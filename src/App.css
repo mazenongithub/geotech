@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700|Lato:wght@900&display=swap');
 .App {
   text-align: center;
 }
@@ -27,6 +28,23 @@
 .App-link {
   color: #61dafb;
 }
+
+.googlecls-1{fill:#ed355d;}.googlecls-1,
+    .googlecls-2{stroke:#000;stroke-miterlimit:10;}
+    .googlecls-3{fill:#ca4b3a;}
+    .googlecls-4{fill:#68a851;}
+    .googlecls-5{fill:#607ef4;}
+    .googlecls-2{fill:#fff;font-family:Roboto-Bold, Roboto;font-size:82.23px;stroke-width:.5px;}
+    .googlecls-6{fill:#e9bf06;}
+
+    .applecls-1,.applecls-2{fill:#fff;}
+    .applecls-1,.applecls-2,.applecls-3{stroke-miterlimit:10;}
+.applecls-1,.applecls-3{stroke:#333;}
+.applecls-2{font-family:Roboto-Bold, Roboto;font-size:82.23px;stroke:#000;}
+.applecls-4{letter-spacing:-.02em;}
+.applecls-3{fill:#989898;stroke-width:2px;}
+.checkbox-1{fill:red;stroke:#000;stroke-miterlimit:10;stroke-width:2px;}
+.emptybox-1{fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:2px;}
 
 @keyframes App-logo-spin {
   from {
