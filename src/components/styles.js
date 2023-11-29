@@ -17,7 +17,10 @@ export function MyStylesheet() {
             cursor:'pointer'
         },
         generalLink: {
-            textDecoration: 'none',
+            textDecoration: 'none'
+        },
+        generalColor:{
+            color:'#0D1F30'
         },
         flex2: {
             flex: 2
@@ -67,6 +70,13 @@ export function MyStylesheet() {
         },
         boldFont: {
             fontWeight: '700'
+        },
+        mediumwidth: {
+            width:'60%'
+        },
+        generalPadding: {
+            padding:'3px'
+
         },
         whiteFont:{
             color:'#F0F1F2'

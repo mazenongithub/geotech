@@ -11,6 +11,8 @@ import Header from './components/header'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
+import Profile from './components/profile'
+import UES from './components/ues';
 
 
 
@@ -63,6 +65,7 @@ class App extends Component {
       // console.log(myuser)
       if (myuser.hasOwnProperty("myuser")) {
         this.props.reduxUser(myuser.myuser)
+        this.setState({render:'render'})
       }
 
 
@@ -74,12 +77,20 @@ class App extends Component {
 
 
   render() {
-
+    const ues = new UES();
     const styles = MyStylesheet();
     const landing = new Landing();
     const header = new Header();
+    const profile = new Profile()
+    const myuser = ues.checkUser.call(this)
 
-    const defaultLogo = () => {
+
+    const defaultLogo = (myuser) => {
+      if(myuser) {
+  
+        return (profile.showProfile.call(this))
+
+      } else {
 
       return (<div className="App">
         <header className="App-header">
@@ -98,6 +109,8 @@ class App extends Component {
         </header>
       </div>)
 
+      }
+
     }
 
 
@@ -109,8 +122,9 @@ class App extends Component {
           <div style={{ ...styles.generalContainer }}>
           {header.showHeader.call(this)}
             <Routes>
-              <Route exact path="/" element={defaultLogo()} />
+              <Route exact path="/" element={defaultLogo(myuser)} />
               <Route exact path="/login" element={landing.handleLanding.call(this)} />
+              <Route exact path="/:userid/profile" element={profile.showProfile.call(this)} />
             </Routes>
           </div>
         </BrowserRouter>

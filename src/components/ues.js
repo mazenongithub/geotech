@@ -27,6 +27,21 @@ class UES {
 
     }
 
+    arrowWidth() {
+
+        if(this.state.width>1200) {
+            return({width:'200px', height:'auto'})
+
+        } else if (this.state.width>600) {
+            return({width:'150px', height:'auto'})
+
+        } else {
+            return({width:'100px', height:'auto'})
+
+        }
+
+    }
+
     hugeFont() {
         if(this.state.width>1200) {
             return({fontSize:'42px'})

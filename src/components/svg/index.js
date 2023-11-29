@@ -4,6 +4,12 @@ export function checkBox() {
     <g id="Layout"><rect className="checkbox-1" x="1" y="1" width="33" height="33"/></g></svg>)
 }
 
+export function linkArrow() {
+    return (
+        <svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 195.44 81.8"><defs><style>
+        </style></defs><g id="Layout"><polygon className="linkarrow-1" points="130.5 80.9 130.5 56.32 .5 56.32 .5 25.32 130.5 25.32 130.5 .9 194.5 40.9 130.5 80.9"/></g></svg>)
+}
+
 export function emptyBox() {
     return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35"><defs>
     <style></style></defs>
