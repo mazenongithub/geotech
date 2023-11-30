@@ -13,6 +13,8 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import Profile from './components/profile'
 import UES from './components/ues';
+import Projects from './components/projects';
+import Clients from './components/clients';
 
 
 
@@ -34,6 +36,7 @@ class App extends Component {
     window.addEventListener('resize', this.updateWindowDimensions);
     this.updateWindowDimensions();
     this.getUser()
+    
 
     const config = () => {
       return ({
@@ -125,6 +128,8 @@ class App extends Component {
               <Route exact path="/" element={defaultLogo(myuser)} />
               <Route exact path="/login" element={landing.handleLanding.call(this)} />
               <Route exact path="/:userid/profile" element={profile.showProfile.call(this)} />
+              <Route exact path="/:userid/projects" element={<Projects/>} />
+              <Route exact path="/:userid/clients" element={<Clients/>} />
             </Routes>
           </div>
         </BrowserRouter>

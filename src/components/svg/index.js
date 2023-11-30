@@ -4,6 +4,11 @@ export function checkBox() {
     <g id="Layout"><rect className="checkbox-1" x="1" y="1" width="33" height="33"/></g></svg>)
 }
 
+export function removeIcon() {
+    return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 61.41 61.41"><defs><style>
+    </style></defs><g id="Layout"><polygon className="removeicon-1" points="60.71 46.19 46.19 60.71 30.71 45.22 15.22 60.71 .71 46.19 16.19 30.71 .71 15.22 15.22 .71 30.71 16.19 46.19 .71 60.71 15.22 45.22 30.71 60.71 46.19"/></g></svg>)
+}
+
 export function linkArrow() {
     return (
         <svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 195.44 81.8"><defs><style>

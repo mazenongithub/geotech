@@ -10,6 +10,9 @@ export function MyStylesheet() {
         flex1: {
             flex: 1,
         },
+        activeid: {
+            backgroundColor: '#ED9FB9'
+        },
         marginTop15:{
          marginTop:'15px'
         },
@@ -21,6 +24,9 @@ export function MyStylesheet() {
         },
         generalColor:{
             color:'#0D1F30'
+        },
+        areatext:{
+            height:'225px'
         },
         flex2: {
             flex: 2

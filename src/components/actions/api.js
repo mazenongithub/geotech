@@ -1,3 +1,47 @@
+export async function LoadProjects() {
+
+    let APIURL = `https://civilengineer.io/UES/api/loadprojects.php`
+    
+    return fetch(APIURL, { credentials: 'include' }).then(resp => {
+
+        if (!resp.ok) {
+            if (resp.status >= 400 && resp.status < 500) {
+                return resp.json().then(data => {
+                    throw data.message
+                })
+            }
+            else {
+                let err =  'No network connection or the Server is not responding';
+                throw err;
+            }
+        }
+
+        return resp.json();
+    })
+}
+
+export async function LoadClients() {
+
+    let APIURL = `https://civilengineer.io/UES/api/loadclients.php`
+    
+    return fetch(APIURL, { credentials: 'include' }).then(resp => {
+
+        if (!resp.ok) {
+            if (resp.status >= 400 && resp.status < 500) {
+                return resp.json().then(data => {
+                    throw data.message
+                })
+            }
+            else {
+                let err =  'No network connection or the Server is not responding';
+                throw err;
+            }
+        }
+
+        return resp.json();
+    })
+}
+
 export async function LoadUser() {
 
     let APIURL = `https://civilengineer.io/UES/api/loaduser.php`

@@ -196,6 +196,10 @@ class Profile {
                     <Link style={{...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor}} to={`/${myuser.userid}/projects`}><button style={{...styles.generalButton, ...arrowWidth}}>{linkArrow()}</button> Go To Projects </Link>   
                 </div>
 
+                <div style={{...styles.generalContainer}}>
+                    <Link style={{...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor}} to={`/${myuser.userid}/clients`}><button style={{...styles.generalButton, ...arrowWidth}}>{linkArrow()}</button> Clients </Link>   
+                </div>
+
 
             </div>)
 
