@@ -15,6 +15,17 @@ export function removeIcon() {
     </style></defs><g id="Layout"><polygon className="removeicon-1" points="60.71 46.19 46.19 60.71 30.71 45.22 15.22 60.71 .71 46.19 16.19 30.71 .71 15.22 15.22 .71 30.71 16.19 46.19 .71 60.71 15.22 45.22 30.71 60.71 46.19"/></g></svg>)
 }
 
+export function arrowDown() {
+    return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30.73 53.59"><defs><style>
+    </style></defs><g id="Layout"><polygon className="arrowUp-1" points=".87 27.5 8.37 27.5 8.37 .5 22.37 .5 22.37 27.5 29.87 27.5 15.37 52.59 .87 27.5"/></g></svg>)
+}
+
+export function arrowUp() {
+    return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30.73 53.59"><defs><style>
+   
+    </style></defs><g id="Layout"><polygon className="arrowUp-1" points="29.87 26.09 22.37 26.09 22.37 53.09 8.37 53.09 8.37 26.09 .87 26.09 15.37 1 29.87 26.09"/></g></svg>)
+}
+
 export function saveIcon() {
     return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200.65 64.29"><defs><style>
     </style></defs><g id="Layout"><rect className="saveIcon-1" x=".5" y=".5" width="199.65" height="63.29" rx="13.15" ry="13.15"/><text className="saveIcon-3" transform="translate(55.13 45.37) scale(.94 1.04)"><tspan x="0" y="0">S</tspan><tspan className="saveIcon-2" x="20.92" y="0">A</tspan><tspan x="45.32" y="0">VE</tspan></text></g></svg>)

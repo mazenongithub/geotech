@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
-import { generateIcon, removeIcon, saveIcon } from './svg';
+import { arrowUp, generateIcon, removeIcon, saveIcon, arrowDown } from './svg';
 import { formatDateReport, currentDate, newReport, newList, newSublist, newSection } from './functions'
 import MakeID from './makeids';
 
@@ -355,11 +355,55 @@ class Report extends Component {
 
     }
 
+    movelistup(listid) {
+        const ues = new UES();
+        const report = this.getReport();
+        const reports = ues.getReports.call(this)
+        if(report) {
+            const reportid = this.state.activereportid;
+            const i = ues.getReportKeyByID.call(this,reportid)
+            const list = ues.getListbyID.call(this,reportid,listid)
+            if(list) {
+                const j = ues.getListKeybyID.call(this,reportid,listid)
+                if(report.list.length>1 && j > 0) {
+                    const list_1 = reports[i].list[j-1]
+                    reports[i].list[j] = list_1;
+                    reports[i].list[j-1] = list;
+                    this.props.reduxReports(reports);
+                    this.setState({render:'render'})
+                }
+            }
+        }
+    }
+
+    movelistdown(listid) {
+        const ues = new UES();
+        const report = this.getReport();
+        const reports = ues.getReports.call(this)
+        if(report) {
+            const reportid = this.state.activereportid;
+            const i = ues.getReportKeyByID.call(this,reportid)
+            const list = ues.getListbyID.call(this,reportid,listid)
+            if(list) {
+                const j = ues.getListKeybyID.call(this,reportid,listid)
+                const listcount = report.list.length;
+                if (listcount > 1 && j < listcount - 1) {
+                    const list_1 =  reports[i].list[j + 1]
+                    reports[i].list[j] = list_1;
+                    reports[i].list[j+1] = list;
+                    this.props.reduxReports(reports);
+                    this.setState({render:'render'})
+                }
+            }
+        }
+    }
+
     showList(list) {
         const ues = new UES();
         const styles = MyStylesheet();
         const regularFont = ues.regularFont.call(this);
         const iconWidth = ues.removeIcon.call(this)
+        const arrowWidth = ues.arrowUp.call(this)
         const highlight = (listid) => {
             if (this.state.activelistid === listid) {
                 return (styles.activeid)
@@ -367,8 +411,20 @@ class Report extends Component {
         }
 
         return (<li style={{ ...styles.bottomMargin15 }} key={list.listid}>
-            <span style={{ ...styles.generalFont, ...regularFont, ...highlight(list.listid) }} onClick={() => { this.handlelistid(list.listid) }}>{list.content}</span>
-            <button style={{ ...styles.generalButton, ...iconWidth, ...styles.leftMargin40 }} onClick={() => { this.removeList(list.listid) }}>{removeIcon()}</button>
+            <div style={{ ...styles.generalFlex }}>
+                <div style={{ ...styles.flex3 }}><span style={{ ...styles.generalFont, ...regularFont, ...highlight(list.listid) }} onClick={() => { this.handlelistid(list.listid) }}>{list.content}</span></div>
+
+                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.movelistup(list.listid)}}>{arrowUp()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.movelistdown(list.listid)}}>{arrowDown()}</button>
+                </div>
+                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...iconWidth, ...styles.leftMargin40 }} onClick={() => { this.removeList(list.listid) }}>{removeIcon()}</button>
+                </div>
+
+            </div>
+
+
         </li>)
 
     }
@@ -406,19 +462,94 @@ class Report extends Component {
         }
     }
 
+    movesublistup(sublistid) {
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        const report = this.getReport();
+        if(report) {
+            const reportid = this.state.activereportid;
+            const i = ues.getReportKeyByID.call(this,reportid)
+            const listid = ues.getListIDfromSublistID.call(this,reportid,sublistid)
+            const list = ues.getListbyID.call(this,reportid,listid);
+            if(list) {
+                const j = ues.getListKeybyID.call(this,reportid,listid)
+                const sublist = ues.getSublistbyID.call(this,reportid,listid,sublistid)
+                if(sublist) {
+                    const k = ues.getSublistKeybyID.call(this,reportid,listid,sublistid)
+                    const listcount = reports[i].list[j].sublist.length;
+                    if (listcount > 1 && k > 0) {
+                        const sublist_1 = reports[i].list[j].sublist[k - 1];
+                        reports[i].list[j].sublist[k] = sublist_1;
+                        reports[i].list[j].sublist[k-1] = sublist;
+                        this.props.reduxReports(reports);
+                        this.setState({render:'render'})
+
+                    }
+
+                }
+            }
+        }
+
+    }
+
+    movesublistdown(sublistid) {
+
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        const report = this.getReport();
+        if(report) {
+            const reportid = this.state.activereportid;
+            const i = ues.getReportKeyByID.call(this,reportid)
+            const listid = ues.getListIDfromSublistID.call(this,reportid,sublistid)
+            const list = ues.getListbyID.call(this,reportid,listid);
+            if(list) {
+                const j = ues.getListKeybyID.call(this,reportid,listid)
+                const sublist = ues.getSublistbyID.call(this,reportid,listid,sublistid)
+                if(sublist) {
+                    const k = ues.getSublistKeybyID.call(this,reportid,listid,sublistid)
+                    const listcount = reports[i].list[j].sublist.length;
+                    if (listcount > 1 && k < listcount - 1) {
+                        const sublist_1 = reports[i].list[j].sublist[k + 1];
+                        reports[i].list[j].sublist[k] = sublist_1;
+                        reports[i].list[j].sublist[k+1] = sublist;
+                        this.props.reduxReports(reports);
+                        this.setState({render:'render'})
+
+                    }
+
+                }
+            }
+        }
+
+    }
+
     showsublist(sublist) {
         const ues = new UES();
         const styles = MyStylesheet();
         const regularFont = ues.regularFont.call(this)
         const iconWidth = ues.removeIcon.call(this)
+        const arrowWidth = ues.arrowUp.call(this)
         const highlight = (sublistid) => {
             if (this.state.activesublistid === sublistid) {
                 return (styles.activeid)
             }
         }
         return (<li key={sublist.sublistid} style={{ ...styles.bottomMargin15 }}>
-            <span style={{ ...styles.generalFont, ...regularFont, ...highlight(sublist.sublistid) }} onClick={() => { this.handlesublistid(sublist.sublistid) }}>{sublist.content}</span>
-            <button style={{ ...styles.generalButton, ...iconWidth, ...styles.leftMargin40 }} onClick={() => { this.removeSubbList(sublist.sublistid) }}>{removeIcon()}</button>
+            <div style={{ ...styles.generalFlex }}>
+                <div style={{ ...styles.flex3 }}>
+                    <span style={{ ...styles.generalFont, ...regularFont, ...highlight(sublist.sublistid) }} onClick={() => { this.handlesublistid(sublist.sublistid) }}>{sublist.content}</span>
+                </div>
+                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.movesublistup(sublist.sublistid)}}>{arrowUp()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.movesublistdown(sublist.sublistid)}}>{arrowDown()}</button>
+                </div>
+                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...iconWidth, ...styles.leftMargin40 }} onClick={() => { this.removeSubbList(sublist.sublistid) }}>{removeIcon()}</button>
+                </div>
+            </div>
+
+
+
         </li>)
     }
 
@@ -625,11 +756,69 @@ class Report extends Component {
         }
     }
 
+    moveGeneralSectionDown(sectionid) {
+
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if(reports) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this,reportid)
+            if(report) {
+                const i = ues.getReportKeyByID.call(this,reportid);
+                const section =ues.getGeneralSectionbyID.call(this,reportid,sectionid)
+                if(section) {
+                    const j = ues.getGeneralSectionKeybyID.call(this,reportid,sectionid)
+                    const sectioncount = reports[i].general.length;
+                    if (sectioncount > 1 && j < sectioncount - 1) {
+                        const section_1 = reports[i].general[j+1];
+                        reports[i].general[j] = section_1;
+                        reports[i].general[j+1] = section;
+                        this.props.reduxReports(reports);
+                        this.setState({render:'render'})
+
+                    }
+                }
+            }
+
+
+        }
+
+    }
+
+    moveGeneralSectionUp(sectionid) {
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if(reports) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this,reportid)
+            if(report) {
+                const i = ues.getReportKeyByID.call(this,reportid);
+                const section =ues.getGeneralSectionbyID.call(this,reportid,sectionid)
+                if(section) {
+                    const j = ues.getGeneralSectionKeybyID.call(this,reportid,sectionid)
+                    const sectioncount = reports[i].general.length;
+                    if (sectioncount > 1 && j > 0) {
+                        const section_1 = reports[i].general[j-1];
+                        reports[i].general[j] = section_1;
+                        reports[i].general[j-1] = section;
+                        this.props.reduxReports(reports);
+                        this.setState({render:'render'})
+
+                    }
+                }
+            }
+
+
+        }
+
+    }
+
     showGeneralID(section) {
         const styles = MyStylesheet();
         const ues = new UES();
         const regularFont = ues.regularFont.call(this)
-        const iconWidth = ues.removeIcon.call(this)
+        const iconWidth = ues.removeIcon.call(this);
+        const arrowWidth = ues.arrowUp.call(this)
 
         const highlight = (sectionid) => {
             if (this.state.activegeneralid === sectionid) {
@@ -641,6 +830,10 @@ class Report extends Component {
             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }} key={section.sectionid}>
                 <div style={{ ...styles.flex5, ...highlight(section.sectionid) }} onClick={() => { this.handleGeneralID(section.sectionid) }}>
                     <span style={{ ...regularFont }}>{section.sectionname}</span>
+                </div>
+                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.moveGeneralSectionUp(section.sectionid)}}>{arrowUp()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.moveGeneralSectionDown(section.sectionid)}}>{arrowDown()}</button>
                 </div>
                 <div style={{ ...styles.flex1 }}>
                     <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeGeneralSection(section.sectionid) }}>{removeIcon()}</button>
@@ -729,7 +922,7 @@ class Report extends Component {
                 if (report.hasOwnProperty("general")) {
                     // eslint-disable-next-line 
                     report.general.map(section => {
-                        console.log(section)
+                 
                         if (section.sectionid === sectionid) {
                             content = section.content;
 
@@ -971,12 +1164,71 @@ class Report extends Component {
 
     }
 
+    moveConclusionSectionDown(sectionid) {
+
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if(reports) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this,reportid)
+            if(report) {
+                const i = ues.getReportKeyByID.call(this,reportid);
+                const section =ues.getConclusionSectionbyID.call(this,reportid,sectionid)
+                if(section) {
+                    const j = ues.getConclusionSectionKeybyID.call(this,reportid,sectionid)
+                    const sectioncount = reports[i].conclusion.length;
+                    if (sectioncount > 1 && j < sectioncount - 1) {
+                        const section_1 = reports[i].conclusion[j+1];
+                        reports[i].conclusion[j] = section_1;
+                        reports[i].conclusion[j+1] = section;
+                        this.props.reduxReports(reports);
+                        this.setState({render:'render'})
+    
+                    }
+                }
+            }
+    
+    
+        }
+    
+    }
+    
+    moveConclusionSectionUp(sectionid) {
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if(reports) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this,reportid)
+            if(report) {
+                const i = ues.getReportKeyByID.call(this,reportid);
+                const section =ues.getConclusionSectionbyID.call(this,reportid,sectionid)
+                if(section) {
+                    const j = ues.getConclusionSectionKeybyID.call(this,reportid,sectionid)
+                    const sectioncount = reports[i].conclusion.length;
+                    if (sectioncount > 1 && j > 0) {
+                        const section_1 = reports[i].conclusion[j-1];
+                        reports[i].conclusion[j] = section_1;
+                        reports[i].conclusion[j-1] = section;
+                        this.props.reduxReports(reports);
+                        this.setState({render:'render'})
+    
+                    }
+                }
+            }
+    
+    
+        }
+    
+    }
+    
+
 
     showConclusionID(section) {
         const styles = MyStylesheet();
         const ues = new UES();
         const regularFont = ues.regularFont.call(this)
         const iconWidth = ues.removeIcon.call(this)
+        const arrowWidth = ues.arrowUp.call(this)
 
         const highlight = (sectionid) => {
             if (this.state.activeconclusionid === sectionid) {
@@ -988,6 +1240,10 @@ class Report extends Component {
             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }} key={section.sectionid}>
                 <div style={{ ...styles.flex5, ...highlight(section.sectionid) }} onClick={() => { this.handleConclusionID(section.sectionid) }}>
                     <span style={{ ...regularFont }}>{section.sectionname}</span>
+                </div>
+                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.moveConclusionSectionUp(section.sectionid)}}>{arrowUp()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.moveConclusionSectionDown(section.sectionid)}}>{arrowDown()}</button>
                 </div>
                 <div style={{ ...styles.flex1 }}>
                     <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeConclusionSection(section.sectionid) }}>{removeIcon()}</button>
@@ -1051,12 +1307,70 @@ class Report extends Component {
 
     }
 
+    moveRecommendationSectionDown(sectionid) {
+
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if(reports) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this,reportid)
+            if(report) {
+                const i = ues.getReportKeyByID.call(this,reportid);
+                const section =ues.getRecommendationSectionbyID.call(this,reportid,sectionid)
+                if(section) {
+                    const j = ues.getRecommendationSectionKeybyID.call(this,reportid,sectionid)
+                    const sectioncount = reports[i].recommendation.length;
+                    if (sectioncount > 1 && j < sectioncount - 1) {
+                        const section_1 = reports[i].recommendation[j+1];
+                        reports[i].recommendation[j] = section_1;
+                        reports[i].recommendation[j+1] = section;
+                        this.props.reduxReports(reports);
+                        this.setState({render:'render'})
+    
+                    }
+                }
+            }
+    
+    
+        }
+    
+    }
+    
+    moveRecommendationSectionUp(sectionid) {
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if(reports) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this,reportid)
+            if(report) {
+                const i = ues.getReportKeyByID.call(this,reportid);
+                const section =ues.getRecommendationSectionbyID.call(this,reportid,sectionid)
+                if(section) {
+                    const j = ues.getRecommendationSectionKeybyID.call(this,reportid,sectionid)
+                    const sectioncount = reports[i].recommendation.length;
+                    if (sectioncount > 1 && j > 0) {
+                        const section_1 = reports[i].recommendation[j-1];
+                        reports[i].recommendation[j] = section_1;
+                        reports[i].recommendation[j-1] = section;
+                        this.props.reduxReports(reports);
+                        this.setState({render:'render'})
+    
+                    }
+                }
+            }
+    
+    
+        }
+    
+    }
+
 
     showRecommendationID(section) {
         const styles = MyStylesheet();
         const ues = new UES();
         const regularFont = ues.regularFont.call(this)
         const iconWidth = ues.removeIcon.call(this)
+        const arrowWidth = ues.arrowUp.call(this)
 
         const highlight = (sectionid) => {
             if (this.state.activerecommendationid === sectionid) {
@@ -1069,6 +1383,12 @@ class Report extends Component {
                 <div style={{ ...styles.flex5, ...highlight(section.sectionid) }} onClick={() => { this.handleRecommendationID(section.sectionid) }}>
                     <span style={{ ...regularFont }}>{section.sectionname}</span>
                 </div>
+
+                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.moveRecommendationSectionUp(section.sectionid)}}>{arrowUp()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.moveRecommendationSectionDown(section.sectionid)}}>{arrowDown()}</button>
+                </div>
+
                 <div style={{ ...styles.flex1 }}>
                     <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeRecommendationSection(section.sectionid) }}>{removeIcon()}</button>
                 </div>
@@ -1211,6 +1531,25 @@ class Report extends Component {
 
     }
 
+    handleGeneralMenu(value) {
+     
+        this.handleGeneralSection(value)
+        //window.open('/mazen/projects/_projectid/report')
+    }
+
+    handleConclusionMenu(value) {
+     
+        this.handleConclusionSection(value)
+        //window.open('/mazen/projects/_projectid/report')
+    }
+
+    handleRecommendationMenu(value) {
+     
+        this.handleRecommendationSection(value)
+        //window.open('/mazen/projects/_projectid/report')
+    }
+
+
 
 
 
@@ -1293,7 +1632,7 @@ class Report extends Component {
                             <span style={{ ...styles.generalFont, ...headerFont }}><u>General</u></span>
                         </div>
                         <div style={{ ...styles.flex4, ...styles.addMargin }}>
-                            <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }}>
+                            <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }} onChange={event=>{this.handleGeneralMenu(event.target.value)}}>
                                 <option value="">Select Section</option>
                                 {this.loadGeneralSections()}
 
@@ -1323,7 +1662,8 @@ class Report extends Component {
                             <span style={{ ...styles.generalFont, ...headerFont }}><u>Conclusions</u></span>
                         </div>
                         <div style={{ ...styles.flex4, ...styles.addMargin }}>
-                            <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }}>
+                            <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }}
+                            onChange={event=>{this.handleConclusionMenu(event.target.value)}}>
                                 <option value="">Select Section</option>
                                 {this.loadConclusionSections()}
                             </select>
@@ -1350,7 +1690,8 @@ class Report extends Component {
                             <span style={{ ...styles.generalFont, ...headerFont }}><u>Recommendations</u></span>
                         </div>
                         <div style={{ ...styles.flex4, ...styles.addMargin }}>
-                            <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }}>
+                            <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }}
+                            onChange={(event)=>{this.handleRecommendationMenu(event.target.value)}}>
                                 <option value="">Select Section</option>
                                 {this.loadRecommendationSections()}
                             </select>
