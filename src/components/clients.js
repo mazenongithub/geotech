@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
-import { removeIcon } from './svg';
-import { newClient } from './functions';
+import { removeIcon, saveIcon } from './svg';
+import { newClient, inputUTCStringForLaborID } from './functions';
 import MakeID from './makeids';
+import { SaveClients } from './actions/api';
 
 class Clients extends Component {
 
@@ -41,6 +42,34 @@ class Clients extends Component {
     }
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
+    }
+
+    async saveClients() {
+        const ues = new UES();
+        const clients = ues.getClients.call(this);
+        if(clients) {
+            try {
+                const response = await SaveClients({clients})
+                if (response.hasOwnProperty("clients")) {
+                    this.props.reduxClients(response.clients);
+                    
+                }
+                let message = "";
+                if(response.hasOwnProperty("message")) {
+                    message = response.message;
+                }
+    
+                if (response.hasOwnProperty("lastupdated")) {
+                    message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
+                }
+    
+                this.setState({message})
+
+            } catch(err) {
+                alert(err)
+            }
+        }
+      
     }
 
     showClients() {
@@ -578,6 +607,7 @@ class Clients extends Component {
         const myuser = ues.checkUser.call(this)
         const headerFont = ues.headerFont.call(this)
         const regularFont = ues.regularFont.call(this)
+        const buttonWidth = ues.generateIcon.call(this)
         if (myuser) {
             return (<div style={{ ...styles.generalContainer }}>
 
@@ -587,7 +617,7 @@ class Clients extends Component {
                 </div>
 
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1 }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin }}>
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
                                 value={this.getFirstName()}
@@ -597,7 +627,7 @@ class Clients extends Component {
                         <span style={{ ...regularFont }}>First Name</span>
 
                     </div>
-                    <div style={{ ...styles.flex1 }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
 
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
@@ -613,7 +643,7 @@ class Clients extends Component {
                 </div>
 
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1 }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
                                 value={this.getTitle()}
@@ -623,7 +653,7 @@ class Clients extends Component {
                         <span style={{ ...regularFont }}>Title</span>
 
                     </div>
-                    <div style={{ ...styles.flex1 }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
 
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
@@ -639,7 +669,7 @@ class Clients extends Component {
 
 
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1 }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
                                 value={this.getAddress()}
@@ -649,7 +679,7 @@ class Clients extends Component {
                         <span style={{ ...regularFont }}>Address</span>
 
                     </div>
-                    <div style={{ ...styles.flex1 }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
 
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
@@ -664,7 +694,7 @@ class Clients extends Component {
                 </div>
 
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1 }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
                                 value={this.getContactState()}
@@ -674,7 +704,7 @@ class Clients extends Component {
                         <span style={{ ...regularFont }}>State</span>
 
                     </div>
-                    <div style={{ ...styles.flex1 }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
 
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
@@ -686,6 +716,14 @@ class Clients extends Component {
 
                     </div>
 
+                </div>
+
+                <div style={{...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15}}>
+                    <span style={{...styles.generalFont, ...regularFont}}>{this.state.message}</span>
+                </div>
+
+                <div style={{...styles.generalContainer, ...styles.alignCenter}}>
+                    <button style={{...styles.generalButton, ...buttonWidth}} onClick={()=>{this.saveClients()}}>{saveIcon()}</button>
                 </div>
 
                 {this.showClients()}

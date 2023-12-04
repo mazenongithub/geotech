@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 import './App.css';
 import { MyStylesheet } from './components/styles';
 import logo from './logo.svg';
@@ -15,7 +15,25 @@ import Profile from './components/profile'
 import UES from './components/ues';
 import Projects from './components/projects';
 import Clients from './components/clients';
+import Project from './components/project'
+import Proposals from './components/proposals'
+import Report from './components/report';
 
+
+const ShowReport = () => {
+  const { projectid, userid } = useParams();
+  return(<Report userid={userid} projectid={projectid} />)
+}
+
+const ShowProject = () => {
+  const { projectid, userid } = useParams();
+  return (<Project userid={userid} projectid={projectid} />)
+}
+
+const ShowProposals = () => {
+  const { projectid, userid } = useParams();
+  return(<Proposals userid={userid} projectid={projectid} />)
+}
 
 
 class App extends Component {
@@ -25,18 +43,18 @@ class App extends Component {
 
     this.state = {
 
-      render: '', width: 0, height: 0, register:false, userid:'', message:''
+      render: '', width: 0, height: 0, register: false, userid: '', message: ''
 
     }
 
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
+     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
 
   }
   componentDidMount() {
     window.addEventListener('resize', this.updateWindowDimensions);
     this.updateWindowDimensions();
     this.getUser()
-    
+
 
     const config = () => {
       return ({
@@ -50,8 +68,8 @@ class App extends Component {
         measurementId: "G-GNQ5QDP478"
       })
     }
-   firebase.initializeApp(config());
-  
+    firebase.initializeApp(config());
+
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateWindowDimensions);
@@ -68,7 +86,7 @@ class App extends Component {
       // console.log(myuser)
       if (myuser.hasOwnProperty("myuser")) {
         this.props.reduxUser(myuser.myuser)
-        this.setState({render:'render'})
+        this.setState({ render: 'render' })
       }
 
 
@@ -89,47 +107,51 @@ class App extends Component {
 
 
     const defaultLogo = (myuser) => {
-      if(myuser) {
-  
+      if (myuser) {
+
         return (profile.showProfile.call(this))
 
       } else {
 
-      return (<div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Hello <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>)
+        return (<div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <p>
+              Hello <code>src/App.js</code> and save to reload.
+            </p>
+            <a
+              className="App-link"
+              href="https://reactjs.org"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn React
+            </a>
+          </header>
+        </div>)
 
       }
 
     }
 
-
+   
+   
 
     return (
       <div style={{ ...styles.generalContainer }}>
-      
+
         <BrowserRouter>
-          <div style={{ ...styles.generalContainer }}>
-          {header.showHeader.call(this)}
+          <div style={{ ...styles.generalContainer, ...styles.addMargin }}>
+            {header.showHeader.call(this)}
             <Routes>
               <Route exact path="/" element={defaultLogo(myuser)} />
               <Route exact path="/login" element={landing.handleLanding.call(this)} />
               <Route exact path="/:userid/profile" element={profile.showProfile.call(this)} />
-              <Route exact path="/:userid/projects" element={<Projects/>} />
-              <Route exact path="/:userid/clients" element={<Clients/>} />
+              <Route exact path="/:userid/clients" element={<Clients />} />
+              <Route exact path="/:userid/projects" element={<Projects />} />
+              <Route exact path="/:userid/projects/:projectid" element={<ShowProject />} />
+              <Route exact path="/:userid/projects/:projectid/proposals" element={<ShowProposals />} />
+              <Route exact path="/:userid/projects/:projectid/report" element={<ShowReport />} />
             </Routes>
           </div>
         </BrowserRouter>

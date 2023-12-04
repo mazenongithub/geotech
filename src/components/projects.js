@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
-import { LoadProjects } from './actions/api';
-import { removeIcon, linkArrow } from './svg';
-import { newProject } from './functions';
+import { removeIcon, linkArrow, saveIcon } from './svg';
+import { newProject, inputUTCStringForLaborID } from './functions';
 import MakeID from './makeids';
+import { SaveProjects } from './actions/api';
 
 class Projects extends Component {
 
@@ -31,7 +31,7 @@ class Projects extends Component {
         const projects = ues.getProjects.call(this)
         const clients = ues.getClients.call(this)
         if (!projects) {
-            this.loadProjects();
+            ues.loadProjects.call(this);
         }
 
         if (!clients) {
@@ -41,26 +41,42 @@ class Projects extends Component {
 
     }
 
-    async loadProjects() {
-        try {
-
-            let response = await LoadProjects();
-            console.log(response)
-            if (response.hasOwnProperty("projects")) {
-                this.props.reduxProjects(response.projects)
-            }
-
-
-        } catch (err) {
-
-        }
-    }
+ 
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
     }
     updateWindowDimensions() {
         this.setState({ width: window.innerWidth, height: window.innerHeight });
+    }
+
+    async saveProjects() {
+        const ues = new UES();
+        const projects = ues.getProjects.call(this)
+        if(projects) {
+            try {
+
+                let response = await SaveProjects({projects})
+                console.log(response)
+                if (response.hasOwnProperty("projects")) {
+                    this.props.reduxProjects(response.projects)
+                }
+                let message = "";
+                if(response.hasOwnProperty("message")) {
+                    message = response.message;
+                }
+    
+                if (response.hasOwnProperty("lastupdated")) {
+                    message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
+                }
+    
+                this.setState({message})
+
+            } catch(err) {
+                alert(err)
+            }
+        }
+
     }
 
     removeProject(projectid) {
@@ -563,7 +579,7 @@ class Projects extends Component {
                 </div>
 
                 <div style={{...styles.generalContainer}}>
-                    <Link style={{...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor}} to={`/${myuser.userid}/projects/:projectid`}><button style={{...styles.generalButton, ...arrowWidth}}>{linkArrow()}</button> Go To Project </Link>   
+                    <Link style={{...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor}} to={`/${myuser.userid}/projects/${project.projectid}`}><button style={{...styles.generalButton, ...arrowWidth}}>{linkArrow()}</button> Go To Project </Link>   
                 </div>
 
             </div>
@@ -610,6 +626,7 @@ class Projects extends Component {
         const myuser = ues.checkUser.call(this)
         const headerFont = ues.headerFont.call(this)
         const regularFont = ues.regularFont.call(this)
+        const buttonWidth = ues.generateIcon.call(this)
         if (myuser) {
             return (<div style={{ ...styles.generalContainer }}>
 
@@ -704,6 +721,14 @@ class Projects extends Component {
                         <option value="">Select A Client</option>
                         {this.showclients()}
                     </select>
+                </div>
+
+                <div style={{...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15}}>
+                    <span style={{...styles.generalFont, ...regularFont}}>{this.state.message}</span>
+                </div>
+
+                <div style={{...styles.generalContainer, ...styles.alignCenter}}>
+                    <button style={{...styles.generalButton, ...buttonWidth}} onClick={()=>{this.saveProjects()}}>{saveIcon()}</button>
                 </div>
 
                 {this.showProjects()}

@@ -1,10 +1,44 @@
 import React from 'react';
 import { MyStylesheet } from './styles';
 import UES from './ues'
-import { linkArrow } from './svg';
+import { SaveUser } from './actions/api';
+import { linkArrow, saveIcon } from './svg';
 import { Link } from "react-router-dom";
+import {inputUTCStringForLaborID} from './functions'
 
 class Profile {
+
+    async saveuser() {
+        const ues = new UES();
+        const myuser = ues.checkUser.call(this)
+        const userid = myuser.userid;
+        const firstname = myuser.firstname;
+        const lastname = myuser.lastname;
+        const emailaddress = myuser.emailaddress;
+        const phonenumber = myuser.phonenumber;
+        try {
+            const values = {userid,firstname,lastname, emailaddress, phonenumber}
+            const response = await SaveUser(values)
+            console.log(response)
+            if(response.hasOwnProperty("myuser")) {
+                this.props.reduxUser(response.myuser)
+            }
+            let message = "";
+            if(response.hasOwnProperty("message")) {
+                message = response.message;
+            }
+
+            if (response.hasOwnProperty("lastupdated")) {
+                message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
+            }
+
+            this.setState({message})
+
+        } catch (err) {
+
+        }
+
+    }
 
     handlePhoneNumber(value) {
         const ues = new UES();
@@ -131,6 +165,7 @@ class Profile {
         const profile = new Profile();
         const myuser = ues.checkUser.call(this)
         const arrowWidth = ues.arrowWidth.call(this)
+        const buttonWidth = ues.generateIcon.call(this)
         if(myuser) {
         return (
             <div style={{ ...styles.generalContainer }}>
@@ -191,6 +226,16 @@ class Profile {
                     </div>
 
                 </div>
+                
+                <div style={{...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15}}>
+                    <span style={{...styles.generalFont, ...regularFont}}>{this.state.message}</span>
+                </div>
+
+                <div style={{...styles.generalContainer, ...styles.alignCenter}}>
+                    <button style={{...styles.generalButton, ...buttonWidth}} onClick={()=>{profile.saveuser.call(this)}}>{saveIcon()}</button>
+                </div>
+
+            
 
                 <div style={{...styles.generalContainer}}>
                     <Link style={{...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor}} to={`/${myuser.userid}/projects`}><button style={{...styles.generalButton, ...arrowWidth}}>{linkArrow()}</button> Go To Projects </Link>   

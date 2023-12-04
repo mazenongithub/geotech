@@ -25,8 +25,11 @@ export function MyStylesheet() {
         generalColor:{
             color:'#0D1F30'
         },
+        marginLeft15:{
+            marginLeft:'15px'
+        },
         areatext:{
-            height:'225px'
+            height:'175px'
         },
         flex2: {
             flex: 2
@@ -48,6 +51,12 @@ export function MyStylesheet() {
         },
         alignCenter: {
             textAlign: 'center'
+        },
+        leftMargin40:{
+            marginLeft:'40px'
+        },
+        showBorder:{
+            border:'2px solid'
         },
         noBorder:{
             border:'0px'
@@ -80,6 +89,9 @@ export function MyStylesheet() {
         mediumwidth: {
             width:'60%'
         },
+        smallwidth: {
+            width:'25%'
+        },
         generalPadding: {
             padding:'3px'
 
@@ -90,5 +102,8 @@ export function MyStylesheet() {
         headerWeight: {
             fontWeight: '900'
         },
+        addMargin:{
+            margin:'3px'
+        }
     })
 }

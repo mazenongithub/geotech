@@ -4,9 +4,20 @@ export function checkBox() {
     <g id="Layout"><rect className="checkbox-1" x="1" y="1" width="33" height="33"/></g></svg>)
 }
 
+export function generateIcon() {
+    return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200.65 64.29"><defs><style>
+    </style></defs>
+    <g id="Layout"><rect className="generate-1" x=".5" y=".5" width="199.65" height="63.29" rx="20.76" ry="20.76"/><text className="generate-2" transform="translate(35.88 40.89) scale(.94 1)"><tspan x="0" y="0">GENER</tspan><tspan className="generate-3" x="87.89" y="0">A</tspan><tspan x="104.95" y="0">TE</tspan></text></g></svg>)
+}
+
 export function removeIcon() {
     return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 61.41 61.41"><defs><style>
     </style></defs><g id="Layout"><polygon className="removeicon-1" points="60.71 46.19 46.19 60.71 30.71 45.22 15.22 60.71 .71 46.19 16.19 30.71 .71 15.22 15.22 .71 30.71 16.19 46.19 .71 60.71 15.22 45.22 30.71 60.71 46.19"/></g></svg>)
+}
+
+export function saveIcon() {
+    return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200.65 64.29"><defs><style>
+    </style></defs><g id="Layout"><rect className="saveIcon-1" x=".5" y=".5" width="199.65" height="63.29" rx="13.15" ry="13.15"/><text className="saveIcon-3" transform="translate(55.13 45.37) scale(.94 1.04)"><tspan x="0" y="0">S</tspan><tspan className="saveIcon-2" x="20.92" y="0">A</tspan><tspan x="45.32" y="0">VE</tspan></text></g></svg>)
 }
 
 export function linkArrow() {
