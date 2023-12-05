@@ -1,6 +1,6 @@
 export async function LoadReport(projectid) {
 
-    let APIURL = `https://civilengineer.io/UES/api/loadreportendpoint.php?projectid=${projectid}`
+    let APIURL = `https://civilengineer.io/UES/api/loadreport.php?projectid=${projectid}`
     
     return fetch(APIURL, { credentials: 'include' }).then(resp => {
 
