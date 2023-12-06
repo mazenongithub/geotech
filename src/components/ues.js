@@ -658,6 +658,19 @@ class UES {
 
     }
 
+    logdraftImage() {
+        if(this.state.width>1200) {
+            return({width:'150px', height:'auto'})
+
+        } else if (this.state.width > 600) {
+            return({width:'100px', height:'auto'})
+
+        } else {
+            return({width:'50px', height:'auto'})
+
+        }
+    }
+
     arrowUp() {
         if(this.state.width>1200) {
             return({width:'50px', height:'auto'})

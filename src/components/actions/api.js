@@ -1,3 +1,29 @@
+export async function UploadGraphicLog(formData) {
+
+    var APIURL = `https://civilengineer.io/ues/api/uploadgraphiclog.php`
+    return fetch(APIURL, {
+        method: 'post',
+        credentials: 'include',
+        body: formData
+    })
+        .then(resp => {
+
+            if (!resp.ok) {
+                if (resp.status >= 400 && resp.status < 500) {
+                    return resp.json().then(data => {
+
+                        throw data.message;
+                    })
+                }
+                else {
+                    let err = { errorMessage: 'Please try again later, server is not responding' };
+                    throw err;
+                }
+            }
+
+            return resp.json();
+        })
+}
 export function SaveReport(values) {
 
     const APIURL = `https://civilengineer.io/UES/api/handlereport.php`

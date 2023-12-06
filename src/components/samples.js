@@ -8,6 +8,7 @@ import { removeIcon, saveIcon, calculateIcon } from './svg';
 import MakeID from './makeids';
 import { newSample } from './functions';
 import SoilClassification from './soilclassification';
+import GraphicLog from './graphiclog';
 
 
 class Samples extends Component {
@@ -1643,6 +1644,7 @@ class Samples extends Component {
         const myuser = ues.checkUser.call(this)
         const headerFont = ues.headerFont.call(this)
         const buttonWidth = ues.generateIcon.call(this)
+        const graphiclog = new GraphicLog();
         if (myuser) {
             const projectid = this.props.projectid;
             const project = ues.getProjectbyID.call(this, projectid);
@@ -1822,6 +1824,8 @@ class Samples extends Component {
                                 />
                                 <span style={{ ...styles.generalFont, ...regularFont }}>Description</span>
                             </div>
+
+                            {graphiclog.showGraphicLog.call(this)}
 
                             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                                 <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
