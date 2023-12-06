@@ -2,44 +2,124 @@ import UES from "./ues";
 import { makeID } from "./functions";
 class MakeID {
 
+    sampleID() {
+        const ues = new UES();
+        const borings = ues.getBorings.call(this)
+        let sampleid = false;
+        if (borings) {
+            while (!sampleid) {
+                sampleid = makeID(8)
+                // eslint-disable-next-line
+                borings.map(boring => {
+                    if(boring.hasOwnProperty("samples")) {
+                         // eslint-disable-next-line
+                        boring.samples.map(sample=> {
+    
+                      
+                    if(sample.sampleid === sampleid) {
+                        sampleid = false;
+                    }
+    
+                })
+    
+                }
+    
+                })
+    
+            }
+    
+        } else {
+            sampleid = makeID(8)
+        }
+    
+        return sampleid;
+    
+    }
+
+    boringID() {
+        const ues = new UES();
+        const borings = ues.getBorings.call(this)
+        let boringid = false;
+        if (borings) {
+            while (!boringid) {
+                boringid = makeID(8)
+                // eslint-disable-next-line
+                borings.map(boring => {
+                    if(boring.boringid === boringid) {
+                        boringid = false;
+                    }
+
+                })
+
+            }
+
+        } else {
+            boringid = makeID(8)
+        }
+
+        return boringid;
+
+    }
+
+    pavementid() {
+        const ues = new UES();
+        let sectionid = false;
+        const pavements = ues.getPavement.call(this)
+        if (pavements) {
+            while (!sectionid) {
+                sectionid = makeID(16)
+                // eslint-disable-next-line
+                pavements.map(pavement => {
+                    if (pavement.sectionid === sectionid) {
+                        sectionid = false;
+                    }
+                })
+            }
+
+        } else {
+            sectionid = makeID(16)
+        }
+        return sectionid;
+    }
+
     sectionid(reportid) {
         const ues = new UES();
         let sectionid = false;
-        const report = ues.getReportByID.call(this,reportid)
-        if(report) {
-            while(!sectionid) {
-            sectionid = makeID(16);
+        const report = ues.getReportByID.call(this, reportid)
+        if (report) {
+            while (!sectionid) {
+                sectionid = makeID(16);
 
-            if(report.hasOwnProperty("general")) {
-                // eslint-disable-next-line
-                report.general.map(section=> {
-                    if(section.sectionid === sectionid) {
-                        sectionid = false;
-                    }
-                })
-            }
+                if (report.hasOwnProperty("general")) {
+                    // eslint-disable-next-line
+                    report.general.map(section => {
+                        if (section.sectionid === sectionid) {
+                            sectionid = false;
+                        }
+                    })
+                }
 
-            if(report.hasOwnProperty("conclusion")) {
-                // eslint-disable-next-line
-                report.general.map(section=> {
-                    if(section.sectionid === sectionid) {
-                        sectionid = false;
-                    }
-                })
-            }
+                if (report.hasOwnProperty("conclusion")) {
+                    // eslint-disable-next-line
+                    report.general.map(section => {
+                        if (section.sectionid === sectionid) {
+                            sectionid = false;
+                        }
+                    })
+                }
 
-            if(report.hasOwnProperty("recommendation")) {
-                // eslint-disable-next-line
-                report.general.map(section=> {
-                    if(section.sectionid === sectionid) {
-                        sectionid = false;
-                    }
-                })
-            }
+                if (report.hasOwnProperty("recommendation")) {
+                    // eslint-disable-next-line
+                    report.general.map(section => {
+                        if (section.sectionid === sectionid) {
+                            sectionid = false;
+                        }
+                    })
+                }
 
             }
         } else {
-            sectionid= makeID(16)
+            sectionid = makeID(16)
         }
 
         return sectionid;

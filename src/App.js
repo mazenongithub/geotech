@@ -18,6 +18,10 @@ import Clients from './components/clients';
 import Project from './components/project'
 import Proposals from './components/proposals'
 import Report from './components/report';
+import Pavement from './components/pavement'
+import Borings from './components/borings';
+import Samples from './components/samples'
+import Sieve from './components/sieve'
 
 
 const ShowReport = () => {
@@ -33,6 +37,26 @@ const ShowProject = () => {
 const ShowProposals = () => {
   const { projectid, userid } = useParams();
   return(<Proposals userid={userid} projectid={projectid} />)
+}
+
+const ShowPavement = () => {
+  const { projectid, userid } = useParams();
+  return(<Pavement userid={userid} projectid={projectid} />)
+}
+
+const ShowBorings = () => {
+  const { projectid, userid } = useParams();
+  return(<Borings userid={userid} projectid={projectid} />)
+}
+
+const ShowSamples = ()=> {
+  const { projectid, userid, boringid } = useParams();
+  return(<Samples userid={userid} projectid={projectid} boringid={boringid} />)
+}
+
+const ShowSieve = ()=> {
+  const { projectid, userid, boringid, sampleid } = useParams();
+  return(<Sieve userid={userid} projectid={projectid} boringid={boringid} sampleid={sampleid} />)
 }
 
 
@@ -152,6 +176,10 @@ class App extends Component {
               <Route exact path="/:userid/projects/:projectid" element={<ShowProject />} />
               <Route exact path="/:userid/projects/:projectid/proposals" element={<ShowProposals />} />
               <Route exact path="/:userid/projects/:projectid/report" element={<ShowReport />} />
+              <Route exact path="/:userid/projects/:projectid/borings" element={<ShowBorings />} />
+              <Route exact path="/:userid/projects/:projectid/pavement" element={<ShowPavement />} />
+              <Route exact path="/:userid/projects/:projectid/borings/:boringid/samples" element={<ShowSamples />} />
+              <Route exact path="/:userid/projects/:projectid/borings/:boringid/samples/:sampleid/sieve" element={<ShowSieve />} />
             </Routes>
           </div>
         </BrowserRouter>

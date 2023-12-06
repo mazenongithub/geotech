@@ -1,4 +1,4 @@
-import { LoadClients, LoadProjects, LoadReport } from "./actions/api";
+import { LoadBorings, LoadClients, LoadProjects, LoadReport } from "./actions/api";
 
 class UES {
 
@@ -76,6 +76,33 @@ class UES {
     }
 
 
+    async loadBorings(projectid) {
+        const ues = new UES();
+        let borings = ues.getBorings.call(this);
+        try {
+            let response = await LoadBorings(projectid);
+            console.log(response)
+            if(response.hasOwnProperty("borings")) {
+                if(borings) {
+                     // eslint-disable-next-line
+                    response.borings.map(boring=> {
+                        borings.push(boring)
+                    })
+                    
+                } else {
+                    borings = response.borings;
+                }
+                this.props.reduxBorings(borings)
+
+            }
+
+        } catch(err) {
+            alert(err)
+        }
+    
+    }
+
+
     async loadReports(projectid) {
         const ues = new UES();
         let reports = ues.getReports.call(this)
@@ -132,6 +159,180 @@ class UES {
             alert(err)
         }
 
+    }
+
+    getBoringsbyProjectID(projectid) {
+        const ues = new UES();
+        let getborings = [];
+        const borings = ues.getBorings.call(this)
+        if(borings) {
+            // eslint-disable-next-line
+            borings.map(boring=> {
+                if(boring.projectid === projectid) {
+                    getborings.push(boring)
+                }
+
+            })
+        }
+        if(getborings.length === 0) {
+            getborings = false;
+        }
+        return getborings;
+    }
+
+    getSampleKeyByID(boringid, sampleid) {
+        const ues = new UES();
+        let key = false;
+        const samples = ues.getSamplesbyBoringID.call(this,boringid)
+        if(samples) {
+            //eslint-disable-next-line
+            samples.map((sample,i)=> {
+                if(sample.sampleid === sampleid) {
+                    key = i;
+                }
+
+            })
+        }
+        return key;
+    }
+
+    getSampleByID(boringid, sampleid) {
+        const ues = new UES();
+        let getsample = false;
+        const samples = ues.getSamplesbyBoringID.call(this,boringid)
+        if(samples) {
+            //eslint-disable-next-line
+            samples.map(sample=> {
+                if(sample.sampleid === sampleid) {
+                    getsample = sample;
+                }
+
+            })
+        }
+        return getsample;
+    }
+
+    getSamplesbyBoringID(boringid) {
+        const ues = new UES();
+        let getsamples = false;
+        const boring = ues.getBoringbyID.call(this,boringid)
+        if(boring) {
+            if(boring.hasOwnProperty("samples")) {
+                getsamples = boring.samples;
+            }
+        }
+        return getsamples;
+    }
+
+    getBoringKeybyID(boringid) {
+        const ues = new UES();
+        let key = false;
+        const borings = ues.getBorings.call(this)
+        if(borings) {
+            // eslint-disable-next-line 
+            borings.map((boring,i)=> {
+                if(boring.boringid === boringid) {
+                    key = i;
+
+                }
+            })
+        }
+
+        return key;
+    }
+
+
+
+    getBoringbyID(boringid) {
+        const ues = new UES();
+        let getboring = false;
+        const borings = ues.getBorings.call(this)
+        if(borings) {
+            // eslint-disable-next-line 
+            borings.map(boring=> {
+                if(boring.boringid === boringid) {
+                    getboring = boring;
+
+                }
+            })
+        }
+
+        return getboring;
+    }
+
+    getBorings() {
+        let borings = false;
+        if(this.props.borings) {
+            if(this.props.borings.hasOwnProperty("length")) {
+                borings = this.props.borings;
+            }
+        }
+
+        return borings;
+    }
+
+    getPavementByProjectID(projectid) {
+        const ues = new UES();
+        let getpavements = [];
+
+        const pavements = ues.getPavement.call(this);
+        if(pavements) {
+            // eslint-disable-next-line
+            pavements.map(pavement=> {
+                if(pavement.projectid === projectid) {
+                    getpavements.push(pavement)
+                }
+            })
+        }
+
+
+        return getpavements;
+
+    }
+
+    getPavementKeyByID(sectionid) {
+        const ues = new UES();
+        let key = false;
+        const pavements = ues.getPavement.call(this)
+        if(pavements) {
+            // eslint-disable-next-line
+            pavements.map((pavement,i)=> {
+                if(pavement.sectionid === sectionid) {
+                    key = i;
+                }
+            })
+        }
+
+        return key;
+
+    }
+
+    getPavementByID(sectionid) {
+        const ues = new UES();
+        let getpavement = false;
+        const pavements = ues.getPavement.call(this)
+        if(pavements) {
+            // eslint-disable-next-line
+            pavements.map(pavement=> {
+                if(pavement.sectionid === sectionid) {
+                    getpavement = pavement;
+                }
+            })
+        }
+
+        return getpavement;
+
+    }
+
+    getPavement() {
+        let pavement = false;
+        if(this.props.pavement) {
+            if(this.props.pavement.hasOwnProperty("length")) {
+                pavement = this.props.pavement;
+            }
+        }
+
+        return pavement;
     }
 
     getReports() {
@@ -625,8 +826,16 @@ class UES {
         if(this.props.clients) {
             if(this.props.clients.hasOwnProperty("length")) {
                 clients = this.props.clients;
+                clients.sort((a, b) => {
+                    if (Number(a.lastname) >= Number(b.lastname)) {
+                        return 1;
+                    } else {
+                        return -1
+                    }
+                })
             }
         }
+        
 
         return clients;
     }

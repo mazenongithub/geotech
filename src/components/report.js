@@ -5,8 +5,9 @@ import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
 import { arrowUp, generateIcon, removeIcon, saveIcon, arrowDown } from './svg';
-import { formatDateReport, currentDate, newReport, newList, newSublist, newSection } from './functions'
+import { formatDateReport, currentDate, newReport, newList, newSublist, newSection, inputUTCStringForLaborID } from './functions'
 import MakeID from './makeids';
+import { SaveReport } from './actions/api';
 
 
 class Report extends Component {
@@ -273,7 +274,7 @@ class Report extends Component {
 
     handlelistid(listid) {
         if (this.state.activelistid) {
-            this.setState({ activelistid: false })
+            this.setState({ activelistid: false, activesublistid:false })
         } else {
             this.setState({ activelistid: listid })
         }
@@ -1549,6 +1550,30 @@ class Report extends Component {
         //window.open('/mazen/projects/_projectid/report')
     }
 
+    async saveReport() {
+        try {
+            const ues = new UES();
+            const projectid = this.props.projectid;
+            const reports = ues.getReportsByProjectID.call(this,projectid)
+            const response = await SaveReport({projectid, reports});
+            console.log(response)
+
+            let message = "";
+            if(response.hasOwnProperty("message")) {
+                message = response.message;
+            }
+
+            if (response.hasOwnProperty("lastupdated")) {
+                message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
+            }
+
+            this.setState({message})
+
+        } catch(err) {
+            alert(err)
+        }
+    }
+
 
 
 
@@ -1720,7 +1745,7 @@ class Report extends Component {
                     </div>
 
                     <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                        <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { console.log("save report") }}>{saveIcon()}</button>
+                        <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { this.saveReport() }}>{saveIcon()}</button>
                     </div>
 
                 </div>)

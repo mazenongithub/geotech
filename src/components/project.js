@@ -81,11 +81,12 @@ class Project extends Component {
 
                         <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                             <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${project.projectid}/engineering`}>
-                                    /Engineering Analysis </Link>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${project.projectid}/pavement`}>
+                                    /Pavement </Link>
                             </div>
                             <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                                &nbsp;
+                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${project.projectid}/borings`}>
+                                    /Borings</Link>
                             </div>
                         </div>
 
