@@ -20,8 +20,9 @@ import Proposals from './components/proposals'
 import Report from './components/report';
 import Pavement from './components/pavement'
 import Borings from './components/borings';
-import Samples from './components/samples'
-import Sieve from './components/sieve'
+import Samples from './components/samples';
+import Sieve from './components/sieve';
+import LogDraft from './components/logdraft';
 
 
 const ShowReport = () => {
@@ -47,6 +48,11 @@ const ShowPavement = () => {
 const ShowBorings = () => {
   const { projectid, userid } = useParams();
   return(<Borings userid={userid} projectid={projectid} />)
+}
+
+const ShowLogDraft = () => {
+  const { projectid, userid, boringid } = useParams();
+  return(<LogDraft userid={userid} projectid={projectid} boringid={boringid} />)
 }
 
 const ShowSamples = ()=> {
@@ -179,6 +185,7 @@ class App extends Component {
               <Route exact path="/:userid/projects/:projectid/borings" element={<ShowBorings />} />
               <Route exact path="/:userid/projects/:projectid/pavement" element={<ShowPavement />} />
               <Route exact path="/:userid/projects/:projectid/borings/:boringid/samples" element={<ShowSamples />} />
+              <Route exact path="/:userid/projects/:projectid/borings/:boringid/logdraft" element={<ShowLogDraft />} />
               <Route exact path="/:userid/projects/:projectid/borings/:boringid/samples/:sampleid/sieve" element={<ShowSieve />} />
             </Routes>
           </div>

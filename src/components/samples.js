@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
-import { removeIcon, saveIcon, calculateIcon } from './svg';
+import { removeIcon, saveIcon, calculateIcon, linkArrow } from './svg';
 import MakeID from './makeids';
 import { newSample } from './functions';
 import SoilClassification from './soilclassification';
@@ -1563,7 +1563,7 @@ class Samples extends Component {
             if (sample.ll && sample.pi && sample.hasOwnProperty("sieve")) {
 
                 return (<div style={{ ...styles.generalContainer }}>
-                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={()=>{this.calcUSCS()}}>{calculateIcon()}</button>
+                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { this.calcUSCS() }}>{calculateIcon()}</button>
                 </div>)
             }
 
@@ -1575,59 +1575,59 @@ class Samples extends Component {
     calcUSCS() {
         const ues = new UES();
         const boringid = this.props.boringid;
-        const boring = ues.getBoringbyID.call(this,boringid)
-        if(boring) {
-        const sampleid = this.state.activesampleid;
-        const sample = ues.getSampleByID.call(this, boringid, sampleid);
-        let uscs = ''
-        if (sample) {
-            const ll = Number(sample.ll);
-            const pi = Number(sample.pi);
-            if (!ll || !pi) {
-                alert(`No LL or PI found`)
-            } else {
-                
-                if (!sample.hasOwnProperty("sieve")) {
-    
-                    alert(`No Sieve Found`)
-    
+        const boring = ues.getBoringbyID.call(this, boringid)
+        if (boring) {
+            const sampleid = this.state.activesampleid;
+            const sample = ues.getSampleByID.call(this, boringid, sampleid);
+            let uscs = ''
+            if (sample) {
+                const ll = Number(sample.ll);
+                const pi = Number(sample.pi);
+                if (!ll || !pi) {
+                    alert(`No LL or PI found`)
                 } else {
-    
-                    const sieve = sample.sieve;
-                    const netwgt = Number(sample.drywgt) - Number(sample.tarewgt)
-                    const ll = Number(sample.ll);
-                    const pi = Number(sample.pi)
-                    const wgt34 = Number(sieve.wgt34)
-                    const wgt38 = Number(sieve.wgt38)
-                    const wgt4 = Number(sieve.wgt4)
-                    const wgt10 = Number(sieve.wgt10)
-                    const wgt30 = Number(sieve.wgt30)
-                    const wgt40 = Number(sieve.wgt40)
-                    const wgt100 = Number(sieve.wgt100)
-                    const wgt200 = Number(sieve.wgt200)
-    
-                    const getSoilClassification = new SoilClassification(netwgt, ll, pi, wgt34, wgt38, wgt4, wgt10, wgt30, wgt40, wgt100, wgt200)
-                    const classification = getSoilClassification.getClassification();
-                    uscs = classification.uscs;
-                    let description = sample.description;
-                    description += ` ${classification.description}`
-                    
-                    this.handleUSCS(uscs)
-                    this.handleDescription(description)
-    
-    
+
+                    if (!sample.hasOwnProperty("sieve")) {
+
+                        alert(`No Sieve Found`)
+
+                    } else {
+
+                        const sieve = sample.sieve;
+                        const netwgt = Number(sample.drywgt) - Number(sample.tarewgt)
+                        const ll = Number(sample.ll);
+                        const pi = Number(sample.pi)
+                        const wgt34 = Number(sieve.wgt34)
+                        const wgt38 = Number(sieve.wgt38)
+                        const wgt4 = Number(sieve.wgt4)
+                        const wgt10 = Number(sieve.wgt10)
+                        const wgt30 = Number(sieve.wgt30)
+                        const wgt40 = Number(sieve.wgt40)
+                        const wgt100 = Number(sieve.wgt100)
+                        const wgt200 = Number(sieve.wgt200)
+
+                        const getSoilClassification = new SoilClassification(netwgt, ll, pi, wgt34, wgt38, wgt4, wgt10, wgt30, wgt40, wgt100, wgt200)
+                        const classification = getSoilClassification.getClassification();
+                        uscs = classification.uscs;
+                        let description = sample.description;
+                        description += ` ${classification.description}`
+
+                        this.handleUSCS(uscs)
+                        this.handleDescription(description)
+
+
+                    }
+
+
+
                 }
-    
-    
-    
+
+            } else {
+                alert(`Sample Not Found`)
             }
-    
-        } else {
-            alert(`Sample Not Found`)
+
         }
-    
-    }
-    
+
     }
 
 
@@ -1645,6 +1645,7 @@ class Samples extends Component {
         const headerFont = ues.headerFont.call(this)
         const buttonWidth = ues.generateIcon.call(this)
         const graphiclog = new GraphicLog();
+        const arrowWidth = ues.arrowWidth.call(this)
         if (myuser) {
             const projectid = this.props.projectid;
             const project = ues.getProjectbyID.call(this, projectid);
@@ -1834,9 +1835,10 @@ class Samples extends Component {
                             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                                 <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { console.log("save borings") }}>{saveIcon()}</button>
                             </div>
-
-
                             {this.showsampleids()}
+                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${project.projectid}/borings/${boring.boringid}/logdraft`}><button style={{ ...styles.generalButton, ...arrowWidth }}>{linkArrow()}</button> View LogDraft </Link>
+                            </div>
                         </div>
 
 

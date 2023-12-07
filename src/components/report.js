@@ -1557,10 +1557,25 @@ class Report extends Component {
             const reports = ues.getReportsByProjectID.call(this,projectid)
             const response = await SaveReport({projectid, reports});
             console.log(response)
+            if(response.hasOwnProperty("reportsdb")) {
+                // eslint-disable-next-line
+                response.reportsdb.map(reportdb => {
+                    const reportiddb = reportdb.reportid;
+                    const checkreport = ues.getReportByID.call(this,reportiddb);
+                    if(checkreport) {
+                        const i = ues.getReportKeyByID.call(this,reportiddb);
+                        reports[i] = reportdb;
+                    }
+                    
+                })
+                this.props.reduxReports(reports)
+
+            }
 
             let message = "";
             if(response.hasOwnProperty("message")) {
-                message = response.message;
+                message+= response.message;
+                
             }
 
             if (response.hasOwnProperty("lastupdated")) {
