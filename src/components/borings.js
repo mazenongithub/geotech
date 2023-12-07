@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
-import { removeIcon, linkArrow, saveIcon } from './svg';
+import { removeIcon, linkArrow, saveIcon, calculateIcon } from './svg';
 import { currentDate, newBoring } from './functions';
 import MakeID from './makeids';
 
@@ -57,13 +57,13 @@ class Borings extends Component {
     removeBoring(boringid) {
         const ues = new UES();
         const borings = ues.getBorings.call(this)
-        if(borings) {
-            const boring = ues.getBoringbyID.call(this,boringid)
-            if(boring) {
-                const i = ues.getBoringKeybyID.call(this,boringid)
-                borings.splice(i,1)
+        if (borings) {
+            const boring = ues.getBoringbyID.call(this, boringid)
+            if (boring) {
+                const i = ues.getBoringKeybyID.call(this, boringid)
+                borings.splice(i, 1)
                 this.props.reduxBorings(borings)
-                this.setState({activeboringid:false})
+                this.setState({ activeboringid: false })
             }
         }
 
@@ -147,23 +147,23 @@ class Borings extends Component {
         } else {
             datedrilled = currentDate()
         }
-    
+
         return datedrilled;
-    
+
     }
 
     handleDateDrilled(value) {
         const ues = new UES();
         const makeid = new MakeID();
         let borings = ues.getBorings.call(this)
-        if(this.state.activeboringid) {
+        if (this.state.activeboringid) {
             const boringid = this.state.activeboringid;
-            const boring = ues.getBoringbyID.call(this,boringid)
-            if(boring) {
-                const i = ues.getBoringKeybyID.call(this,boringid)
+            const boring = ues.getBoringbyID.call(this, boringid)
+            if (boring) {
+                const i = ues.getBoringKeybyID.call(this, boringid)
                 borings[i].datedrilled = value;
                 this.props.reduxBorings(borings)
-                this.setState({render:'render'})
+                this.setState({ render: 'render' })
             }
 
         } else {
@@ -177,16 +177,16 @@ class Borings extends Component {
             const latitude = this.state.latitude;
             const longitude = this.state.longitude;
             const diameter = this.state.diameter;
-            const newboring = newBoring(newboringid,projectid,boringnumber,value,gwdepth,elevation,drillrig,loggedby,latitude,longitude,diameter)
-            
-            if(borings) {
+            const newboring = newBoring(newboringid, projectid, boringnumber, value, gwdepth, elevation, drillrig, loggedby, latitude, longitude, diameter)
+
+            if (borings) {
                 borings.push(newboring)
 
             } else {
                 borings = [newBoring]
 
             }
-            this.setState({activeboringid:newboringid})
+            this.setState({ activeboringid: newboringid })
         }
 
     }
@@ -200,26 +200,26 @@ class Borings extends Component {
             if (boring) {
                 boringnumber = boring.boringnumber;
             }
-        } 
-    
+        }
+
         return boringnumber;
-    
+
     }
-    
+
     handleBoringNumber(value) {
         const ues = new UES();
         const makeid = new MakeID();
         let borings = ues.getBorings.call(this)
-        if(this.state.activeboringid) {
+        if (this.state.activeboringid) {
             const boringid = this.state.activeboringid;
-            const boring = ues.getBoringbyID.call(this,boringid)
-            if(boring) {
-                const i = ues.getBoringKeybyID.call(this,boringid)
+            const boring = ues.getBoringbyID.call(this, boringid)
+            if (boring) {
+                const i = ues.getBoringKeybyID.call(this, boringid)
                 borings[i].boringnumber = value;
                 this.props.reduxBorings(borings)
-                this.setState({render:'render'})
+                this.setState({ render: 'render' })
             }
-    
+
         } else {
             const newboringid = makeid.boringID.call(this)
             const projectid = this.props.projectid;
@@ -231,16 +231,16 @@ class Borings extends Component {
             const latitude = this.state.latitude;
             const longitude = this.state.longitude;
             const diameter = this.state.diameter;
-            const newboring = newBoring(newboringid,projectid,value,datedrilled,gwdepth,elevation,drillrig,loggedby,latitude,longitude,diameter)
-            
-            if(borings) {
+            const newboring = newBoring(newboringid, projectid, value, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, longitude, diameter)
+
+            if (borings) {
                 borings.push(newboring)
-    
+
             } else {
                 borings = [newBoring]
-    
+
             }
-            this.setState({activeboringid:newboringid})
+            this.setState({ activeboringid: newboringid })
         }
 
     }
@@ -255,26 +255,26 @@ class Borings extends Component {
             if (boring) {
                 diameter = boring.diameter;
             }
-        } 
-    
+        }
+
         return diameter;
-    
+
     }
-    
+
     handleDiameter(value) {
         const ues = new UES();
         const makeid = new MakeID();
         let borings = ues.getBorings.call(this)
-        if(this.state.activeboringid) {
+        if (this.state.activeboringid) {
             const boringid = this.state.activeboringid;
-            const boring = ues.getBoringbyID.call(this,boringid)
-            if(boring) {
-                const i = ues.getBoringKeybyID.call(this,boringid)
+            const boring = ues.getBoringbyID.call(this, boringid)
+            if (boring) {
+                const i = ues.getBoringKeybyID.call(this, boringid)
                 borings[i].diameter = value;
                 this.props.reduxBorings(borings)
-                this.setState({render:'render'})
+                this.setState({ render: 'render' })
             }
-    
+
         } else {
             const newboringid = makeid.boringID.call(this)
             const projectid = this.props.projectid;
@@ -286,18 +286,18 @@ class Borings extends Component {
             const latitude = this.state.latitude;
             const longitude = this.state.longitude;
             const boringnumber = this.state.boringnumber;
-            const newboring = newBoring(newboringid,projectid,boringnumber,datedrilled,gwdepth,elevation,drillrig,loggedby,latitude,longitude,value)
-            
-            if(borings) {
+            const newboring = newBoring(newboringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, longitude, value)
+
+            if (borings) {
                 borings.push(newboring)
-    
+
             } else {
                 borings = [newBoring]
-    
+
             }
-            this.setState({activeboringid:newboringid})
+            this.setState({ activeboringid: newboringid })
         }
-    
+
     }
 
 
@@ -310,26 +310,26 @@ class Borings extends Component {
             if (boring) {
                 gwdepth = boring.gwdepth;
             }
-        } 
-    
+        }
+
         return gwdepth;
-    
+
     }
-    
+
     handleGWDepth(value) {
         const ues = new UES();
         const makeid = new MakeID();
         let borings = ues.getBorings.call(this)
-        if(this.state.activeboringid) {
+        if (this.state.activeboringid) {
             const boringid = this.state.activeboringid;
-            const boring = ues.getBoringbyID.call(this,boringid)
-            if(boring) {
-                const i = ues.getBoringKeybyID.call(this,boringid)
+            const boring = ues.getBoringbyID.call(this, boringid)
+            if (boring) {
+                const i = ues.getBoringKeybyID.call(this, boringid)
                 borings[i].gwdepth = value;
                 this.props.reduxBorings(borings)
-                this.setState({render:'render'})
+                this.setState({ render: 'render' })
             }
-    
+
         } else {
             const newboringid = makeid.boringID.call(this)
             const projectid = this.props.projectid;
@@ -341,18 +341,18 @@ class Borings extends Component {
             const latitude = this.state.latitude;
             const longitude = this.state.longitude;
             const boringnumber = this.state.boringnumber;
-            const newboring = newBoring(newboringid,projectid,boringnumber,datedrilled,value,elevation,drillrig,loggedby,latitude,longitude,diameter)
-            
-            if(borings) {
+            const newboring = newBoring(newboringid, projectid, boringnumber, datedrilled, value, elevation, drillrig, loggedby, latitude, longitude, diameter)
+
+            if (borings) {
                 borings.push(newboring)
-    
+
             } else {
                 borings = [newBoring]
-    
+
             }
-            this.setState({activeboringid:newboringid})
+            this.setState({ activeboringid: newboringid })
         }
-    
+
     }
 
     getElevation() {
@@ -364,26 +364,26 @@ class Borings extends Component {
             if (boring) {
                 elevation = boring.elevation;
             }
-        } 
-    
+        }
+
         return elevation;
-    
+
     }
-    
+
     handleElevation(value) {
         const ues = new UES();
         const makeid = new MakeID();
         let borings = ues.getBorings.call(this)
-        if(this.state.activeboringid) {
+        if (this.state.activeboringid) {
             const boringid = this.state.activeboringid;
-            const boring = ues.getBoringbyID.call(this,boringid)
-            if(boring) {
-                const i = ues.getBoringKeybyID.call(this,boringid)
+            const boring = ues.getBoringbyID.call(this, boringid)
+            if (boring) {
+                const i = ues.getBoringKeybyID.call(this, boringid)
                 borings[i].elevation = value;
                 this.props.reduxBorings(borings)
-                this.setState({render:'render'})
+                this.setState({ render: 'render' })
             }
-    
+
         } else {
             const newboringid = makeid.boringID.call(this)
             const projectid = this.props.projectid;
@@ -395,18 +395,18 @@ class Borings extends Component {
             const latitude = this.state.latitude;
             const longitude = this.state.longitude;
             const boringnumber = this.state.boringnumber;
-            const newboring = newBoring(newboringid,projectid,boringnumber,datedrilled,gwdepth,value,drillrig,loggedby,latitude,longitude,diameter)
-            
-            if(borings) {
+            const newboring = newBoring(newboringid, projectid, boringnumber, datedrilled, gwdepth, value, drillrig, loggedby, latitude, longitude, diameter)
+
+            if (borings) {
                 borings.push(newboring)
-    
+
             } else {
                 borings = [newBoring]
-    
+
             }
-            this.setState({activeboringid:newboringid})
+            this.setState({ activeboringid: newboringid })
         }
-    
+
     }
 
     getDrillRig() {
@@ -418,26 +418,26 @@ class Borings extends Component {
             if (boring) {
                 drillrig = boring.drillrig;
             }
-        } 
-    
+        }
+
         return drillrig;
-    
+
     }
-    
+
     handleDrillRig(value) {
         const ues = new UES();
         const makeid = new MakeID();
         let borings = ues.getBorings.call(this)
-        if(this.state.activeboringid) {
+        if (this.state.activeboringid) {
             const boringid = this.state.activeboringid;
-            const boring = ues.getBoringbyID.call(this,boringid)
-            if(boring) {
-                const i = ues.getBoringKeybyID.call(this,boringid)
+            const boring = ues.getBoringbyID.call(this, boringid)
+            if (boring) {
+                const i = ues.getBoringKeybyID.call(this, boringid)
                 borings[i].drillrig = value;
                 this.props.reduxBorings(borings)
-                this.setState({render:'render'})
+                this.setState({ render: 'render' })
             }
-    
+
         } else {
             const newboringid = makeid.boringID.call(this)
             const projectid = this.props.projectid;
@@ -449,18 +449,18 @@ class Borings extends Component {
             const latitude = this.state.latitude;
             const longitude = this.state.longitude;
             const boringnumber = this.state.boringnumber;
-            const newboring = newBoring(newboringid,projectid,boringnumber,datedrilled,gwdepth,elevation,value,loggedby,latitude,longitude,diameter)
-            
-            if(borings) {
+            const newboring = newBoring(newboringid, projectid, boringnumber, datedrilled, gwdepth, elevation, value, loggedby, latitude, longitude, diameter)
+
+            if (borings) {
                 borings.push(newboring)
-    
+
             } else {
                 borings = [newBoring]
-    
+
             }
-            this.setState({activeboringid:newboringid})
+            this.setState({ activeboringid: newboringid })
         }
-    
+
     }
 
     getLoggedBy() {
@@ -472,26 +472,26 @@ class Borings extends Component {
             if (boring) {
                 loggedby = boring.loggedby;
             }
-        } 
-    
+        }
+
         return loggedby;
-    
+
     }
-    
+
     handleLoggedBy(value) {
         const ues = new UES();
         const makeid = new MakeID();
         let borings = ues.getBorings.call(this)
-        if(this.state.activeboringid) {
+        if (this.state.activeboringid) {
             const boringid = this.state.activeboringid;
-            const boring = ues.getBoringbyID.call(this,boringid)
-            if(boring) {
-                const i = ues.getBoringKeybyID.call(this,boringid)
+            const boring = ues.getBoringbyID.call(this, boringid)
+            if (boring) {
+                const i = ues.getBoringKeybyID.call(this, boringid)
                 borings[i].loggedby = value;
                 this.props.reduxBorings(borings)
-                this.setState({render:'render'})
+                this.setState({ render: 'render' })
             }
-    
+
         } else {
             const newboringid = makeid.boringID.call(this)
             const projectid = this.props.projectid;
@@ -503,18 +503,18 @@ class Borings extends Component {
             const latitude = this.state.latitude;
             const longitude = this.state.longitude;
             const boringnumber = this.state.boringnumber;
-            const newboring = newBoring(newboringid,projectid,boringnumber,datedrilled,gwdepth,elevation,drillrig,value,latitude,longitude,diameter)
-            
-            if(borings) {
+            const newboring = newBoring(newboringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, value, latitude, longitude, diameter)
+
+            if (borings) {
                 borings.push(newboring)
-    
+
             } else {
                 borings = [newBoring]
-    
+
             }
-            this.setState({activeboringid:newboringid})
+            this.setState({ activeboringid: newboringid })
         }
-    
+
     }
 
     getLatitude() {
@@ -526,26 +526,26 @@ class Borings extends Component {
             if (boring) {
                 latitude = boring.latitude;
             }
-        } 
-    
+        }
+
         return latitude;
-    
+
     }
-    
+
     handleLatitude(value) {
         const ues = new UES();
         const makeid = new MakeID();
         let borings = ues.getBorings.call(this)
-        if(this.state.activeboringid) {
+        if (this.state.activeboringid) {
             const boringid = this.state.activeboringid;
-            const boring = ues.getBoringbyID.call(this,boringid)
-            if(boring) {
-                const i = ues.getBoringKeybyID.call(this,boringid)
+            const boring = ues.getBoringbyID.call(this, boringid)
+            if (boring) {
+                const i = ues.getBoringKeybyID.call(this, boringid)
                 borings[i].latitude = value;
                 this.props.reduxBorings(borings)
-                this.setState({render:'render'})
+                this.setState({ render: 'render' })
             }
-    
+
         } else {
             const newboringid = makeid.boringID.call(this)
             const projectid = this.props.projectid;
@@ -557,18 +557,18 @@ class Borings extends Component {
             const loggedby = this.state.loggedby;
             const longitude = this.state.longitude;
             const boringnumber = this.state.boringnumber;
-            const newboring = newBoring(newboringid,projectid,boringnumber,datedrilled,gwdepth,elevation,drillrig,loggedby,value,longitude,diameter)
-            
-            if(borings) {
+            const newboring = newBoring(newboringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, value, longitude, diameter)
+
+            if (borings) {
                 borings.push(newboring)
-    
+
             } else {
                 borings = [newBoring]
-    
+
             }
-            this.setState({activeboringid:newboringid})
+            this.setState({ activeboringid: newboringid })
         }
-    
+
     }
 
 
@@ -581,26 +581,26 @@ class Borings extends Component {
             if (boring) {
                 longitude = boring.longitude;
             }
-        } 
-    
+        }
+
         return longitude;
-    
+
     }
-    
+
     handleLongitude(value) {
         const ues = new UES();
         const makeid = new MakeID();
         let borings = ues.getBorings.call(this)
-        if(this.state.activeboringid) {
+        if (this.state.activeboringid) {
             const boringid = this.state.activeboringid;
-            const boring = ues.getBoringbyID.call(this,boringid)
-            if(boring) {
-                const i = ues.getBoringKeybyID.call(this,boringid)
+            const boring = ues.getBoringbyID.call(this, boringid)
+            if (boring) {
+                const i = ues.getBoringKeybyID.call(this, boringid)
                 borings[i].longitude = value;
                 this.props.reduxBorings(borings)
-                this.setState({render:'render'})
+                this.setState({ render: 'render' })
             }
-    
+
         } else {
             const newboringid = makeid.boringID.call(this)
             const projectid = this.props.projectid;
@@ -612,21 +612,48 @@ class Borings extends Component {
             const loggedby = this.state.loggedby;
             const latitude = this.state.latitude;
             const boringnumber = this.state.boringnumber;
-            const newboring = newBoring(newboringid,projectid,boringnumber,datedrilled,gwdepth,elevation,drillrig,loggedby,latitude,value,diameter)
-            
-            if(borings) {
+            const newboring = newBoring(newboringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, value, diameter)
+
+            if (borings) {
                 borings.push(newboring)
-    
+
             } else {
                 borings = [newBoring]
-    
+
             }
-            this.setState({activeboringid:newboringid})
+            this.setState({ activeboringid: newboringid })
         }
-    
+
     }
-    
- 
+
+    getPosition() {
+
+
+        const displayGeoData = (position) => {
+
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude
+
+            this.handleLatitude(latitude);
+            this.handleLongitude(longitude)
+
+        };
+
+        const displayError = (err) => {
+            alert(err.message);
+        };
+
+        if (navigator.geolocation) {
+            
+            navigator.geolocation.getCurrentPosition(displayGeoData, displayError);
+
+        
+        }
+
+
+    }
+
+
 
 
 
@@ -655,21 +682,21 @@ class Borings extends Component {
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
                             <input type="date" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                            value={this.getDateDrilled()}
-                            onChange={event=>{this.handleDateDrilled(event.target.value)}} />
+                                value={this.getDateDrilled()}
+                                onChange={event => { this.handleDateDrilled(event.target.value) }} />
                             <span style={{ ...styles.generalFont, ...regularFont }}>Date Drilled</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
                             <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                            value={this.getBoringNumber()}
-                            onChange={event=>{this.handleBoringNumber(event.target.value)}} />
+                                value={this.getBoringNumber()}
+                                onChange={event => { this.handleBoringNumber(event.target.value) }} />
                             <span style={{ ...styles.generalFont, ...regularFont }}
                             >Boring Number</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
-                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }} 
+                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
                                 value={this.getDiameter()}
-                                onChange={event=>{this.handleDiameter(event.target.value)}}
+                                onChange={event => { this.handleDiameter(event.target.value) }}
                             />
                             <span style={{ ...styles.generalFont, ...regularFont }}
                             >Boring Diameter</span>
@@ -679,46 +706,50 @@ class Borings extends Component {
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
                             <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                           value={this.getGWDepth()}
-                           onChange={event=>{this.handleGWDepth(event.target.value)}} />
+                                value={this.getGWDepth()}
+                                onChange={event => { this.handleGWDepth(event.target.value) }} />
                             <span style={{ ...styles.generalFont, ...regularFont }}>GW Depth</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
                             <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                            value={this.getElevation()}
-                            onChange={event=>{this.handleElevation(event.target.value)}} />
+                                value={this.getElevation()}
+                                onChange={event => { this.handleElevation(event.target.value) }} />
                             <span style={{ ...styles.generalFont, ...regularFont }}>Surface Elevation</span>
                         </div>
                     </div>
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
-                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }} 
+                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
                                 value={this.getDrillRig()}
-                                onChange={event=>{this.handleDrillRig(event.target.value)}}
+                                onChange={event => { this.handleDrillRig(event.target.value) }}
                             />
                             <span style={{ ...styles.generalFont, ...regularFont }}>Drill Rig</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
                             <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                            value={this.getLoggedBy()}
-                            onChange={event=>{this.handleLoggedBy(event.target.value)}} />
+                                value={this.getLoggedBy()}
+                                onChange={event => { this.handleLoggedBy(event.target.value) }} />
                             <span style={{ ...styles.generalFont, ...regularFont }}>Logged By</span>
                         </div>
+                    </div>
+
+                    <div style={{ ...styles.generalContainer }}>
+                        <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { this.getPosition() }}>{calculateIcon()}</button>
                     </div>
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
                             <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                            value={this.getLatitude()} 
-                            onChange={event=>{this.handleLatitude(event.target.value)}}
+                                value={this.getLatitude()}
+                                onChange={event => { this.handleLatitude(event.target.value) }}
                             />
                             <span style={{ ...styles.generalFont, ...regularFont }}>Latitude</span>
                         </div>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
                             <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                            value={this.getLongitude()}
-                            onChange={event=>{this.handleLongitude(event.target.value)}} />
+                                value={this.getLongitude()}
+                                onChange={event => { this.handleLongitude(event.target.value) }} />
                             <span style={{ ...styles.generalFont, ...regularFont }}>Longitude</span>
                         </div>
                     </div>
