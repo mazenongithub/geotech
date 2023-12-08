@@ -594,7 +594,7 @@ class Sieve extends Component {
                                 </div>
 
                                 <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { this.saveProjects() }}>{saveIcon()}</button>
+                                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { ues.saveBorings.call(this) }}>{saveIcon()}</button>
                                 </div>
 
                             </div>

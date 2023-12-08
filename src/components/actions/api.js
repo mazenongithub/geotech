@@ -54,6 +54,36 @@ export function SaveReport(values) {
 
 }
 
+export function SaveBorings(values) {
+
+    const APIURL = `https://civilengineer.io/UES/api/handleborings.php`
+  
+    return fetch(APIURL, {
+        method: 'post',
+        credentials: 'include',
+        headers: new Headers({
+            'Content-Type': 'application/json',
+        }),
+
+        body: JSON.stringify(values)
+    })
+        .then(resp => {
+
+            if (!resp.ok) {
+                if (resp.status >= 400 && resp.status < 500) {
+                    return resp.json().then(data => {
+
+                        throw data.message;
+                    })
+                }
+
+            }
+
+            return resp.json();
+        })
+
+}
+
 export async function LoadPavement(projectid) {
 
     let APIURL = `https://civilengineer.io/UES/api/loadpavement.php`

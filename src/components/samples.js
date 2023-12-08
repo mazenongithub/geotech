@@ -1833,7 +1833,7 @@ class Samples extends Component {
                             </div>
 
                             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                                <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { console.log("save borings") }}>{saveIcon()}</button>
+                                <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { ues.saveBorings.call(this) }}>{saveIcon()}</button>
                             </div>
                             {this.showsampleids()}
                             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
