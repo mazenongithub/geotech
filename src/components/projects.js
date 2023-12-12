@@ -41,7 +41,7 @@ class Projects extends Component {
 
     }
 
- 
+
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -53,26 +53,26 @@ class Projects extends Component {
     async saveProjects() {
         const ues = new UES();
         const projects = ues.getProjects.call(this)
-        if(projects) {
+        if (projects) {
             try {
 
-                let response = await SaveProjects({projects})
+                let response = await SaveProjects({ projects })
                 console.log(response)
                 if (response.hasOwnProperty("projects")) {
                     this.props.reduxProjects(response.projects)
                 }
                 let message = "";
-                if(response.hasOwnProperty("message")) {
+                if (response.hasOwnProperty("message")) {
                     message = response.message;
                 }
-    
+
                 if (response.hasOwnProperty("lastupdated")) {
                     message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
                 }
-    
-                this.setState({message})
 
-            } catch(err) {
+                this.setState({ message })
+
+            } catch (err) {
                 alert(err)
             }
         }
@@ -491,7 +491,7 @@ class Projects extends Component {
             const projectstate = this.state.projectstate;
             const description = this.state.description;
             const newproject = newProject(projectid, projectnumber, title, address, city, projectstate, description, value)
-           
+
             if (projects) {
 
                 projects.push(newproject)
@@ -539,14 +539,14 @@ class Projects extends Component {
         }
 
         const showClient = (clientid) => {
-            if(clientid) {
-                const client = ues.getClient.call(this,clientid)
-                if(client) {
-                    return(
-                    <div style={{...styles.generalContainer, ...styles.generalFont}}>
-                        <span style={{...regularFont}}>{client.firstname} {client.lastname} {client.title} {client.company}</span>
+            if (clientid) {
+                const client = ues.getClient.call(this, clientid)
+                if (client) {
+                    return (
+                        <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
+                            <span style={{ ...regularFont }}>{client.firstname} {client.lastname} {client.title} {client.company}</span>
 
-                    </div>
+                        </div>
                     )
                 }
             }
@@ -578,8 +578,8 @@ class Projects extends Component {
                     </div>
                 </div>
 
-                <div style={{...styles.generalContainer}}>
-                    <Link style={{...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor}} to={`/${myuser.userid}/projects/${project.projectid}`}><button style={{...styles.generalButton, ...arrowWidth}}>{linkArrow()}</button> Go To Project </Link>   
+                <div style={{ ...styles.generalContainer }}>
+                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${project.projectid}`}><button style={{ ...styles.generalButton, ...arrowWidth }}>{linkArrow()}</button> Go To Project </Link>
                 </div>
 
             </div>
@@ -648,20 +648,22 @@ class Projects extends Component {
                         <span style={{ ...regularFont }}>Project Number</span>
 
                     </div>
-                    <div style={{ ...styles.flex1 }}>
-
-                        <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
-                            <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
-                                value={this.getTitle()}
-                                onChange={event => { this.handleTitle(event.target.value) }}
-
-                            />
-                        </div>
-                        <span style={{ ...regularFont }}>Title</span>
-
-                    </div>
 
                 </div>
+
+                <div style={{ ...styles.flex1 }}>
+
+                    <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
+                        <input type="text" style={{ ...regularFont, ...styles.generalContainer, ...styles.generalField }}
+                            value={this.getTitle()}
+                            onChange={event => { this.handleTitle(event.target.value) }}
+
+                        />
+                    </div>
+                    <span style={{ ...regularFont }}>Title</span>
+
+                </div>
+
 
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
 
@@ -723,12 +725,12 @@ class Projects extends Component {
                     </select>
                 </div>
 
-                <div style={{...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15}}>
-                    <span style={{...styles.generalFont, ...regularFont}}>{this.state.message}</span>
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
                 </div>
 
-                <div style={{...styles.generalContainer, ...styles.alignCenter}}>
-                    <button style={{...styles.generalButton, ...buttonWidth}} onClick={()=>{this.saveProjects()}}>{saveIcon()}</button>
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { this.saveProjects() }}>{saveIcon()}</button>
                 </div>
 
                 {this.showProjects()}

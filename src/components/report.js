@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
-import { arrowUp, generateIcon, removeIcon, saveIcon, arrowDown } from './svg';
+import { arrowUp, generateIcon, removeIcon, saveIcon, arrowDown, linkArrow } from './svg';
 import { formatDateReport, currentDate, newReport, newList, newSublist, newSection, inputUTCStringForLaborID } from './functions'
 import MakeID from './makeids';
 import { SaveReport } from './actions/api';
@@ -152,22 +152,33 @@ class Report extends Component {
         const regularFont = ues.regularFont.call(this)
         const styles = MyStylesheet();
         const iconWidth = ues.removeIcon.call(this)
-
+        const projectid = this.props.projectid;
+        const headerFont = ues.headerFont.call(this)
+        const myuser = ues.checkUser.call(this)
+        const arrowWidth = ues.arrowWidth.call(this)
         const highlight = (reportid) => {
             if (this.state.activereportid === reportid) {
                 return (styles.activeid)
             }
         }
 
-        return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={report.reportid}>
-            <div style={{ ...styles.flex5, ...styles.generalFont, ...highlight(report.reportid) }}>
-                <span style={{ ...regularFont }} onClick={() => { this.handleReportID(report.reportid) }}>{formatDateReport(report.datereport)}</span>
-            </div>
-            <div style={{ ...styles.flex1 }}>
-                <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeReport(report.reportid) }}>{removeIcon()}</button>
-            </div>
+        return (
+            <div style={{ ...styles.generalContainer }}>
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={report.reportid}>
+                    <div style={{ ...styles.flex5, ...styles.generalFont, ...highlight(report.reportid) }}>
+                        <span style={{ ...regularFont }} onClick={() => { this.handleReportID(report.reportid) }}>{formatDateReport(report.datereport)}</span>
+                    </div>
+                    <div style={{ ...styles.flex1 }}>
+                        <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeReport(report.reportid) }}>{removeIcon()}</button>
+                    </div>
 
-        </div>)
+                </div>
+
+                <div style={{...styles.generalContainer}}>
+                    <Link style={{...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor}} to={`/${myuser.userid}/projects/${projectid}/report/${report.reportid}`}><button style={{...styles.generalButton, ...arrowWidth}}>{linkArrow()}</button> View Report </Link>   
+                </div>
+
+            </div>)
     }
 
     getDateReport() {
@@ -274,7 +285,7 @@ class Report extends Component {
 
     handlelistid(listid) {
         if (this.state.activelistid) {
-            this.setState({ activelistid: false, activesublistid:false })
+            this.setState({ activelistid: false, activesublistid: false })
         } else {
             this.setState({ activelistid: listid })
         }
@@ -360,18 +371,18 @@ class Report extends Component {
         const ues = new UES();
         const report = this.getReport();
         const reports = ues.getReports.call(this)
-        if(report) {
+        if (report) {
             const reportid = this.state.activereportid;
-            const i = ues.getReportKeyByID.call(this,reportid)
-            const list = ues.getListbyID.call(this,reportid,listid)
-            if(list) {
-                const j = ues.getListKeybyID.call(this,reportid,listid)
-                if(report.list.length>1 && j > 0) {
-                    const list_1 = reports[i].list[j-1]
+            const i = ues.getReportKeyByID.call(this, reportid)
+            const list = ues.getListbyID.call(this, reportid, listid)
+            if (list) {
+                const j = ues.getListKeybyID.call(this, reportid, listid)
+                if (report.list.length > 1 && j > 0) {
+                    const list_1 = reports[i].list[j - 1]
                     reports[i].list[j] = list_1;
-                    reports[i].list[j-1] = list;
+                    reports[i].list[j - 1] = list;
                     this.props.reduxReports(reports);
-                    this.setState({render:'render'})
+                    this.setState({ render: 'render' })
                 }
             }
         }
@@ -381,19 +392,19 @@ class Report extends Component {
         const ues = new UES();
         const report = this.getReport();
         const reports = ues.getReports.call(this)
-        if(report) {
+        if (report) {
             const reportid = this.state.activereportid;
-            const i = ues.getReportKeyByID.call(this,reportid)
-            const list = ues.getListbyID.call(this,reportid,listid)
-            if(list) {
-                const j = ues.getListKeybyID.call(this,reportid,listid)
+            const i = ues.getReportKeyByID.call(this, reportid)
+            const list = ues.getListbyID.call(this, reportid, listid)
+            if (list) {
+                const j = ues.getListKeybyID.call(this, reportid, listid)
                 const listcount = report.list.length;
                 if (listcount > 1 && j < listcount - 1) {
-                    const list_1 =  reports[i].list[j + 1]
+                    const list_1 = reports[i].list[j + 1]
                     reports[i].list[j] = list_1;
-                    reports[i].list[j+1] = list;
+                    reports[i].list[j + 1] = list;
                     this.props.reduxReports(reports);
-                    this.setState({render:'render'})
+                    this.setState({ render: 'render' })
                 }
             }
         }
@@ -416,8 +427,8 @@ class Report extends Component {
                 <div style={{ ...styles.flex3 }}><span style={{ ...styles.generalFont, ...regularFont, ...highlight(list.listid) }} onClick={() => { this.handlelistid(list.listid) }}>{list.content}</span></div>
 
                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.movelistup(list.listid)}}>{arrowUp()}</button>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.movelistdown(list.listid)}}>{arrowDown()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.movelistup(list.listid) }}>{arrowUp()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.movelistdown(list.listid) }}>{arrowDown()}</button>
                 </div>
                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
                     <button style={{ ...styles.generalButton, ...iconWidth, ...styles.leftMargin40 }} onClick={() => { this.removeList(list.listid) }}>{removeIcon()}</button>
@@ -467,23 +478,23 @@ class Report extends Component {
         const ues = new UES();
         const reports = ues.getReports.call(this)
         const report = this.getReport();
-        if(report) {
+        if (report) {
             const reportid = this.state.activereportid;
-            const i = ues.getReportKeyByID.call(this,reportid)
-            const listid = ues.getListIDfromSublistID.call(this,reportid,sublistid)
-            const list = ues.getListbyID.call(this,reportid,listid);
-            if(list) {
-                const j = ues.getListKeybyID.call(this,reportid,listid)
-                const sublist = ues.getSublistbyID.call(this,reportid,listid,sublistid)
-                if(sublist) {
-                    const k = ues.getSublistKeybyID.call(this,reportid,listid,sublistid)
+            const i = ues.getReportKeyByID.call(this, reportid)
+            const listid = ues.getListIDfromSublistID.call(this, reportid, sublistid)
+            const list = ues.getListbyID.call(this, reportid, listid);
+            if (list) {
+                const j = ues.getListKeybyID.call(this, reportid, listid)
+                const sublist = ues.getSublistbyID.call(this, reportid, listid, sublistid)
+                if (sublist) {
+                    const k = ues.getSublistKeybyID.call(this, reportid, listid, sublistid)
                     const listcount = reports[i].list[j].sublist.length;
                     if (listcount > 1 && k > 0) {
                         const sublist_1 = reports[i].list[j].sublist[k - 1];
                         reports[i].list[j].sublist[k] = sublist_1;
-                        reports[i].list[j].sublist[k-1] = sublist;
+                        reports[i].list[j].sublist[k - 1] = sublist;
                         this.props.reduxReports(reports);
-                        this.setState({render:'render'})
+                        this.setState({ render: 'render' })
 
                     }
 
@@ -498,23 +509,23 @@ class Report extends Component {
         const ues = new UES();
         const reports = ues.getReports.call(this)
         const report = this.getReport();
-        if(report) {
+        if (report) {
             const reportid = this.state.activereportid;
-            const i = ues.getReportKeyByID.call(this,reportid)
-            const listid = ues.getListIDfromSublistID.call(this,reportid,sublistid)
-            const list = ues.getListbyID.call(this,reportid,listid);
-            if(list) {
-                const j = ues.getListKeybyID.call(this,reportid,listid)
-                const sublist = ues.getSublistbyID.call(this,reportid,listid,sublistid)
-                if(sublist) {
-                    const k = ues.getSublistKeybyID.call(this,reportid,listid,sublistid)
+            const i = ues.getReportKeyByID.call(this, reportid)
+            const listid = ues.getListIDfromSublistID.call(this, reportid, sublistid)
+            const list = ues.getListbyID.call(this, reportid, listid);
+            if (list) {
+                const j = ues.getListKeybyID.call(this, reportid, listid)
+                const sublist = ues.getSublistbyID.call(this, reportid, listid, sublistid)
+                if (sublist) {
+                    const k = ues.getSublistKeybyID.call(this, reportid, listid, sublistid)
                     const listcount = reports[i].list[j].sublist.length;
                     if (listcount > 1 && k < listcount - 1) {
                         const sublist_1 = reports[i].list[j].sublist[k + 1];
                         reports[i].list[j].sublist[k] = sublist_1;
-                        reports[i].list[j].sublist[k+1] = sublist;
+                        reports[i].list[j].sublist[k + 1] = sublist;
                         this.props.reduxReports(reports);
-                        this.setState({render:'render'})
+                        this.setState({ render: 'render' })
 
                     }
 
@@ -541,8 +552,8 @@ class Report extends Component {
                     <span style={{ ...styles.generalFont, ...regularFont, ...highlight(sublist.sublistid) }} onClick={() => { this.handlesublistid(sublist.sublistid) }}>{sublist.content}</span>
                 </div>
                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.movesublistup(sublist.sublistid)}}>{arrowUp()}</button>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.movesublistdown(sublist.sublistid)}}>{arrowDown()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.movesublistup(sublist.sublistid) }}>{arrowUp()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.movesublistdown(sublist.sublistid) }}>{arrowDown()}</button>
                 </div>
                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
                     <button style={{ ...styles.generalButton, ...iconWidth, ...styles.leftMargin40 }} onClick={() => { this.removeSubbList(sublist.sublistid) }}>{removeIcon()}</button>
@@ -761,21 +772,21 @@ class Report extends Component {
 
         const ues = new UES();
         const reports = ues.getReports.call(this)
-        if(reports) {
+        if (reports) {
             const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this,reportid)
-            if(report) {
-                const i = ues.getReportKeyByID.call(this,reportid);
-                const section =ues.getGeneralSectionbyID.call(this,reportid,sectionid)
-                if(section) {
-                    const j = ues.getGeneralSectionKeybyID.call(this,reportid,sectionid)
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid);
+                const section = ues.getGeneralSectionbyID.call(this, reportid, sectionid)
+                if (section) {
+                    const j = ues.getGeneralSectionKeybyID.call(this, reportid, sectionid)
                     const sectioncount = reports[i].general.length;
                     if (sectioncount > 1 && j < sectioncount - 1) {
-                        const section_1 = reports[i].general[j+1];
+                        const section_1 = reports[i].general[j + 1];
                         reports[i].general[j] = section_1;
-                        reports[i].general[j+1] = section;
+                        reports[i].general[j + 1] = section;
                         this.props.reduxReports(reports);
-                        this.setState({render:'render'})
+                        this.setState({ render: 'render' })
 
                     }
                 }
@@ -789,21 +800,21 @@ class Report extends Component {
     moveGeneralSectionUp(sectionid) {
         const ues = new UES();
         const reports = ues.getReports.call(this)
-        if(reports) {
+        if (reports) {
             const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this,reportid)
-            if(report) {
-                const i = ues.getReportKeyByID.call(this,reportid);
-                const section =ues.getGeneralSectionbyID.call(this,reportid,sectionid)
-                if(section) {
-                    const j = ues.getGeneralSectionKeybyID.call(this,reportid,sectionid)
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid);
+                const section = ues.getGeneralSectionbyID.call(this, reportid, sectionid)
+                if (section) {
+                    const j = ues.getGeneralSectionKeybyID.call(this, reportid, sectionid)
                     const sectioncount = reports[i].general.length;
                     if (sectioncount > 1 && j > 0) {
-                        const section_1 = reports[i].general[j-1];
+                        const section_1 = reports[i].general[j - 1];
                         reports[i].general[j] = section_1;
-                        reports[i].general[j-1] = section;
+                        reports[i].general[j - 1] = section;
                         this.props.reduxReports(reports);
-                        this.setState({render:'render'})
+                        this.setState({ render: 'render' })
 
                     }
                 }
@@ -833,8 +844,8 @@ class Report extends Component {
                     <span style={{ ...regularFont }}>{section.sectionname}</span>
                 </div>
                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.moveGeneralSectionUp(section.sectionid)}}>{arrowUp()}</button>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.moveGeneralSectionDown(section.sectionid)}}>{arrowDown()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveGeneralSectionUp(section.sectionid) }}>{arrowUp()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveGeneralSectionDown(section.sectionid) }}>{arrowDown()}</button>
                 </div>
                 <div style={{ ...styles.flex1 }}>
                     <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeGeneralSection(section.sectionid) }}>{removeIcon()}</button>
@@ -923,7 +934,7 @@ class Report extends Component {
                 if (report.hasOwnProperty("general")) {
                     // eslint-disable-next-line 
                     report.general.map(section => {
-                 
+
                         if (section.sectionid === sectionid) {
                             content = section.content;
 
@@ -1169,59 +1180,59 @@ class Report extends Component {
 
         const ues = new UES();
         const reports = ues.getReports.call(this)
-        if(reports) {
+        if (reports) {
             const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this,reportid)
-            if(report) {
-                const i = ues.getReportKeyByID.call(this,reportid);
-                const section =ues.getConclusionSectionbyID.call(this,reportid,sectionid)
-                if(section) {
-                    const j = ues.getConclusionSectionKeybyID.call(this,reportid,sectionid)
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid);
+                const section = ues.getConclusionSectionbyID.call(this, reportid, sectionid)
+                if (section) {
+                    const j = ues.getConclusionSectionKeybyID.call(this, reportid, sectionid)
                     const sectioncount = reports[i].conclusion.length;
                     if (sectioncount > 1 && j < sectioncount - 1) {
-                        const section_1 = reports[i].conclusion[j+1];
+                        const section_1 = reports[i].conclusion[j + 1];
                         reports[i].conclusion[j] = section_1;
-                        reports[i].conclusion[j+1] = section;
+                        reports[i].conclusion[j + 1] = section;
                         this.props.reduxReports(reports);
-                        this.setState({render:'render'})
-    
+                        this.setState({ render: 'render' })
+
                     }
                 }
             }
-    
-    
+
+
         }
-    
+
     }
-    
+
     moveConclusionSectionUp(sectionid) {
         const ues = new UES();
         const reports = ues.getReports.call(this)
-        if(reports) {
+        if (reports) {
             const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this,reportid)
-            if(report) {
-                const i = ues.getReportKeyByID.call(this,reportid);
-                const section =ues.getConclusionSectionbyID.call(this,reportid,sectionid)
-                if(section) {
-                    const j = ues.getConclusionSectionKeybyID.call(this,reportid,sectionid)
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid);
+                const section = ues.getConclusionSectionbyID.call(this, reportid, sectionid)
+                if (section) {
+                    const j = ues.getConclusionSectionKeybyID.call(this, reportid, sectionid)
                     const sectioncount = reports[i].conclusion.length;
                     if (sectioncount > 1 && j > 0) {
-                        const section_1 = reports[i].conclusion[j-1];
+                        const section_1 = reports[i].conclusion[j - 1];
                         reports[i].conclusion[j] = section_1;
-                        reports[i].conclusion[j-1] = section;
+                        reports[i].conclusion[j - 1] = section;
                         this.props.reduxReports(reports);
-                        this.setState({render:'render'})
-    
+                        this.setState({ render: 'render' })
+
                     }
                 }
             }
-    
-    
+
+
         }
-    
+
     }
-    
+
 
 
     showConclusionID(section) {
@@ -1243,8 +1254,8 @@ class Report extends Component {
                     <span style={{ ...regularFont }}>{section.sectionname}</span>
                 </div>
                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.moveConclusionSectionUp(section.sectionid)}}>{arrowUp()}</button>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.moveConclusionSectionDown(section.sectionid)}}>{arrowDown()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveConclusionSectionUp(section.sectionid) }}>{arrowUp()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveConclusionSectionDown(section.sectionid) }}>{arrowDown()}</button>
                 </div>
                 <div style={{ ...styles.flex1 }}>
                     <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeConclusionSection(section.sectionid) }}>{removeIcon()}</button>
@@ -1312,57 +1323,57 @@ class Report extends Component {
 
         const ues = new UES();
         const reports = ues.getReports.call(this)
-        if(reports) {
+        if (reports) {
             const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this,reportid)
-            if(report) {
-                const i = ues.getReportKeyByID.call(this,reportid);
-                const section =ues.getRecommendationSectionbyID.call(this,reportid,sectionid)
-                if(section) {
-                    const j = ues.getRecommendationSectionKeybyID.call(this,reportid,sectionid)
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid);
+                const section = ues.getRecommendationSectionbyID.call(this, reportid, sectionid)
+                if (section) {
+                    const j = ues.getRecommendationSectionKeybyID.call(this, reportid, sectionid)
                     const sectioncount = reports[i].recommendation.length;
                     if (sectioncount > 1 && j < sectioncount - 1) {
-                        const section_1 = reports[i].recommendation[j+1];
+                        const section_1 = reports[i].recommendation[j + 1];
                         reports[i].recommendation[j] = section_1;
-                        reports[i].recommendation[j+1] = section;
+                        reports[i].recommendation[j + 1] = section;
                         this.props.reduxReports(reports);
-                        this.setState({render:'render'})
-    
+                        this.setState({ render: 'render' })
+
                     }
                 }
             }
-    
-    
+
+
         }
-    
+
     }
-    
+
     moveRecommendationSectionUp(sectionid) {
         const ues = new UES();
         const reports = ues.getReports.call(this)
-        if(reports) {
+        if (reports) {
             const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this,reportid)
-            if(report) {
-                const i = ues.getReportKeyByID.call(this,reportid);
-                const section =ues.getRecommendationSectionbyID.call(this,reportid,sectionid)
-                if(section) {
-                    const j = ues.getRecommendationSectionKeybyID.call(this,reportid,sectionid)
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid);
+                const section = ues.getRecommendationSectionbyID.call(this, reportid, sectionid)
+                if (section) {
+                    const j = ues.getRecommendationSectionKeybyID.call(this, reportid, sectionid)
                     const sectioncount = reports[i].recommendation.length;
                     if (sectioncount > 1 && j > 0) {
-                        const section_1 = reports[i].recommendation[j-1];
+                        const section_1 = reports[i].recommendation[j - 1];
                         reports[i].recommendation[j] = section_1;
-                        reports[i].recommendation[j-1] = section;
+                        reports[i].recommendation[j - 1] = section;
                         this.props.reduxReports(reports);
-                        this.setState({render:'render'})
-    
+                        this.setState({ render: 'render' })
+
                     }
                 }
             }
-    
-    
+
+
         }
-    
+
     }
 
 
@@ -1386,8 +1397,8 @@ class Report extends Component {
                 </div>
 
                 <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.moveRecommendationSectionUp(section.sectionid)}}>{arrowUp()}</button>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={()=>{this.moveRecommendationSectionDown(section.sectionid)}}>{arrowDown()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveRecommendationSectionUp(section.sectionid) }}>{arrowUp()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveRecommendationSectionDown(section.sectionid) }}>{arrowDown()}</button>
                 </div>
 
                 <div style={{ ...styles.flex1 }}>
@@ -1533,19 +1544,19 @@ class Report extends Component {
     }
 
     handleGeneralMenu(value) {
-     
+
         this.handleGeneralSection(value)
         //window.open('/mazen/projects/_projectid/report')
     }
 
     handleConclusionMenu(value) {
-     
+
         this.handleConclusionSection(value)
         //window.open('/mazen/projects/_projectid/report')
     }
 
     handleRecommendationMenu(value) {
-     
+
         this.handleRecommendationSection(value)
         //window.open('/mazen/projects/_projectid/report')
     }
@@ -1554,37 +1565,37 @@ class Report extends Component {
         try {
             const ues = new UES();
             const projectid = this.props.projectid;
-            const reports = ues.getReportsByProjectID.call(this,projectid)
-            const response = await SaveReport({projectid, reports});
+            const reports = ues.getReportsByProjectID.call(this, projectid)
+            const response = await SaveReport({ projectid, reports });
             console.log(response)
-            if(response.hasOwnProperty("reportsdb")) {
+            if (response.hasOwnProperty("reportsdb")) {
                 // eslint-disable-next-line
                 response.reportsdb.map(reportdb => {
                     const reportiddb = reportdb.reportid;
-                    const checkreport = ues.getReportByID.call(this,reportiddb);
-                    if(checkreport) {
-                        const i = ues.getReportKeyByID.call(this,reportiddb);
+                    const checkreport = ues.getReportByID.call(this, reportiddb);
+                    if (checkreport) {
+                        const i = ues.getReportKeyByID.call(this, reportiddb);
                         reports[i] = reportdb;
                     }
-                    
+
                 })
                 this.props.reduxReports(reports)
 
             }
 
             let message = "";
-            if(response.hasOwnProperty("message")) {
-                message+= response.message;
-                
+            if (response.hasOwnProperty("message")) {
+                message += response.message;
+
             }
 
             if (response.hasOwnProperty("lastupdated")) {
-                message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
+                message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
             }
 
-            this.setState({message})
+            this.setState({ message })
 
-        } catch(err) {
+        } catch (err) {
             alert(err)
         }
     }
@@ -1654,8 +1665,10 @@ class Report extends Component {
                                 value={this.getList()}
                                 onChange={event => { this.handleList(event.target.value) }}
                             />
-                            <span style={{ ...styles.generalFont, ...regularFont }}
-                            >List</span>
+                            <div style={{ ...styles.generalContainer }}>
+                                <span style={{ ...styles.generalFont, ...regularFont }}
+                                >List</span>
+                            </div>
                         </div>
 
                         <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.marginLeft15 }}>
@@ -1672,7 +1685,7 @@ class Report extends Component {
                             <span style={{ ...styles.generalFont, ...headerFont }}><u>General</u></span>
                         </div>
                         <div style={{ ...styles.flex4, ...styles.addMargin }}>
-                            <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }} onChange={event=>{this.handleGeneralMenu(event.target.value)}}>
+                            <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }} onChange={event => { this.handleGeneralMenu(event.target.value) }}>
                                 <option value="">Select Section</option>
                                 {this.loadGeneralSections()}
 
@@ -1703,7 +1716,7 @@ class Report extends Component {
                         </div>
                         <div style={{ ...styles.flex4, ...styles.addMargin }}>
                             <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }}
-                            onChange={event=>{this.handleConclusionMenu(event.target.value)}}>
+                                onChange={event => { this.handleConclusionMenu(event.target.value) }}>
                                 <option value="">Select Section</option>
                                 {this.loadConclusionSections()}
                             </select>
@@ -1731,7 +1744,7 @@ class Report extends Component {
                         </div>
                         <div style={{ ...styles.flex4, ...styles.addMargin }}>
                             <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }}
-                            onChange={(event)=>{this.handleRecommendationMenu(event.target.value)}}>
+                                onChange={(event) => { this.handleRecommendationMenu(event.target.value) }}>
                                 <option value="">Select Section</option>
                                 {this.loadRecommendationSections()}
                             </select>
@@ -1785,7 +1798,8 @@ function mapStateToProps(state) {
         myuser: state.myuser,
         clients: state.clients,
         projects: state.projects,
-        reports: state.reports
+        reports: state.reports,
+        pavement:state.pavement
     }
 }
 

@@ -2,6 +2,37 @@ import UES from "./ues";
 import { makeID } from "./functions";
 class MakeID {
 
+    pavementSectionID() {
+        let pavementid = false;
+        const ues = new UES();
+        const pavements = ues.getPavement.call(this);
+        if (pavements) {
+           
+            while (!pavementid) {
+                pavementid = makeID(16)
+                 // eslint-disable-next-line
+                pavements.map(pavement => {
+                    if (pavement.hasOwnProperty("design")) {
+
+                        // eslint-disable-next-line
+                        pavement.design.map(section => {
+                            if (section.pavementid === pavementid) {
+                                pavementid = false;
+                            }
+                        })
+                    }
+                })
+
+
+            }
+
+
+        } else {
+            pavementid = makeID(16)
+        }
+        return pavementid;
+    }
+
     sampleID() {
         const ues = new UES();
         const borings = ues.getBorings.call(this)
@@ -11,29 +42,29 @@ class MakeID {
                 sampleid = makeID(8)
                 // eslint-disable-next-line
                 borings.map(boring => {
-                    if(boring.hasOwnProperty("samples")) {
-                         // eslint-disable-next-line
-                        boring.samples.map(sample=> {
-    
-                      
-                    if(sample.sampleid === sampleid) {
-                        sampleid = false;
+                    if (boring.hasOwnProperty("samples")) {
+                        // eslint-disable-next-line
+                        boring.samples.map(sample => {
+
+
+                            if (sample.sampleid === sampleid) {
+                                sampleid = false;
+                            }
+
+                        })
+
                     }
-    
+
                 })
-    
-                }
-    
-                })
-    
+
             }
-    
+
         } else {
             sampleid = makeID(8)
         }
-    
+
         return sampleid;
-    
+
     }
 
     boringID() {
@@ -45,7 +76,7 @@ class MakeID {
                 boringid = makeID(8)
                 // eslint-disable-next-line
                 borings.map(boring => {
-                    if(boring.boringid === boringid) {
+                    if (boring.boringid === boringid) {
                         boringid = false;
                     }
 

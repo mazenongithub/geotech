@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
-import { removeIcon, saveIcon } from './svg';
+import { checkBox, emptyBox, removeIcon, saveIcon } from './svg';
 import { newClient, inputUTCStringForLaborID } from './functions';
 import MakeID from './makeids';
 import { SaveClients } from './actions/api';
@@ -16,7 +16,7 @@ class Clients extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activeclientid: false, firstname: '', lastname: '', title: '', company: '', city: '', address: '', contactstate: '', zipcode: ''
+            render: '', width: 0, height: 0, message: '', activeclientid: false, firstname: '', lastname: '', title: '', company: '', city: '', address: '', contactstate: '', zipcode: '', prefix:''
 
         }
 
@@ -35,7 +35,7 @@ class Clients extends Component {
 
     }
 
-  
+
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
@@ -47,29 +47,29 @@ class Clients extends Component {
     async saveClients() {
         const ues = new UES();
         const clients = ues.getClients.call(this);
-        if(clients) {
+        if (clients) {
             try {
-                const response = await SaveClients({clients})
+                const response = await SaveClients({ clients })
                 if (response.hasOwnProperty("clients")) {
                     this.props.reduxClients(response.clients);
-                    
+
                 }
                 let message = "";
-                if(response.hasOwnProperty("message")) {
+                if (response.hasOwnProperty("message")) {
                     message = response.message;
                 }
-    
+
                 if (response.hasOwnProperty("lastupdated")) {
                     message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
                 }
-    
-                this.setState({message})
 
-            } catch(err) {
+                this.setState({ message })
+
+            } catch (err) {
                 alert(err)
             }
         }
-      
+
     }
 
     showClients() {
@@ -141,7 +141,7 @@ class Clients extends Component {
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex5, ...highlight(client.clientid) }} onClick={() => { this.handleclientid(client.clientid) }}>
                     <div style={{ ...styles.generalContainer }}>
-                        <span>{client.firstname} {client.lastname}{title(client.title)}</span>
+                        <span>{client.prefix} {client.firstname} {client.lastname}{title(client.title)}</span>
                     </div>
                     {company(client.company)}
                     <div style={{ ...styles.generalContainer }}>
@@ -206,7 +206,8 @@ class Clients extends Component {
             const city = this.state.city;
             const contactstate = this.state.contactstate;
             const zipcode = this.state.zipcode;
-            const newclient = newClient(clientid, value, lastname, title, company, address, city, contactstate, zipcode)
+            const prefix = this.state.prefix;
+            const newclient = newClient(clientid, prefix, value, lastname, title, company, address, city, contactstate, zipcode)
             if (clients) {
                 clients.push(newclient)
 
@@ -260,7 +261,8 @@ class Clients extends Component {
             const city = this.state.city;
             const contactstate = this.state.contactstate;
             const zipcode = this.state.zipcode;
-            const newclient = newClient(clientid, firstname, value, title, company, address, city, contactstate, zipcode)
+            const prefix = this.state.prefix;
+            const newclient = newClient(clientid, prefix, firstname, value, title, company, address, city, contactstate, zipcode)
             if (clients) {
                 clients.push(newclient)
 
@@ -314,7 +316,8 @@ class Clients extends Component {
             const city = this.state.city;
             const contactstate = this.state.contactstate;
             const zipcode = this.state.zipcode;
-            const newclient = newClient(clientid, firstname, lastname, value, company, address, city, contactstate, zipcode)
+            const prefix = this.state.prefix;
+            const newclient = newClient(clientid, prefix, firstname, lastname, value, company, address, city, contactstate, zipcode)
             if (clients) {
                 clients.push(newclient)
 
@@ -368,7 +371,8 @@ class Clients extends Component {
             const city = this.state.city;
             const contactstate = this.state.contactstate;
             const zipcode = this.state.zipcode;
-            const newclient = newClient(clientid, firstname, lastname, title, value, address, city, contactstate, zipcode)
+            const prefix = this.state.prefix;
+            const newclient = newClient(clientid, prefix, firstname, lastname, title, value, address, city, contactstate, zipcode)
             if (clients) {
                 clients.push(newclient)
 
@@ -422,7 +426,8 @@ class Clients extends Component {
             const city = this.state.city;
             const contactstate = this.state.contactstate;
             const zipcode = this.state.zipcode;
-            const newclient = newClient(clientid, firstname, lastname, title, company, value, city, contactstate, zipcode)
+            const prefix = this.state.prefix;
+            const newclient = newClient(clientid, prefix, firstname, lastname, title, company, value, city, contactstate, zipcode)
             if (clients) {
                 clients.push(newclient)
 
@@ -476,7 +481,8 @@ class Clients extends Component {
             const address = this.state.address;
             const contactstate = this.state.contactstate;
             const zipcode = this.state.zipcode;
-            const newclient = newClient(clientid, firstname, lastname, title, company, address, value, contactstate, zipcode)
+            const prefix = this.state.prefix;
+            const newclient = newClient(clientid, prefix, firstname, lastname, title, company, address, value, contactstate, zipcode)
             if (clients) {
                 clients.push(newclient)
 
@@ -531,7 +537,8 @@ class Clients extends Component {
             const address = this.state.address;
             const city = this.state.city;
             const zipcode = this.state.zipcode;
-            const newclient = newClient(clientid, firstname, lastname, title, company, address, city, value, zipcode)
+            const prefix = this.state.prefix;
+            const newclient = newClient(clientid, prefix, firstname, lastname, title, company, address, city, value, zipcode)
             if (clients) {
                 clients.push(newclient)
 
@@ -585,7 +592,8 @@ class Clients extends Component {
             const address = this.state.address;
             const city = this.state.city;
             const contactstate = this.state.contactstate;
-            const newclient = newClient(clientid, firstname, lastname, title, company, address, city, contactstate, value)
+            const prefix = this.state.prefix;
+            const newclient = newClient(clientid, prefix, firstname, lastname, title, company, address, city, contactstate, value)
             if (clients) {
                 clients.push(newclient)
 
@@ -594,6 +602,63 @@ class Clients extends Component {
             }
             this.props.reduxClients(clients)
             this.setState({ activeclientid: clientid })
+        }
+
+    }
+
+    handlePrefix(value) {
+
+        const ues = new UES();
+        const makeid = new MakeID();
+        let clients = ues.getClients.call(this)
+        if (this.state.activeclientid) {
+
+            const clientid = this.state.activeclientid;
+            const client = ues.getClient.call(this, clientid)
+            if (client) {
+                const i = ues.getClientKey.call(this, clientid)
+                clients[i].prefix = value;
+                this.props.reduxClients(clients)
+                this.setState({ render: 'render' })
+            }
+
+        } else {
+            // new client
+            const clientid = makeid.clientid.call(this)
+            const lastname = this.state.lastname;
+            const title = this.state.title;
+            const company = this.state.company;
+            const address = this.state.address;
+            const city = this.state.city;
+            const contactstate = this.state.contactstate;
+            const zipcode = this.state.zipcode;
+            const firstname = this.state.firstname;
+            
+            const newclient = newClient(clientid,value, firstname, lastname, title, company, address, city, contactstate, zipcode)
+            if (clients) {
+                clients.push(newclient)
+
+            } else {
+                clients = [newClient]
+            }
+            this.props.reduxClients(clients)
+            this.setState({ activeclientid: clientid })
+        }
+
+    }
+
+    getPrefix(prefix) {
+        const ues = new UES()
+        if (this.state.activeclientid) {
+            const clientid = this.state.activeclientid;
+            const client = ues.getClient.call(this, clientid)
+            if (client.prefix === prefix) {
+                return (checkBox())
+            } else {
+                return (emptyBox())
+            }
+        } else {
+            return (emptyBox())
         }
 
     }
@@ -608,12 +673,27 @@ class Clients extends Component {
         const headerFont = ues.headerFont.call(this)
         const regularFont = ues.regularFont.call(this)
         const buttonWidth = ues.generateIcon.call(this)
+        const checkboxwidth = ues.checkBox.call(this)
         if (myuser) {
             return (<div style={{ ...styles.generalContainer }}>
 
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                     <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/clients`}>
                         /Clients </Link>
+                </div>
+
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.flex1 }}>
+                        <button style={{ ...styles.generalButton, ...checkboxwidth }} onClick={() => { this.handlePrefix.call(this, 'Mr.') }}>{this.getPrefix.call(this, 'Mr.')}</button>
+                        <span style={{ ...regularFont, ...styles.generalFont }}>Mr.</span>
+                    </div>
+                    <div style={{ ...styles.flex1 }}>
+                        <button style={{ ...styles.generalButton, ...checkboxwidth }} onClick={() => { this.handlePrefix.call(this, 'Ms.') }}>{this.getPrefix.call(this, 'Ms.')}</button>
+                        <span style={{ ...regularFont, ...styles.generalFont }}>Ms.</span>
+                    </div>
+                    <div style={{...styles.flex3}}>
+                        &nbsp;
+                    </div>
                 </div>
 
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
@@ -627,7 +707,7 @@ class Clients extends Component {
                         <span style={{ ...regularFont }}>First Name</span>
 
                     </div>
-                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
@@ -643,7 +723,7 @@ class Clients extends Component {
                 </div>
 
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin }}>
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
                                 value={this.getTitle()}
@@ -653,7 +733,7 @@ class Clients extends Component {
                         <span style={{ ...regularFont }}>Title</span>
 
                     </div>
-                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
@@ -669,7 +749,7 @@ class Clients extends Component {
 
 
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin }}>
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
                                 value={this.getAddress()}
@@ -679,7 +759,7 @@ class Clients extends Component {
                         <span style={{ ...regularFont }}>Address</span>
 
                     </div>
-                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
@@ -694,7 +774,7 @@ class Clients extends Component {
                 </div>
 
                 <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin }}>
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
                                 value={this.getContactState()}
@@ -704,7 +784,7 @@ class Clients extends Component {
                         <span style={{ ...regularFont }}>State</span>
 
                     </div>
-                    <div style={{ ...styles.flex1, ...styles.addMargin  }}>
+                    <div style={{ ...styles.flex1, ...styles.addMargin }}>
 
                         <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
                             <input type="text" style={{ ...regularFont, ...styles.generalContainer }}
@@ -718,12 +798,12 @@ class Clients extends Component {
 
                 </div>
 
-                <div style={{...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15}}>
-                    <span style={{...styles.generalFont, ...regularFont}}>{this.state.message}</span>
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
                 </div>
 
-                <div style={{...styles.generalContainer, ...styles.alignCenter}}>
-                    <button style={{...styles.generalButton, ...buttonWidth}} onClick={()=>{this.saveClients()}}>{saveIcon()}</button>
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { this.saveClients() }}>{saveIcon()}</button>
                 </div>
 
                 {this.showClients()}

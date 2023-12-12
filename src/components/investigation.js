@@ -17,24 +17,9 @@ class Investigation {
                 <span style={{ ...headerFont, ...styles.boldFont }}><u>Investigation</u></span>
                 <button style={{ ...styles.generalButton, ...generateIconWidth }}>{generateIcon()}</button>
             </div>
-            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <span style={{ ...styles.generalFont, ...regularFont }}>DSA Exempt</span> <button style={{ ...styles.generalButton, ...checkboxwidth }}>{emptyBox()}</button>
-                </div>
-                <div style={{ ...styles.flex1 }}>
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                        <span style={{ ...styles.generalFont, ...regularFont }}>CPT</span> <button style={{ ...styles.generalButton, ...checkboxwidth }}>{emptyBox()}</button>
-                    </div>
-                    <div style={{ ...styles.generalContainer }}>
-                        <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }} />
-                        <span style={{ ...styles.generalFont, ...regularFont }}>Depth</span>
-                    </div>
-                </div>
-            </div>
+           
 
-            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                <span style={{ ...styles.generalFont, ...regularFont }}>Borings</span> <button style={{ ...styles.generalButton, ...checkboxwidth }}>{emptyBox()}</button>
-            </div>
+          
 
             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.flex1 }}>
@@ -92,44 +77,7 @@ class Investigation {
                 </div>
             </div>
 
-            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                    <button style={{ ...styles.generalButton, ...checkboxwidth }}>{emptyBox()}</button>
-                    <span style={{ ...styles.generalFont, ...regularFont }}>Soil Report</span> <button style={{ ...styles.generalButton, ...generateIconWidth }}>{generateIcon()}</button>
-                </div>
-                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                    <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }} />
-                    <span style={{ ...styles.generalFont, ...regularFont }}>Item</span>
-                </div>
-
-                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.marginLeft15 }}>
-                    <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }} />
-                    <span style={{ ...styles.generalFont, ...regularFont }}>Sub-Item</span>
-                </div>
-            </div>
-
-            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                <span style={{ ...styles.generalFont, ...regularFont }}><u>Schedule</u></span>
-            </div>
-
-            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                <div style={{ ...styles.flex1, ...styles.addMargin }}>
-                    <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }} />
-                    <span style={{ ...styles.generalFont, ...regularFont }}>Field Investigation</span>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.addMargin }}>
-                    <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }} />
-                    <span style={{ ...styles.generalFont, ...regularFont }}>Duration</span>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.addMargin }}>
-                    <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }} />
-                    <span style={{ ...styles.generalFont, ...regularFont }}>Lab Testing</span>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.addMargin }}>
-                    <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }} />
-                    <span style={{ ...styles.generalFont, ...regularFont }}>Report</span>
-                </div>
-            </div>
+       
 
 
         </div>)

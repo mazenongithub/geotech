@@ -7,8 +7,13 @@ export function newSample(sampleid, boringid, sampledepth, depth, samplenumber, 
 export function newBoring(boringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, longitude, diameter) {
     return { boringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, longitude, diameter }
 }
-export function newPavement(sectionid,projectid,sectionname,ti,rvalue,ac,ab,as) {
-    return({sectionid, projectid, sectionname, design:{ti,rvalue,ac,ab,as}})
+
+export function newPavementSection(pavementid, sectionid, ti,ac,ab,as) {
+    return({pavementid, sectionid,  ti,ac,ab,as})
+}
+
+export function newPavement(sectionid,projectid,sectionname,rvalue) {
+    return({sectionid, projectid, sectionname, rvalue})
 }
 export function newSection(sectionid,sectionname,content) {
     return({sectionid,sectionname,content})
@@ -130,8 +135,8 @@ export function inputUTCStringForLaborID(timein) {
 
 }
 
-export function newClient(clientid, firstname, lastname, title, company, address, city, contactstate, zipcode) {
-    return ({ clientid, firstname, lastname, title, company, address, city, contactstate, zipcode })
+export function newClient(clientid, prefix, firstname, lastname, title, company, address, city, contactstate, zipcode) {
+    return ({ clientid, prefix, firstname, lastname, title, company, address, city, contactstate, zipcode })
 }
 
 export function newProject(projectid, projectnumber, title, address, city, projectstate, description, clientid) {

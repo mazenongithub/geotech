@@ -1,6 +1,22 @@
-import { LoadBorings, LoadClients, LoadProjects, LoadReport, SaveBorings } from "./actions/api";
+import { LoadBorings, LoadClients, LoadProjects, LoadReport, SaveBorings, LoadPavement } from "./actions/api";
 import { inputUTCStringForLaborID } from "./functions";
 class UES {
+
+    proposalSections() {
+        return ([
+            { section: 'Plan Review' },
+            { section: 'Historical Review' },
+            { section: 'Investigation' },
+            { section: 'Update Report' },
+            { section: 'CPT' },
+            { section: 'Soil Report' },
+            { section: 'Schedule' },
+            { section: 'Fee' },
+            { section: 'Assumptions' },
+            { section: 'Attachments' },
+            { section: 'D.I.R.' }
+        ])
+    }
 
     recommdationSections() {
         // 13002.01 13245.01 13232.01
@@ -68,7 +84,8 @@ class UES {
             { section: 'Historical Aerial Photographs' },
             { section: 'Site Geology' },
             { section: 'Subsurface Conditions' },
-            { section: 'Groundwater Conditions' }
+            { section: 'Groundwater Conditions' },
+            { section: 'Field Exploration, Sampling, and Laboratory Testing' }
 
 
 
@@ -83,6 +100,7 @@ class UES {
             try {
 
                 const response = await SaveBorings({ projectid, borings })
+                console.log(response)
                 if (response.hasOwnProperty("borings")) {
                     // eslint-disable-next-line
                     response.borings.map(boring => {
@@ -139,6 +157,19 @@ class UES {
             alert(err)
         }
 
+    }
+
+    async loadPavement() {
+        try {
+            const response = await LoadPavement();
+            console.log(response)
+            if (response.hasOwnProperty("pavement")) {
+                this.props.reduxPavement(response.pavement)
+            }
+
+        } catch (err) {
+            alert(err)
+        }
     }
 
 
@@ -316,6 +347,7 @@ class UES {
 
         const pavements = ues.getPavement.call(this);
         if (pavements) {
+     
             // eslint-disable-next-line
             pavements.map(pavement => {
                 if (pavement.projectid === projectid) {
@@ -326,6 +358,51 @@ class UES {
 
 
         return getpavements;
+
+    }
+
+    getPavementSectionKeyByID(sectionid,pavementid) {
+        const ues = new UES();
+        let key = false;
+        const pavementsections = ues.getPavementSections.call(this,sectionid);
+        if(pavementsections) {
+            // eslint-disable-next-line
+            pavementsections.map((section,i)=> {
+                if(section.pavementid === pavementid) {
+                    key = i;
+                }
+            })
+        }
+
+        return key;
+    }
+
+    getPavementSectionByID(sectionid,pavementid) {
+        const ues = new UES();
+        let getsection = false;
+        const pavementsections = ues.getPavementSections.call(this,sectionid);
+        if(pavementsections) {
+            // eslint-disable-next-line
+            pavementsections.map(section=> {
+                if(section.pavementid === pavementid) {
+                    getsection = section;
+                }
+            })
+        }
+
+        return getsection;
+    }
+
+    getPavementSections(sectionid) {
+        let getsections = false;
+        const ues = new UES();
+        const pavement = ues.getPavementByID.call(this, sectionid)
+        if(pavement.hasOwnProperty("design")) {
+            getsections = pavement.design;
+        }
+
+
+        return getsections;
 
     }
 

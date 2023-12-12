@@ -18,6 +18,20 @@ class LogDraft extends Component {
     componentDidMount() {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
+        const ues = new UES();
+        const projects = ues.getProjects.call(this)
+        const projectid = this.props.projectid;
+
+        if (!projects) {
+            ues.loadProjects.call(this);
+        }
+
+        const borings = ues.getBoringsbyProjectID.call(this, projectid)
+        if (!borings) {
+            ues.loadBorings.call(this, projectid)
+
+
+        }
 
     }
     componentWillUnmount() {
