@@ -153,7 +153,7 @@ class ViewReport extends Component {
                 <span style={{ ...regularFont }}><u>{section.sectionname}</u></span>
             </div>
 
-            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15, ...styles.lineSpace }}>
                 <span style={{ ...regularFont }}>{section.content}</span>
             </div>
 
@@ -259,7 +259,7 @@ class ViewReport extends Component {
         const regularFont = ues.regularFont.call(this)
         return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }} key={`pavementdesign`}>
             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>Pavement Design</span>
+                <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>Pavement Design Alternatives</span>
 
             </div>
 
@@ -287,14 +287,28 @@ class ViewReport extends Component {
             // eslint-disable-next-line
             report.conclusion.map(section => {
                 getSections.push(this.showSection(section))
-                if (section.sectionname === 'Pavement Subgrade Quality') {
-                    getSections.push(this.showPavementDesign())
-                }
+               
             })
         }
         return getSections;
     }
 
+    showRecommedationSections() {
+
+        const report = this.getReport();
+        let getSections = [];
+        if (report.hasOwnProperty("recommendation")) {
+            // eslint-disable-next-line
+            report.recommendation.map(section => {
+                getSections.push(this.showSection(section))
+                if (section.sectionname === 'Pavement Design') {
+                    getSections.push(this.showPavementDesign())
+                }
+               
+            })
+        }
+        return getSections;
+    }
 
     showGeneralSections() {
 
@@ -320,6 +334,25 @@ class ViewReport extends Component {
 
                     <span style={{ ...styles.generalFont, ...headerFont }}>
                         <u>Conclusion</u>
+                    </span>
+
+                </div>)
+
+        }
+
+    }
+
+    showRecommendationHeader() {
+        const report = this.getReport();
+        const styles = MyStylesheet();
+        const ues = new UES();
+        const headerFont = ues.headerFont.call(this)
+        if (report.hasOwnProperty("recommendation")) {
+            return (
+                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+
+                    <span style={{ ...styles.generalFont, ...headerFont }}>
+                        <u>Recommendation</u>
                     </span>
 
                 </div>)
@@ -389,6 +422,10 @@ class ViewReport extends Component {
                             {this.showConclusionHeader()}
 
                             {this.showConclusionSections()}
+
+                            {this.showRecommendationHeader()}
+
+                            {this.showRecommedationSections()}
 
 
                         </div>

@@ -40,7 +40,7 @@ class UES {
             { section: 'Retaining Walls' },
             { section: 'Pavement Design' },
             { section: 'Site Drainage' },
-            { section: 'Geotechnical Engineering Construction Observation Services' },
+            { section: 'Geotechnical Engineering Observation and Testing During Earthwork' },
             { section: 'Additional Services' }
 
 

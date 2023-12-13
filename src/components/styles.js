@@ -49,6 +49,10 @@ export function MyStylesheet() {
         flex7: {
             flex: 7
         },
+        lineSpace:{
+            whiteSpace:'pre-wrap'
+
+        },
         alignCenter: {
             textAlign: 'center'
         },
