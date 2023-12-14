@@ -119,14 +119,14 @@ class ViewReport extends Component {
         if (report.hasOwnProperty("list")) {
             // eslint-disable-next-line
             report.list.map(list => {
-            
+
 
                 getlist.push(<li key={list.listid}>{list.content}</li>)
 
                 if (list.hasOwnProperty("sublist")) {
                     // eslint-disable-next-line
                     list.sublist.map(sublist => {
-                     
+
                         getsublist.push(<li key={sublist.sublistid}>{sublist.content}</li>)
                     })
                     getlist.push(<ol key={`reportsublist`} type="a">{getsublist}</ol>)
@@ -143,14 +143,15 @@ class ViewReport extends Component {
 
     }
 
-    showSection(section) {
+    showSection(label, section) {
 
         const styles = MyStylesheet();
         const ues = new UES();
         const regularFont = ues.regularFont.call(this)
         return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                <span style={{ ...regularFont }}><u>{section.sectionname}</u></span>
+                <span style={{ ...regularFont, ...styles.marginLeft15 }}>{label}</span>
+                <span style={{ ...regularFont, ...styles.leftMargin40 }}><u>{section.sectionname}</u></span>
             </div>
 
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15, ...styles.lineSpace }}>
@@ -184,7 +185,7 @@ class ViewReport extends Component {
         const ues = new UES();
         const regularFont = ues.regularFont.call(this)
         const styles = MyStylesheet();
-       return( <div style={{ ...styles.generalFlex }} key={section.pavementid}>
+        return (<div style={{ ...styles.generalFlex }} key={section.pavementid}>
             <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                 <span style={{ ...regularFont }}>{section.ti}</span>
             </div>
@@ -211,7 +212,7 @@ class ViewReport extends Component {
         const styles = MyStylesheet();
         const regularFont = ues.regularFont.call(this)
         const titleBlock = () => {
-            return(<div style={{ ...styles.generalFlex }} key={`pavemettitleblock`}>
+            return (<div style={{ ...styles.generalFlex }} key={`pavemettitleblock`}>
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                     <span style={{ ...regularFont }}>Traffic Index (T.I)</span>
                 </div>
@@ -224,7 +225,7 @@ class ViewReport extends Component {
                 <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
                     <span style={{ ...regularFont }}> Aggregate  SubBase Thickness </span>
                 </div>
-    
+
             </div>)
         }
         if (pavements) {
@@ -233,9 +234,9 @@ class ViewReport extends Component {
                 getsections.push(this.showPavementSection(pavement))
 
                 if (pavement.hasOwnProperty("design")) {
-                
+
                     getsections.push(titleBlock())
-// eslint-disable-next-line
+                    // eslint-disable-next-line
                     pavement.design.map(section => {
                         getsections.push(this.showSectionDesign(section))
                     })
@@ -275,11 +276,11 @@ class ViewReport extends Component {
 
             {this.showPavementSections()}
 
-            <div style={{...styles.generalContainer, ...styles.generalFont, ...styles.marginTop15}}>
-                <span style={{...regularFont}}>We emphasize that the performance of pavement is critically dependent upon uniform and adequate compaction of the soil subgrade, 
-                as well as all engineered fill and utililty trench backfill within the limits of the pavements.
-                We recommend that final pavement subgrade preparation (i.e., scarification, moisture conditioning and compaction)
-                be performed after underground utility construction is completed and just prior to aggregate base. </span>
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.marginTop15 }}>
+                <span style={{ ...regularFont }}>We emphasize that the performance of pavement is critically dependent upon uniform and adequate compaction of the soil subgrade,
+                    as well as all engineered fill and utililty trench backfill within the limits of the pavements.
+                    We recommend that final pavement subgrade preparation (i.e., scarification, moisture conditioning and compaction)
+                    be performed after underground utility construction is completed and just prior to aggregate base. </span>
 
             </div>
 
@@ -291,11 +292,19 @@ class ViewReport extends Component {
 
         const report = this.getReport();
         let getSections = [];
+        let label = "";
         if (report.hasOwnProperty("conclusion")) {
             // eslint-disable-next-line
-            report.conclusion.map(section => {
-                getSections.push(this.showSection(section))
-               
+            report.conclusion.map((section, i) => {
+
+                if (i < 10) {
+                    label = `3.${i + 1}`
+
+                } else {
+                    label = `3.${i + 1}`
+                }
+                getSections.push(this.showSection(label, section))
+
             })
         }
         return getSections;
@@ -305,14 +314,22 @@ class ViewReport extends Component {
 
         const report = this.getReport();
         let getSections = [];
+        let label = "";
         if (report.hasOwnProperty("recommendation")) {
             // eslint-disable-next-line
-            report.recommendation.map(section => {
-                getSections.push(this.showSection(section))
+            report.recommendation.map((section, i) => {
+                if (i < 10) {
+                    label = `4.${i + 1}`
+
+                } else {
+                    label = `4.${i + 1}`
+                }
+
+                getSections.push(this.showSection(label, section))
                 if (section.sectionname === 'Pavement Design') {
                     getSections.push(this.showPavementDesign())
                 }
-               
+
             })
         }
         return getSections;
@@ -322,10 +339,47 @@ class ViewReport extends Component {
 
         const report = this.getReport();
         let getSections = [];
+        let label = "";
         if (report.hasOwnProperty("general")) {
             // eslint-disable-next-line
-            report.general.map(section => {
-                getSections.push(this.showSection(section))
+            report.general.map((section, i) => {
+
+                if (i < 10) {
+                    label = `1.${i + 2}`
+
+                } else {
+                    label = `1.${i + 2}`
+                }
+                getSections.push(this.showSection(label, section))
+
+            })
+
+
+
+
+        }
+
+        return getSections;
+    }
+
+    showFindingSections() {
+
+        const report = this.getReport();
+        let getSections = [];
+        let label = "";
+        if (report.hasOwnProperty("finding")) {
+            // eslint-disable-next-line
+            report.finding.map((section, i) => {
+
+                if (i < 10) {
+                    label = `2.${i + 1}`
+
+                } else {
+                    label = `2.${i + 1}`
+                }
+
+                getSections.push(this.showSection(label, section))
+
             })
         }
         return getSections;
@@ -339,9 +393,13 @@ class ViewReport extends Component {
         if (report.hasOwnProperty("conclusion")) {
             return (
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-
                     <span style={{ ...styles.generalFont, ...headerFont }}>
-                        <u>Conclusion</u>
+                       3.0
+                    </span>
+
+
+                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.leftMargin40 }}>
+                        CONCLUSION
                     </span>
 
                 </div>)
@@ -359,8 +417,34 @@ class ViewReport extends Component {
             return (
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
 
+                      <span style={{ ...styles.generalFont, ...headerFont }}>
+                       4.0
+                    </span>
+
+
+                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.leftMargin40 }}>
+                        RECOMMENDATIONS
+                    </span>
+
+                </div>)
+
+        }
+
+    }
+
+    showFindingHeader() {
+        const report = this.getReport();
+        const styles = MyStylesheet();
+        const ues = new UES();
+        const headerFont = ues.headerFont.call(this)
+        if (report.hasOwnProperty("finding")) {
+            return (
+                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
                     <span style={{ ...styles.generalFont, ...headerFont }}>
-                        <u>Recommendation</u>
+                        2.0
+                    </span>
+                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.leftMargin40 }}>
+                        FINDINGS
                     </span>
 
                 </div>)
@@ -414,11 +498,26 @@ class ViewReport extends Component {
                                 {this.getProjectBlock()}
                             </div>
 
-                            <div style={{ ...styles.bottomMargin15, ...styles.generalFont }}>
-                                <span style={{ ...regularFont }}>{report.intro}</span>
+                            <div style={{ ...styles.generalContainer }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
+                                    <span style={{ ...headerFont }}>1.0</span>
+                                    <span style={{ ...headerFont, ...styles.leftMargin40 }}>INTRODUCTION</span>
+                                </div>
+
+                                <div style={{ ...styles.bottomMargin15, ...styles.generalFont }}>
+                                    <span style={{ ...regularFont }}>{report.intro}</span>
+                                </div>
+
                             </div>
 
                             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
+
+                                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
+                                    <span style={{ ...regularFont }}>1.1</span>
+                                    <span style={{ ...regularFont, ...styles.leftMargin40 }}>Scope of Work</span>
+                                </div>
+
                                 <div style={{ ...styles.generalContainer }}><span style={{ ...regularFont }}>Our scope of services included the following:</span></div>
                                 <div style={{ ...styles.generalFont, ...regularFont }}>{this.showScope()}</div>
                             </div>
@@ -426,6 +525,10 @@ class ViewReport extends Component {
                             <div style={{ ...styles.generalContainer }}>
                                 {this.showGeneralSections()}
                             </div>
+
+                            {this.showFindingHeader()}
+
+                            {this.showFindingSections()}
 
                             {this.showConclusionHeader()}
 

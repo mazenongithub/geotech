@@ -39,6 +39,7 @@ class UES {
             { section: 'Site Clearing' },
             { section: 'Site Prepartion' },
             { section: 'Engineered Fill Construction' },
+            { section: 'Chemical Treatment Alternative' },
             { section: 'Subgrade Preparation' },
             { section: 'Utility Trench Backfill' },
             { section: 'Foundation Design' },
