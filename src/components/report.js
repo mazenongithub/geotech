@@ -17,7 +17,7 @@ class Report extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activereportid: false, intro: '', activelistid: false, activesublistid: false, activegeneralid: false, activeconclusionid: false, activerecommendationid: false, content: ''
+            render: '', width: 0, height: 0, message: '', activereportid: false, intro: '', activelistid: false, activesublistid: false, activegeneralid: false, activeconclusionid: false, activerecommendationid: false, activefindingid:false, content: ''
 
         }
 
@@ -1233,6 +1233,33 @@ class Report extends Component {
 
     }
 
+    removeFindingSection(sectionid) {
+        const ues = new UES();
+    
+        if (this.state.activereportid) {
+            const reports = ues.getReports.call(this)
+            if (reports) {
+                const reportid = this.state.activereportid;
+                const report = ues.getReportByID.call(this, reportid)
+                if (report) {
+                    const i = ues.getReportKeyByID.call(this, reportid)
+                    const section = ues.getFindingSectionbyID.call(this, reportid, sectionid)
+                    if (section) {
+    
+                        const j = ues.getFindingSectionKeybyID.call(this, reportid, sectionid)
+                        reports[i].finding.splice(j, 1);
+                        this.props.reduxReports(reports);
+                        this.setState({ activefindingid: false })
+                    }
+    
+                }
+    
+            }
+    
+        }
+    
+    }
+
 
 
     showConclusionID(section) {
@@ -1603,6 +1630,285 @@ class Report extends Component {
 
 
 
+    handleFindingMenu(value) {
+
+        this.handleFindingSection(value)
+        //window.open('/mazen/projects/_projectid/report')
+    }
+
+
+
+    loadFindingSections() {
+
+        const ues = new UES();
+        const sections = ues.findingSections();
+        let getsections = [];
+        if (sections) {
+            // eslint-disable-next-line
+            sections.map(section => {
+                getsections.push(this.showOptionValue(section))
+    
+            })
+    
+        }
+        return getsections;
+    
+    }
+
+
+    showFindingIDs() {
+        const report = this.getReport();
+        let getids = [];
+        if (report) {
+            if (report.hasOwnProperty("finding")) {
+                // eslint-disable-next-line
+                report.finding.map(section => {
+                    getids.push(this.showFindingID(section))
+                })
+            }
+        }
+    
+        return getids;
+    
+    
+    }
+
+    showFindingID(section) {
+        const styles = MyStylesheet();
+        const ues = new UES();
+        const regularFont = ues.regularFont.call(this)
+        const iconWidth = ues.removeIcon.call(this)
+        const arrowWidth = ues.arrowUp.call(this)
+    
+        const highlight = (sectionid) => {
+            if (this.state.activefindingid === sectionid) {
+                return (styles.activeid)
+            }
+        }
+    
+        return (
+            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }} key={section.sectionid}>
+                <div style={{ ...styles.flex5, ...highlight(section.sectionid) }} onClick={() => { this.handleFindingID(section.sectionid) }}>
+                    <span style={{ ...regularFont }}>{section.sectionname}</span>
+                </div>
+                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveFindingSectionUp(section.sectionid) }}>{arrowUp()}</button>
+                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveFindingSectionDown(section.sectionid) }}>{arrowDown()}</button>
+                </div>
+                <div style={{ ...styles.flex1 }}>
+                    <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeFindingSection(section.sectionid) }}>{removeIcon()}</button>
+                </div>
+            </div>
+    
+        )
+    
+    }
+    
+
+    handleFindingID(sectionid) {
+        if (this.state.activefindingid) {
+            this.setState({ activefindingid: false })
+        } else {
+            this.setState({ activefindingid: sectionid })
+        }
+    }
+
+    handleFindingSection(value) {
+        const ues = new UES();
+        const makeid = new MakeID();
+        const reports = ues.getReports.call(this)
+        if (reports) {
+            const report = this.getReport();
+            if (report) {
+                const reportid = this.state.activereportid;
+                const i = ues.getReportKeyByID.call(this, reportid)
+                if (this.state.activefindingid) {
+                    const sectionid = this.state.activefindingid;
+                    const section = ues.getFindingSectionbyID.call(this, reportid, sectionid)
+                    if (section) {
+                        const j = ues.getFindingSectionKeybyID.call(this, reportid, sectionid)
+                        reports[i].finding[j].sectionname = value;
+                        this.props.reduxReports(reports)
+                        this.setState({ render: 'render' })
+                    }
+    
+                } else {
+                    const newsectionid = makeid.sectionid.call(this, reportid)
+                    const content = this.state.content;
+                    const newsection = newSection(newsectionid, value, content)
+                    if (report.hasOwnProperty("finding")) {
+                        reports[i].finding.push(newsection);
+    
+                    } else {
+                        reports[i].finding = [newsection]
+    
+                    }
+                    this.setState({ activefindingid: newsectionid })
+                }
+    
+    
+            }
+        }
+    
+    }
+
+    getFindingSection() {
+        const report = this.getReport();
+        let sectionname = "";
+        if (this.state.activefindingid) {
+            const sectionid = this.state.activefindingid;
+    
+            if (report) {
+                // eslint-disable-next-line
+                if (report.hasOwnProperty("finding")) {
+                    // eslint-disable-next-line 
+                    report.finding.map(section => {
+                        if (section.sectionid === sectionid) {
+                            sectionname = section.sectionname;
+    
+                        }
+    
+                    })
+                }
+    
+            }
+    
+        }
+    
+        return sectionname;
+    
+    }
+
+
+    getFindingContent() {
+        const report = this.getReport();
+        let content = "";
+        if (this.state.activefindingid) {
+            const sectionid = this.state.activefindingid;
+    
+            if (report) {
+                // eslint-disable-next-line
+                if (report.hasOwnProperty("finding")) {
+                    // eslint-disable-next-line 
+                    report.finding.map(section => {
+                        if (section.sectionid === sectionid) {
+                            content = section.content;
+    
+                        }
+    
+                    })
+                }
+    
+            }
+    
+        }
+    
+        return content;
+    
+    }
+    
+    handleFindingContent(value) {
+        const ues = new UES();
+        const makeid = new MakeID();
+        const reports = ues.getReports.call(this)
+        if (reports) {
+            const report = this.getReport();
+            if (report) {
+                const reportid = this.state.activereportid;
+                const i = ues.getReportKeyByID.call(this, reportid)
+                if (this.state.activefindingid) {
+                    const sectionid = this.state.activefindingid;
+                    const section = ues.getFindingSectionbyID.call(this, reportid, sectionid)
+                    if (section) {
+                        const j = ues.getFindingSectionKeybyID.call(this, reportid, sectionid)
+                        reports[i].finding[j].content = value;
+                        this.props.reduxReports(reports)
+                        this.setState({ render: 'render' })
+                    }
+    
+                } else {
+                    const newsectionid = makeid.sectionid.call(this, reportid)
+                    const sectionname = this.state.sectionname;
+                    const newsection = newSection(newsectionid, sectionname, value)
+                    if (report.hasOwnProperty("finding")) {
+                        reports[i].finding.push(newsection);
+    
+                    } else {
+                        reports[i].finding = [newsection]
+    
+                    }
+                    this.setState({ activefindingid: newsectionid })
+                }
+    
+    
+            }
+        }
+    
+    }
+
+    moveFindingSectionDown(sectionid) {
+
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if (reports) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid);
+                const section = ues.getFindingSectionbyID.call(this, reportid, sectionid)
+                if (section) {
+                    const j = ues.getFindingSectionKeybyID.call(this, reportid, sectionid)
+                    const sectioncount = reports[i].finding.length;
+                    if (sectioncount > 1 && j < sectioncount - 1) {
+                        const section_1 = reports[i].finding[j + 1];
+                        reports[i].finding[j] = section_1;
+                        reports[i].finding[j + 1] = section;
+                        this.props.reduxReports(reports);
+                        this.setState({ render: 'render' })
+    
+                    }
+                }
+            }
+    
+    
+        }
+    
+    }
+    
+    moveFindingSectionUp(sectionid) {
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if (reports) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid);
+                const section = ues.getFindingSectionbyID.call(this, reportid, sectionid)
+                if (section) {
+                    const j = ues.getFindingSectionKeybyID.call(this, reportid, sectionid)
+                    const sectioncount = reports[i].finding.length;
+                    if (sectioncount > 1 && j > 0) {
+                        const section_1 = reports[i].finding[j - 1];
+                        reports[i].finding[j] = section_1;
+                        reports[i].finding[j - 1] = section;
+                        this.props.reduxReports(reports);
+                        this.setState({ render: 'render' })
+    
+                    }
+                }
+            }
+    
+    
+        }
+    
+    }
+    
+    
+    
+
+
+
+
 
     render() {
         const styles = MyStylesheet();
@@ -1709,6 +2015,37 @@ class Report extends Component {
                     </div>
 
                     {this.showGeneralIDs()}
+
+
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
+                            <span style={{ ...styles.generalFont, ...headerFont }}><u>Findings</u></span>
+                        </div>
+                        <div style={{ ...styles.flex4, ...styles.addMargin }}>
+                            <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }}
+                                onChange={event => { this.handleFindingMenu(event.target.value) }}>
+                                <option value="">Select Section</option>
+                                {this.loadFindingSections()}
+                            </select>
+                        </div>
+                        <div style={{ ...styles.flex1, ...styles.addMargin }}><button style={{ ...styles.generalButton, ...generateIconWidth }}>{generateIcon()}</button></div>
+                    </div>
+                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                        <input type="text" style={{ ...styles.generalField, ...regularFont }}
+                            value={this.getFindingSection()}
+                            onChange={event => { this.handleFindingSection(event.target.value) }} />
+                        <span style={{ ...styles.generalFont, ...regularFont }}>Section</span>
+                    </div>
+                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                        <textarea style={{ ...styles.generalField, ...regularFont, ...styles.areatext, ...styles.generalFont }}
+                            value={this.getFindingContent()}
+                            onChange={event => { this.handleFindingContent(event.target.value) }}
+                        />
+                        <span style={{ ...styles.generalFont, ...regularFont }}>Content</span>
+                    </div>
+
+                    {this.showFindingIDs()}
+                    
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>

@@ -18,6 +18,20 @@ class UES {
         ])
     }
 
+    figureList() {
+        return ([{ section: 'Vicinity Map' },
+        { section: 'Site Plan' },
+        { section: 'Boring Logs' },
+        { section: 'United Soils Classification' }])
+    }
+
+    appendixList() {
+        return ([{ section: `Atterberg's Limits Test Results` },
+        { section: 'Expansion Index Test Results' },
+        { section: 'Resistance Value Test Results'},
+        { section: 'United Soils Classification' }])
+    }
+
     recommdationSections() {
         // 13002.01 13245.01 13232.01
         return ([
@@ -50,7 +64,7 @@ class UES {
     conclusionSections() {
 
         return ([
-            { section: 'Seismic Design Criteria' },
+            { section: '2022 CBC and ASEC 7-16 Seismic Design Parameters' },
             { section: 'Seismicity and Faults' },
             { section: 'Liquefaction Potential' },
             { section: 'Foundation Support' },
@@ -78,16 +92,28 @@ class UES {
     generalSections() {
         return ([
             { section: 'Supplement Information' },
+            { section: 'Previous Report' },
             { section: 'Proposed Development' },
             { section: 'Figures and Attachments' },
             { section: 'Site Description' },
             { section: 'Historical Aerial Photographs' },
-            { section: 'Site Geology' },
             { section: 'Subsurface Conditions' },
             { section: 'Groundwater Conditions' },
+            { section: 'Site Geology' },
             { section: 'Field Exploration, Sampling, and Laboratory Testing' }
 
 
+        ])
+    }
+
+    findingSections() {
+        return ([
+            { section: 'Site Description' },
+            { section: 'Historical Aerial Photographs' },
+            { section: 'Subsurface Conditions' },
+            { section: 'Groundwater Conditions' },
+            { section: 'Site Geology' },
+            { section: 'Field Exploration, Sampling, and Laboratory Testing' }
 
         ])
     }
@@ -347,7 +373,7 @@ class UES {
 
         const pavements = ues.getPavement.call(this);
         if (pavements) {
-     
+
             // eslint-disable-next-line
             pavements.map(pavement => {
                 if (pavement.projectid === projectid) {
@@ -361,14 +387,14 @@ class UES {
 
     }
 
-    getPavementSectionKeyByID(sectionid,pavementid) {
+    getPavementSectionKeyByID(sectionid, pavementid) {
         const ues = new UES();
         let key = false;
-        const pavementsections = ues.getPavementSections.call(this,sectionid);
-        if(pavementsections) {
+        const pavementsections = ues.getPavementSections.call(this, sectionid);
+        if (pavementsections) {
             // eslint-disable-next-line
-            pavementsections.map((section,i)=> {
-                if(section.pavementid === pavementid) {
+            pavementsections.map((section, i) => {
+                if (section.pavementid === pavementid) {
                     key = i;
                 }
             })
@@ -377,14 +403,14 @@ class UES {
         return key;
     }
 
-    getPavementSectionByID(sectionid,pavementid) {
+    getPavementSectionByID(sectionid, pavementid) {
         const ues = new UES();
         let getsection = false;
-        const pavementsections = ues.getPavementSections.call(this,sectionid);
-        if(pavementsections) {
+        const pavementsections = ues.getPavementSections.call(this, sectionid);
+        if (pavementsections) {
             // eslint-disable-next-line
-            pavementsections.map(section=> {
-                if(section.pavementid === pavementid) {
+            pavementsections.map(section => {
+                if (section.pavementid === pavementid) {
                     getsection = section;
                 }
             })
@@ -397,7 +423,7 @@ class UES {
         let getsections = false;
         const ues = new UES();
         const pavement = ues.getPavementByID.call(this, sectionid)
-        if(pavement.hasOwnProperty("design")) {
+        if (pavement.hasOwnProperty("design")) {
             getsections = pavement.design;
         }
 
@@ -633,6 +659,46 @@ class UES {
 
 
 
+        }
+        return getsection;
+    }
+
+    getFindingSectionKeybyID(reportid, sectionid) {
+        const ues = new UES();
+        const report = ues.getReportByID.call(this, reportid);
+        let key = false;
+        if (report) {
+            if (report.hasOwnProperty("finding")) {
+                // eslint-disable-next-line
+                report.finding.map((section, i) => {
+                    if (section.sectionid === sectionid) {
+                        key = i;
+                    }
+                })
+            }
+    
+    
+    
+        }
+        return key;
+    }
+    
+    getFindingSectionbyID(reportid, sectionid) {
+        const ues = new UES();
+        const report = ues.getReportByID.call(this, reportid);
+        let getsection = false;
+        if (report) {
+            if (report.hasOwnProperty("finding")) {
+                // eslint-disable-next-line
+                report.finding.map(section => {
+                    if (section.sectionid === sectionid) {
+                        getsection = section;
+                    }
+                })
+            }
+    
+    
+    
         }
         return getsection;
     }

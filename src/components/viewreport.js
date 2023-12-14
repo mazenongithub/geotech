@@ -275,6 +275,14 @@ class ViewReport extends Component {
 
             {this.showPavementSections()}
 
+            <div style={{...styles.generalContainer, ...styles.generalFont, ...styles.marginTop15}}>
+                <span style={{...regularFont}}>We emphasize that the performance of pavement is critically dependent upon uniform and adequate compaction of the soil subgrade, 
+                as well as all engineered fill and utililty trench backfill within the limits of the pavements.
+                We recommend that final pavement subgrade preparation (i.e., scarification, moisture conditioning and compaction)
+                be performed after underground utility construction is completed and just prior to aggregate base. </span>
+
+            </div>
+
 
         </div>)
     }
