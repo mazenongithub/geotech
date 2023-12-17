@@ -18,7 +18,7 @@ class Pavement extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activesectionid: false, activepavementid: false, sectionname: '', ti: '', rvalue: '', ab: '', ac: '', as: ''
+            render: '', width: 0, height: 0, message: '', activesectionid: false, activepavementid: false, sectionname: '', ti: '', rvalue: '', ab: '', ac: '', as: '', pcc:'', use:''
 
         }
 
@@ -155,7 +155,7 @@ class Pavement extends Component {
             const newsectionid = makeid.pavementid.call(this);
             const projectid = this.props.projectid;
             const rvalue = this.state.rvalue;
-                  const newpavement = newPavement(newsectionid, projectid, value, rvalue)
+            const newpavement = newPavement(newsectionid, projectid, value, rvalue)
             if (pavements) {
                 pavements.push(newpavement)
 
@@ -217,11 +217,13 @@ class Pavement extends Component {
 
                 } else {
                     const pavementid = makeid.pavementSectionID.call(this)
-               
+
                     const ac = this.state.ac;
                     const ab = this.state.ab;
                     const as = this.state.as;
-                    const newpavementsection = newPavementSection(pavementid, sectionid, value, ac, ab, as)
+                    const use = this.state.use;
+                    const pcc = this.state.pcc;
+                    const newpavementsection = newPavementSection(pavementid, sectionid, value, ac, ab, as, use, pcc)
                     if (pavement.hasOwnProperty("design")) {
 
                         pavement.design.push(newpavementsection)
@@ -238,6 +240,78 @@ class Pavement extends Component {
     }
 
 
+    getUse() {
+        const ues = new UES();
+        let use = "";
+        if (this.state.activesectionid) {
+            const sectionid = this.state.activesectionid;
+            const section = ues.getPavementByID.call(this, sectionid)
+    
+            if (section) {
+                if (this.state.activepavementid) {
+                    const pavementid = this.state.activepavementid;
+                    const pavementsection = ues.getPavementSectionByID.call(this, sectionid, pavementid)
+                    if (pavementsection) {
+                        use = pavementsection.use
+                    }
+    
+                }
+    
+    
+            }
+        }
+    
+        return use;
+    
+    
+    }
+    
+    handleUse(value) {
+        const ues = new UES()
+        const makeid = new MakeID();
+        let pavements = ues.getPavement.call(this)
+        if (this.state.activesectionid) {
+            const sectionid = this.state.activesectionid;
+            const pavement = ues.getPavementByID.call(this, sectionid)
+            if (pavement) {
+                const i = ues.getPavementKeyByID.call(this, sectionid)
+                if (this.state.activepavementid) {
+                    const pavementid = this.state.activepavementid;
+                    const pavementsection = ues.getPavementSectionByID.call(this, sectionid, pavementid)
+                    if (pavementsection) {
+                        const j = ues.getPavementSectionKeyByID.call(this, sectionid, pavementid)
+                        pavements[i].design[j].use = value;
+                        this.props.reduxPavement(pavements)
+                        this.setState({ render: 'render' })
+    
+                    }
+    
+    
+                } else {
+                    const pavementid = makeid.pavementSectionID.call(this)
+    
+                    const ac = this.state.ac;
+                    const ab = this.state.ab;
+                    const as = this.state.as;
+                    const ti = this.state.ti;
+                    const pcc = this.state.pcc;
+                    const newpavementsection = newPavementSection(pavementid, sectionid, ti, ac, ab, as, pcc,value)
+                    if (pavement.hasOwnProperty("design")) {
+    
+                        pavement.design.push(newpavementsection)
+    
+                    } else {
+                        pavement.design = [newpavementsection]
+    
+                    }
+                    this.setState({ activepavementid: pavementid })
+                }
+            }
+        }
+    
+    }
+
+
     getRvalue() {
         const ues = new UES();
         let rvalue = "";
@@ -246,15 +320,15 @@ class Pavement extends Component {
             const section = ues.getPavementByID.call(this, sectionid)
             if (section) {
                 rvalue = section.rvalue
-    
+
             }
         }
-    
+
         return rvalue;
-    
-    
+
+
     }
-    
+
     handleRvalue(value) {
         const ues = new UES()
         const makeid = new MakeID();
@@ -272,20 +346,22 @@ class Pavement extends Component {
             const newsectionid = makeid.pavementid.call(this);
             const projectid = this.props.projectid;
             const sectionname = this.state.sectionname;
-    
+
             const newpavement = newPavement(newsectionid, projectid, sectionname, value)
             if (pavements) {
                 pavements.push(newpavement)
-    
+
             } else {
                 pavements = [newpavement]
-    
+
             }
             this.setState({ activesectionid: newsectionid })
         }
-    
+
     }
-    
+
+
+
 
     getAC() {
         const ues = new UES();
@@ -339,7 +415,10 @@ class Pavement extends Component {
                     const ti = this.state.ti;
                     const ab = this.state.ab;
                     const as = this.state.as;
-                    const newpavementsection = newPavementSection(pavementid, sectionid, ti, value, ab, as)
+                    const use = this.state.use;
+                    const pcc = this.state.pcc;
+                  
+                    const newpavementsection = newPavementSection(pavementid, sectionid, ti, value, ab, as, use, pcc)
                     if (pavement.hasOwnProperty("design")) {
 
                         pavement.design.push(newpavementsection)
@@ -354,6 +433,78 @@ class Pavement extends Component {
         }
 
     }
+
+
+    getPCC() {
+        const ues = new UES();
+        let pcc = "";
+        if (this.state.activesectionid) {
+            const sectionid = this.state.activesectionid;
+            const section = ues.getPavementByID.call(this, sectionid)
+
+            if (section) {
+                if (this.state.activepavementid) {
+                    const pavementid = this.state.activepavementid;
+                    const pavementsection = ues.getPavementSectionByID.call(this, sectionid, pavementid)
+                    if (pavementsection) {
+                        pcc = pavementsection.pcc
+                    }
+
+                }
+
+
+            }
+        }
+
+        return pcc;
+
+
+    }
+
+    handlePCC(value) {
+        const ues = new UES()
+        const makeid = new MakeID();
+        let pavements = ues.getPavement.call(this)
+        if (this.state.activesectionid) {
+            const sectionid = this.state.activesectionid;
+            const pavement = ues.getPavementByID.call(this, sectionid)
+            if (pavement) {
+                const i = ues.getPavementKeyByID.call(this, sectionid)
+                if (this.state.activepavementid) {
+                    const pavementid = this.state.activepavementid;
+                    const pavementsection = ues.getPavementSectionByID.call(this, sectionid, pavementid)
+                    if (pavementsection) {
+                        const j = ues.getPavementSectionKeyByID.call(this, sectionid, pavementid)
+                        pavements[i].design[j].pcc = value;
+                        this.props.reduxPavement(pavements)
+                        this.setState({ render: 'render' })
+
+                    }
+
+
+                } else {
+                    const pavementid = makeid.pavementSectionID.call(this)
+                    const ti = this.state.ti;
+                    const ab = this.state.ab;
+                    const as = this.state.as;
+                    const ac = this.state.ac;
+                    const use = this.state.use;
+                    const newpavementsection = newPavementSection(pavementid, sectionid, ti, ac, ab, as,value, use )
+                    if (pavement.hasOwnProperty("design")) {
+
+                        pavement.design.push(newpavementsection)
+
+                    } else {
+                        pavement.design = [newpavementsection]
+
+                    }
+                    this.setState({ activepavementid: pavementid })
+                }
+            }
+        }
+
+    }
+
 
     getAB() {
         const ues = new UES();
@@ -432,10 +583,12 @@ class Pavement extends Component {
                 } else {
                     const pavementid = makeid.pavementSectionID.call(this)
                     const ti = this.state.ti;
-          
+
                     const ac = this.state.ac;
                     const as = this.state.as;
-                    const newpavementsection = newPavementSection(pavementid, sectionid, ti,  ac, value, as)
+                    const use = this.state.use;
+                    const pcc = this.state.pcc;
+                    const newpavementsection = newPavementSection(pavementid, sectionid, ti, ac, value, as, pcc, use)
                     if (pavement.hasOwnProperty("design")) {
 
                         pavement.design.push(newpavementsection)
@@ -477,352 +630,397 @@ class Pavement extends Component {
 
     }
 
-  
-        handleAS(value) {
-            const ues = new UES()
-            const makeid = new MakeID();
-            let pavements = ues.getPavement.call(this)
-            if (this.state.activesectionid) {
-                const sectionid = this.state.activesectionid;
-                const pavement = ues.getPavementByID.call(this, sectionid)
-                if (pavement) {
-                    const i = ues.getPavementKeyByID.call(this, sectionid)
-                    if (this.state.activepavementid) {
-                        const pavementid = this.state.activepavementid;
-                        const pavementsection = ues.getPavementSectionByID.call(this, sectionid, pavementid)
-                        if (pavementsection) {
-                            const j = ues.getPavementSectionKeyByID.call(this, sectionid, pavementid)
-                            pavements[i].design[j].as = value;
-                            this.props.reduxPavement(pavements)
-                            this.setState({ render: 'render' })
 
-                        }
+    handleAS(value) {
+        const ues = new UES()
+        const makeid = new MakeID();
+        let pavements = ues.getPavement.call(this)
+        if (this.state.activesectionid) {
+            const sectionid = this.state.activesectionid;
+            const pavement = ues.getPavementByID.call(this, sectionid)
+            if (pavement) {
+                const i = ues.getPavementKeyByID.call(this, sectionid)
+                if (this.state.activepavementid) {
+                    const pavementid = this.state.activepavementid;
+                    const pavementsection = ues.getPavementSectionByID.call(this, sectionid, pavementid)
+                    if (pavementsection) {
+                        const j = ues.getPavementSectionKeyByID.call(this, sectionid, pavementid)
+                        pavements[i].design[j].as = value;
+                        this.props.reduxPavement(pavements)
+                        this.setState({ render: 'render' })
 
+                    }
+
+
+                } else {
+                    const pavementid = makeid.pavementSectionID.call(this)
+                    const ti = this.state.ti;
+                    const ac = this.state.ac;
+                    const ab = this.state.ab;
+                    const use = this.state.use;
+                    const pcc = this.state.pcc;
+                    const newpavementsection = newPavementSection(pavementid, sectionid, ti, ac, ab, value, pcc, use)
+                    if (pavement.hasOwnProperty("design")) {
+
+                        pavement.design.push(newpavementsection)
 
                     } else {
-                        const pavementid = makeid.pavementSectionID.call(this)
-                        const ti = this.state.ti;
-                        const ac = this.state.ac;
-                        const ab = this.state.ab;
-                        const newpavementsection = newPavementSection(pavementid, sectionid, ti, ac, ab, value)
-                        if (pavement.hasOwnProperty("design")) {
+                        pavement.design = [newpavementsection]
 
-                            pavement.design.push(newpavementsection)
-
-                        } else {
-                            pavement.design = [newpavementsection]
-
-                        }
-                        this.setState({ activepavementid: pavementid })
                     }
+                    this.setState({ activepavementid: pavementid })
                 }
             }
-
         }
 
+    }
 
-        calcGEDesign() {
-            const gfac = Number(this.calcGF());
-            const ac = Number(this.getAC())
-            const ab = Number(this.getAB())
-            const as = Number(this.getAS())
-            let GE = 0;
-            if (ac > 0 || ab > 0 || as > 0) {
-                GE = gfac * ac + ab * 1.1 + as
-            }
-            return Math.round(GE)
+
+    calcGEDesign() {
+        const gfac = Number(this.calcGF());
+        const ac = Number(this.getAC())
+        const ab = Number(this.getAB())
+        const as = Number(this.getAS())
+        const pcc = Number(this.getPCC())
+        let GE = 0;
+        if (ac > 0 || ab > 0 || as > 0 || pcc > 0) {
+            GE = (gfac * ac) + (1.8*pcc) + (ab * 1.1) + as
         }
+        return Math.round(GE)
+    }
 
-        calcFS() {
-            const GErequired = this.calcGERequired();
-            const GEDesign = this.calcGEDesign();
-            let fs = 0
-            if (GErequired > 0 && GErequired > 0) {
+    calcFS() {
+        const GErequired = this.calcGERequired();
+        const GEDesign = this.calcGEDesign();
+        let fs = 0
+        if (GErequired > 0 && GErequired > 0) {
 
-                fs = GEDesign / GErequired;
-            }
-            return (Number(fs).toFixed(2))
+            fs = GEDesign / GErequired;
         }
+        return (Number(fs).toFixed(2))
+    }
 
     async savePavement() {
-            const ues = new UES();
-            const pavement = ues.getPavement.call(this)
-            if (pavement) {
-                try {
+        const ues = new UES();
+        const pavement = ues.getPavement.call(this)
+        if (pavement) {
+            try {
 
-                    let response = await SavePavement({ pavement })
-                    if(response.hasOwnProperty("pavement")) {
-                        this.props.reduxPavement(response.pavement)
-                    }
-                    
-
-                    let message = "";
-                    if (response.hasOwnProperty("message")) {
-                        message += response.message;
-
-                    }
-
-                    if (response.hasOwnProperty("lastupdated")) {
-                        message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
-                    }
-                    this.setState({ message })
+                let response = await SavePavement({ pavement })
+                if (response.hasOwnProperty("pavement")) {
+                    this.props.reduxPavement(response.pavement)
+                }
 
 
-                } catch (err) {
+                let message = "";
+                if (response.hasOwnProperty("message")) {
+                    message += response.message;
 
                 }
 
-            }
-
-        }
-
-        handlePavementID(pavementid) {
-            if (this.state.activepavementid === pavementid) {
-                this.setState({ activepavementid: false })
-            } else {
-                this.setState({ activepavementid: pavementid })
-            }
-
-        }
-
-        removePavementSection(pavementid) {
-            const ues = new UES();
-            let pavement = ues.getPavement.call(this)
-            if (this.state.activesectionid) {
-                const sectionid = this.state.activesectionid;
-                const section = ues.getPavementByID.call(this, sectionid);
-
-                if (section) {
-                    const i = ues.getPavementKeyByID.call(this, sectionid)
-                    if (section.hasOwnProperty("design")) {
-
-                        const pavementsection = ues.getPavementSectionByID.call(this, sectionid, pavementid)
-
-                        if (pavementsection) {
-
-                            const j = ues.getPavementSectionKeyByID.call(this, sectionid, pavementid)
-                            pavement[i].design.splice(j, 1)
-                            this.props.reduxPavement(pavement)
-                            this.setState({ activepavementid: false })
-                        }
-                    }
-
+                if (response.hasOwnProperty("lastupdated")) {
+                    message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
                 }
+                this.setState({ message })
+
+
+            } catch (err) {
+
             }
 
         }
 
-        showPavementSections() {
+    }
 
-            const ues = new UES();
+    handlePavementID(pavementid) {
+        if (this.state.activepavementid === pavementid) {
+            this.setState({ activepavementid: false })
+        } else {
+            this.setState({ activepavementid: pavementid })
+        }
+
+    }
+
+    removePavementSection(pavementid) {
+        const ues = new UES();
+        let pavement = ues.getPavement.call(this)
+        if (this.state.activesectionid) {
             const sectionid = this.state.activesectionid;
-            let getsections = [];
-            const pavement = ues.getPavementByID.call(this, sectionid);
-            if (pavement) {
+            const section = ues.getPavementByID.call(this, sectionid);
 
-                if (pavement.hasOwnProperty("design")) {
-                    // eslint-disable-next-line
-                    pavement.design.map(section => {
-                       
-                        getsections.push(this.showPavementSection(section))
+            if (section) {
+                const i = ues.getPavementKeyByID.call(this, sectionid)
+                if (section.hasOwnProperty("design")) {
 
-                    })
+                    const pavementsection = ues.getPavementSectionByID.call(this, sectionid, pavementid)
+
+                    if (pavementsection) {
+
+                        const j = ues.getPavementSectionKeyByID.call(this, sectionid, pavementid)
+                        pavement[i].design.splice(j, 1)
+                        this.props.reduxPavement(pavement)
+                        this.setState({ activepavementid: false })
+                    }
                 }
+
             }
-
-            return getsections;
-
         }
 
+    }
 
+    showPavementSections() {
 
-        showPavementSection(section) {
+        const ues = new UES();
+        const sectionid = this.state.activesectionid;
+        let getsections = [];
+        const pavement = ues.getPavementByID.call(this, sectionid);
+        if (pavement) {
 
-            const ues = new UES();
-            const regularFont = ues.regularFont.call(this)
-            const styles = MyStylesheet();
-            const iconWidth = ues.removeIcon.call(this)
+            if (pavement.hasOwnProperty("design")) {
+                // eslint-disable-next-line
+                pavement.design.map(section => {
 
-            const highlight = (pavementid) => {
-                if (this.state.activepavementid === pavementid) {
-                    return (styles.activeid)
-                }
+                    getsections.push(this.showPavementSection(section))
+
+                })
             }
+        }
 
-            return (
-                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={section.pavementid}>
-                    <div style={{ ...styles.flex5, ...highlight(section.pavementid) }} onClick={() => { this.handlePavementID(section.pavementid) }}>
-                        <span style={{ ...styles.generalFont, ...regularFont }}>TI:{section.ti} Rvalue: {section.rvalue} AC: {section.ac}" AB: {section.ab}" AS: {section.as}"</span>
-                    </div>
-                    <div style={{ ...styles.flex1 }}>
-                        <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removePavementSection(section.pavementid) }}>{removeIcon()}</button>
-                    </div>
+        return getsections;
+
+    }
+
+
+
+    showPavementSection(section) {
+
+        const ues = new UES();
+        const regularFont = ues.regularFont.call(this)
+        const styles = MyStylesheet();
+        const iconWidth = ues.removeIcon.call(this)
+
+        const highlight = (pavementid) => {
+            if (this.state.activepavementid === pavementid) {
+                return (styles.activeid)
+            }
+        }
+
+        return (
+            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={section.pavementid}>
+                <div style={{ ...styles.flex5, ...highlight(section.pavementid) }} onClick={() => { this.handlePavementID(section.pavementid) }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>TI:{section.ti}  AC: {section.ac}" PCC: {section.pcc}" AB: {section.ab}" AS: {section.as}"</span>
                 </div>
-            )
+                <div style={{ ...styles.flex1 }}>
+                    <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removePavementSection(section.pavementid) }}>{removeIcon()}</button>
+                </div>
+            </div>
+        )
 
 
-        }
+    }
 
 
 
 
-        render() {
-            const styles = MyStylesheet();
-            const ues = new UES();
-            const myuser = ues.checkUser.call(this)
-            const regularFont = ues.regularFont.call(this)
-            const headerFont = ues.headerFont.call(this)
-            const generateIconWidth = ues.generateIcon.call(this)
-            if (myuser) {
-                const projectid = this.props.projectid;
-                const project = ues.getProjectbyID.call(this, projectid)
-                if (project) {
-                    return (
-                        <div style={{ ...styles.generalContainer }}>
+    render() {
+        const styles = MyStylesheet();
+        const ues = new UES();
+        const myuser = ues.checkUser.call(this)
+        const regularFont = ues.regularFont.call(this)
+        const headerFont = ues.headerFont.call(this)
+        const generateIconWidth = ues.generateIcon.call(this)
+        if (myuser) {
+            const projectid = this.props.projectid;
+            const project = ues.getProjectbyID.call(this, projectid)
+            if (project) {
+                return (
+                    <div style={{ ...styles.generalContainer }}>
 
 
-                            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${project.projectid}`}>
-                                    /{project.projectnumber} {project.title} </Link>
-                            </div>
+                        <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${project.projectid}`}>
+                                /{project.projectnumber} {project.title} </Link>
+                        </div>
 
-                            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${project.projectid}/pavement`}>
-                                    /pavement</Link>
-                            </div>
+                        <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${project.projectid}/pavement`}>
+                                /pavement</Link>
+                        </div>
 
-                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                                <input type="text" style={{ ...styles.generalField, ...regularFont, ...styles.generalFont }}
-                                    value={this.getSectionName()}
-                                    onChange={event => { this.handleSectionName(event.target.value) }}
+                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                            <input type="text" style={{ ...styles.generalField, ...regularFont, ...styles.generalFont }}
+                                value={this.getSectionName()}
+                                onChange={event => { this.handleSectionName(event.target.value) }}
+                            />
+                            <span style={{ ...regularFont, ...styles.generalFont }}>Section Name</span>
+
+                        </div>
+                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.generalContainer }}>
+                                <input type="text" style={{ ...styles.mediumwidth, ...regularFont, ...styles.generalFont }}
+                                    value={this.getRvalue()}
+                                    onChange={event => { this.handleRvalue(event.target.value) }}
                                 />
-                                <span style={{ ...regularFont, ...styles.generalFont }}>Section Name</span>
+                            </div>
+                            <span style={{ ...regularFont, ...styles.generalFont }}>R-Value</span>
+                        </div>
+
+                        {this.showpavementids()}
+
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1 }}>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <input type="text" style={{ ...styles.mediumwidth, ...regularFont, ...styles.generalFont }}
+                                        value={this.getTI()}
+                                        onChange={event => { this.handleTI(event.target.value) }}
+                                    />
+                                </div>
+                                <span style={{ ...regularFont, ...styles.generalFont }}>T.I. Traffic Index</span>
+                            </div>
+
+                            <div style={{ ...styles.flex1 }}>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <input type="text" style={{ ...styles.mediumwidth, ...regularFont, ...styles.generalFont, ...styles.generalField }}
+                                        value={this.getUse()}
+                                        onChange={event => { this.handleUse(event.target.value) }}
+                                    />
+                                </div>
+                                <span style={{ ...regularFont, ...styles.generalFont }}>Use</span>
+                            </div>
+
+
+                        </div>
+
+
+                   
+
+
+
+                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                            <span style={{ ...regularFont, ...styles.generalFont }}>GE Required (in): {this.calcGERequired()}</span>
+                        </div>
+
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                            <div style={{ ...styles.flex1 }}>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <input type="text" style={{ ...styles.mediumwidth, ...regularFont, ...styles.generalFont }}
+                                        value={this.getAC()}
+                                        onChange={event => { this.handleAC(event.target.value) }} />
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <span style={{ ...regularFont, ...styles.generalFont }}>
+                                        A.C. (in)
+                                    </span>
+                                </div>
+                                <span style={{ ...regularFont, ...styles.generalFont }}>
+                                    {this.calcGF()}
+                                </span>
 
                             </div>
-                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15}}>
-                                    <div style={{ ...styles.generalContainer }}>
-                                        <input type="text" style={{ ...styles.mediumwidth, ...regularFont, ...styles.generalFont }}
-                                            value={this.getRvalue()}
-                                            onChange={event => { this.handleRvalue(event.target.value) }}
-                                        />
-                                    </div>
-                                    <span style={{ ...regularFont, ...styles.generalFont }}>R-Value</span>
-                                </div>
-
-                            {this.showpavementids()}
 
                             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                                 <div style={{ ...styles.flex1 }}>
-                                    <div style={{ ...styles.generalContainer }}>
-                                        <input type="text" style={{ ...styles.mediumwidth, ...regularFont, ...styles.generalFont }}
-                                            value={this.getTI()}
-                                            onChange={event => { this.handleTI(event.target.value) }}
-                                        />
-                                    </div>
-                                    <span style={{ ...regularFont, ...styles.generalFont }}>T.I. Traffic Index</span>
-                                </div>
-                               
-
-                            </div>
-
-                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                                <span style={{ ...regularFont, ...styles.generalFont }}>GE Required (in): {this.calcGERequired()}</span>
-                            </div>
-
-                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                                <div style={{ ...styles.flex1 }}>
 
                                     <div style={{ ...styles.generalContainer }}>
                                         <input type="text" style={{ ...styles.mediumwidth, ...regularFont, ...styles.generalFont }}
-                                            value={this.getAC()}
-                                            onChange={event => { this.handleAC(event.target.value) }} />
+                                            value={this.getPCC()}
+                                            onChange={event => { this.handlePCC(event.target.value) }} />
                                     </div>
                                     <div style={{ ...styles.generalContainer }}>
                                         <span style={{ ...regularFont, ...styles.generalFont }}>
-                                            A.C. (in)
+                                            P.C.C. (in)
                                         </span>
                                     </div>
-                                    <span style={{ ...regularFont, ...styles.generalFont }}>
-                                        {this.calcGF()}
-                                    </span>
+                                    <div style={{ ...styles.generalContainer }}>
+                                        <span style={{ ...regularFont, ...styles.generalFont }}>
+                                            1.8
+                                        </span>
+                                    </div>
+
 
                                 </div>
-                                <div style={{ ...styles.flex1 }}>
-                                    <div style={{ ...styles.generalContainer }}>
-                                        <input type="text" style={{ ...styles.mediumwidth, ...regularFont, ...styles.generalFont }}
-                                            value={this.getAB()}
-                                            onChange={event => { this.handleAB(event.target.value) }}
-                                        />
-                                    </div>
-                                    <div style={{ ...styles.generalContainer }}>
-                                        <span style={{ ...regularFont, ...styles.generalFont }}>A.B. (in)</span>
-                                    </div>
-                                    <span style={{ ...regularFont, ...styles.generalFont }}>G.F. 1.1</span>
+                            </div>
+
+                        </div>
+
+                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+
+                            <div style={{ ...styles.flex1 }}>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <input type="text" style={{ ...styles.mediumwidth, ...regularFont, ...styles.generalFont }}
+                                        value={this.getAB()}
+                                        onChange={event => { this.handleAB(event.target.value) }}
+                                    />
                                 </div>
-                                <div style={{ ...styles.flex1 }}>
-                                    <div style={{ ...styles.generalContainer }}>
-                                        <input type="text" style={{ ...styles.mediumwidth, ...regularFont, ...styles.generalFont }}
-                                            value={this.getAS()}
-                                            onChange={event => { this.handleAS(event.target.value) }} />
-                                    </div>
-                                    <div style={{ ...styles.generalContainer }}>
-                                        <span style={{ ...regularFont, ...styles.generalFont }}>A.S. (in)</span>
-                                    </div>
-                                    <span style={{ ...regularFont, ...styles.generalFont }}>G.F. 1.0</span>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <span style={{ ...regularFont, ...styles.generalFont }}>A.B. (in)</span>
                                 </div>
-
-
-
+                                <span style={{ ...regularFont, ...styles.generalFont }}>G.F. 1.1</span>
                             </div>
-
-                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                                <span style={{ ...regularFont, ...styles.generalFont }}>GE Design (in): {this.calcGEDesign()}</span>
-                            </div>
-
-                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                                <span style={{ ...regularFont, ...styles.generalFont }}>Factor of Safety:{this.calcFS()}</span>
-                            </div>
-
-                            {this.showPavementSections()}
-
-                           
-
-                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
-                                <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
-                            </div>
-
-                            <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                                <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { this.savePavement() }}>{saveIcon()}</button>
+                            <div style={{ ...styles.flex1 }}>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <input type="text" style={{ ...styles.mediumwidth, ...regularFont, ...styles.generalFont }}
+                                        value={this.getAS()}
+                                        onChange={event => { this.handleAS(event.target.value) }} />
+                                </div>
+                                <div style={{ ...styles.generalContainer }}>
+                                    <span style={{ ...regularFont, ...styles.generalFont }}>A.S. (in)</span>
+                                </div>
+                                <span style={{ ...regularFont, ...styles.generalFont }}>G.F. 1.0</span>
                             </div>
 
 
 
                         </div>
 
-                    )
+                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                            <span style={{ ...regularFont, ...styles.generalFont }}>GE Design (in): {this.calcGEDesign()}</span>
+                        </div>
 
-                } else {
+                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                            <span style={{ ...regularFont, ...styles.generalFont }}>Factor of Safety:{this.calcFS()}</span>
+                        </div>
 
-                    return (<div style={{ ...styles.generalContainer }}>
+                        {this.showPavementSections()}
 
-                        <span style={{ ...styles.generalFont, ...regularFont }}>Project Not Found</span>
-                    </div>)
 
-                }
 
+                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.alignCenter }}>
+                            <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
+                        </div>
+
+                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                            <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { this.savePavement() }}>{saveIcon()}</button>
+                        </div>
+
+
+
+                    </div>
+
+                )
 
             } else {
+
                 return (<div style={{ ...styles.generalContainer }}>
 
-                    <span style={{ ...styles.generalFont, ...regularFont }}>No User Found</span>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>Project Not Found</span>
                 </div>)
+
             }
 
 
+        } else {
+            return (<div style={{ ...styles.generalContainer }}>
 
+                <span style={{ ...styles.generalFont, ...regularFont }}>No User Found</span>
+            </div>)
         }
 
+
+
     }
+
+}
 
 function mapStateToProps(state) {
     return {

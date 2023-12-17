@@ -8,8 +8,8 @@ export function newBoring(boringid, projectid, boringnumber, datedrilled, gwdept
     return { boringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, longitude, diameter }
 }
 
-export function newPavementSection(pavementid, sectionid, ti,ac,ab,as) {
-    return({pavementid, sectionid,  ti,ac,ab,as})
+export function newPavementSection(pavementid, sectionid, ti,ac,ab,as, pcc,use) {
+    return({pavementid, sectionid,ti,ac,ab,as,pcc,use})
 }
 
 export function newPavement(sectionid,projectid,sectionname,rvalue) {
