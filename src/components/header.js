@@ -54,7 +54,7 @@ class Header {
         }
 
         return (
-            <div style={{ ...styles.generalContainer, ...styles.drawheader, ...styles.bottomMargin15 }}>
+            <div className={`noPrint`} style={{  ...styles.drawheader, ...styles.bottomMargin15 }}>
                 <div style={{ ...styles.generalFlex, ...styles.marginTop15 }}>
                     <div style={{ ...styles.flex1, ...styles.alignCenter }}>
 

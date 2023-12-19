@@ -36,9 +36,9 @@ class Borings extends Component {
         }
 
         const borings = ues.getBoringsbyProjectID.call(this, projectid)
+        console.log(borings)
         if (!borings) {
             ues.loadBorings.call(this, projectid)
-
 
         }
 

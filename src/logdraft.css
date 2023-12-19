@@ -1,162 +1,131 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed|Roboto:400,500&display=swap');
-.logdraft-container {
-    width: 96%;
-    margin: auto;
+
+@media print {
+    .titleFont{font-size:'12px';}
+    .noPrint{display: none;}
+ 
+ }
+ .titleFont{
+    color:'red';
+ }
+
+.logdraft-1 {
+    letter-spacing: -.07em;
 }
 
-.logdraft-title {
-    text-align: center;
-}
-
-.logdraft-description {
-    padding: 0px;
-    font-size: 14px;
-    color: #000000;
-}
-
-.logdraft-1,
-.logdraft-2 {
-    fill: none;
-    stroke: #000;
+.logdraft-2,
+.logdraft-3,
+.logdraft-4,
+.logdraft-5,
+.logdraft-6,
+.logdraft-7 {
     stroke-miterlimit: 10;
 }
 
-.logdraft-1 {
-    stroke-width: 2px;
-}
-
+.logdraft-2,
 .logdraft-3,
 .logdraft-4,
-.logdraft-6 {
-    writing-mode: tb;
+.logdraft-5,
+.logdraft-7 {
+    fill: none;
 }
 
-.logdraft-3,
-.logdraft-4 {
-    text-orientation: upright;
-    glyph-orientation-vertical: 0deg;
+.logdraft-2,
+.logdraft-5,
+.logdraft-6,
+.logdraft-7 {
+    stroke: #000;
+}
+
+.logdraft-8 {
+    font-size: 29px;
+}
+
+.logdraft-8,
+.logdraft-9,
+.logdraft-10,
+.logdraft-11,
+.logdraft-6,
+.logdraft-12 {
+    font-family: ArialMT, Arial;
+}
+
+.logdraft-9,
+.logdraft-10,
+.logdraft-6 {
+    font-size: 24px;
 }
 
 .logdraft-3 {
-    font-size: 12px;
-    letter-spacing: 0.1em;
+    stroke: #030607;
 }
 
-.logdraft-11,
-.logdraft-3,
-.logdraft-4,
-.logdraft-6,
-.logdraft-7,
-.logdraft-8,
-.logdraft-description,
-.logdraft-label,
-.logdraft-20,
-.logdraft-21,
-.logdraft-title {
-    font-family: 'Roboto Condensed', sans-serif;
-}
-
-.exploratorylog {
-    font-family: 'Roboto', sans-serif;
-}
-
-.logdraft-title {
-    font-size: 24px;
-}
-
-.logdraft-4,
-.logdraft-6,
-.logdraft-7,
-.logdraft-label {
-    font-size: 16px;
-}
-
-.logdraft-5 {
-    letter-spacing: 0.03em;
-}
-
-.logdraft-6 {
-    text-orientation: sideways-right;
-    glyph-orientation-vertical: 90deg;
-    letter-spacing: 0.1em;
-}
-
-.logdraft-7 {
-    letter-spacing: 0.1em;
-}
-
-.logdraft-11,
-.logdraft-8 {
-    font-size: 18px;
-}
-
-.logdraft-8 {
-    letter-spacing: 0.1em;
-}
-
-.logdraft-9 {
-    letter-spacing: 0.08em;
-}
-
-.logdraft-10 {
-    letter-spacing: 0.08em;
-}
-
-.logdraft-11 {
-    letter-spacing: 0.1em;
-}
-
-.logdraft-12 {
-    letter-spacing: 0.11em;
-}
-
-.logdraft-13 {
-    letter-spacing: 0.11em;
+.logdraft-13,
+.logdraft-14,
+.logdraft-15,
+.logdraft-16,
+.logdraft-17 {
+    stroke-width: 0px;
 }
 
 .logdraft-14 {
-    letter-spacing: 0.09em;
+    fill: #035384;
 }
 
 .logdraft-15 {
-    letter-spacing: 0.1em;
+    fill: #4185c5;
 }
 
-.logdraft-16 {
-    font-size: 36px;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    letter-spacing: 0.1em;
+.logdraft-4 {
+    stroke: blue;
 }
 
-.logdraft-17 {
-    letter-spacing: 0.07em;
+.logdraft-5 {
+    stroke-width: 2px;
+}
+
+.logdraft-10 {
+    text-decoration: underline;
+}
+
+.logdraft-11 {
+    font-size: 30px;
 }
 
 .logdraft-18 {
-    letter-spacing: 0.04em;
+    letter-spacing: -.11em;
 }
 
 .logdraft-19 {
-    letter-spacing: 0.09em;
+    letter-spacing: -.02em;
 }
 
 .logdraft-20 {
-    letter-spacing: 0.08em;
+    letter-spacing: -.04em;
+}
+
+.logdraft-16 {
+    fill: blue;
+}
+
+.logdraft-12 {
+    font-size: 16px;
 }
 
 .logdraft-21 {
-    font-size: 24px;
+    letter-spacing: -.06em;
 }
 
-.logdraft-22 {
-    letter-spacing: -0.01em;
+.logdraft-7 {
+    stroke-width: .5px;
 }
 
-@media print {
-    .logdraft-container {
-        width: 850px;
-        margin: auto;
-    }
-
+.logdraft-17 {
+    fill: #6b266d;
 }
+
+.liner-1{fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:2px;}
+
+
+.logdraftblock-1{letter-spacing:-.11em;}.logdraftblock-2{font-family:Arial-BoldMT, Arial;font-size:24px;font-weight:700;}.logdraftblock-3{letter-spacing:-.02em;}.logdraftblock-4{font-family:ArialMT, Arial;font-size:20px;}.logdraftblock-5{letter-spacing:-.04em;}.logdraftblock-6{letter-spacing:-.06em;}.logdraftblock-7{fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:.5px;}
+
+.logdraft-footer-1{stroke:#030607;}.logdraft-footer-1,.logdraft-footer-2{fill:none;stroke-miterlimit:10;}.logdraft-footer-3{fill:#035384;}.logdraft-footer-3,.logdraft-footer-4{stroke-width:0px;}.logdraft-footer-4{fill:#4185c5;}.logdraft-footer-2{stroke:#000;stroke-width:2px;}.logdraft-footer-5{font-family:ArialMT, Arial;font-size:30px;}

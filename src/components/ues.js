@@ -266,6 +266,7 @@ class UES {
             // eslint-disable-next-line
             borings.map(boring => {
                 if (boring.projectid === projectid) {
+                    
                     getborings.push(boring)
                 }
 
@@ -318,6 +319,13 @@ class UES {
                 getsamples = boring.samples;
             }
         }
+        getsamples.sort((a, b) => {
+            if (Number(a.depth) >= Number(b.depth)) {
+                return 1;
+            } else {
+                return -1
+            }
+        })
         return getsamples;
     }
 
@@ -1023,7 +1031,7 @@ class UES {
             if (this.props.clients.hasOwnProperty("length")) {
                 clients = this.props.clients;
                 clients.sort((a, b) => {
-                    if (Number(a.lastname) >= Number(b.lastname)) {
+                    if (a.lastname >= b.lastname) {
                         return 1;
                     } else {
                         return -1

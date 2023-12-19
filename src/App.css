@@ -14,6 +14,70 @@
   }
 }
 
+@media print {
+  .titleFont{
+    font-size: 12px;
+    font-family: ArialMT, Arial;
+
+  } 
+
+  .noPrint{
+    display:none;
+  }
+
+  .headerFont{
+    font-size: 10px;
+    font-family: ArialMT, Arial;
+
+  }
+
+  .regularFont{
+    font-size: 8px;
+    font-family: ArialMT, Arial;
+
+  }
+
+}
+
+
+@media only screen and (max-width: 1200px) {
+  .titleFont{
+    font-size: 20px;
+    font-family: ArialMT, Arial;
+
+  } 
+  .headerFont{
+    font-size: 16px;
+    font-family: ArialMT, Arial;
+
+  }
+
+  .regularFont{
+    font-size: 12px;
+    font-family: ArialMT, Arial;
+
+  }
+}
+
+
+@media only screen and (max-width: 600px) {
+  .titleFont{
+    font-size: 16px;
+  } 
+
+  .regularFont{
+    font-size: 10px;
+
+  }
+
+  .headerFont{
+    font-size: 14px;
+
+  }
+}
+
+
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
