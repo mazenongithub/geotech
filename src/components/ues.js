@@ -1,4 +1,4 @@
-import { LoadBorings, LoadClients, LoadProjects, LoadReport, SaveBorings, LoadPavement } from "./actions/api";
+import { LoadBorings, LoadClients, LoadProjects, LoadReport, SaveBorings, LoadPavement, SaveReport } from "./actions/api";
 import { inputUTCStringForLaborID } from "./functions";
 class UES {
 
@@ -28,7 +28,7 @@ class UES {
     appendixList() {
         return ([{ section: `Atterberg's Limits Test Results` },
         { section: 'Expansion Index Test Results' },
-        { section: 'Resistance Value Test Results'},
+        { section: 'Resistance Value Test Results' },
         { section: 'United Soils Classification' }])
     }
 
@@ -117,6 +117,45 @@ class UES {
             { section: 'Field Exploration, Sampling, and Laboratory Testing' }
 
         ])
+    }
+
+    async saveReport() {
+        try {
+            const ues = new UES();
+            const projectid = this.props.projectid;
+            const reports = ues.getReportsByProjectID.call(this, projectid)
+            const response = await SaveReport({ projectid, reports });
+            console.log(response)
+            if (response.hasOwnProperty("reportsdb")) {
+                // eslint-disable-next-line
+                response.reportsdb.map(reportdb => {
+                    const reportiddb = reportdb.reportid;
+                    const checkreport = ues.getReportByID.call(this, reportiddb);
+                    if (checkreport) {
+                        const i = ues.getReportKeyByID.call(this, reportiddb);
+                        reports[i] = reportdb;
+                    }
+
+                })
+                this.props.reduxReports(reports)
+
+            }
+
+            let message = "";
+            if (response.hasOwnProperty("message")) {
+                message += response.message;
+
+            }
+
+            if (response.hasOwnProperty("lastupdated")) {
+                message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
+            }
+
+            this.setState({ message })
+
+        } catch (err) {
+            alert(err)
+        }
     }
 
     async saveBorings() {
@@ -266,7 +305,7 @@ class UES {
             // eslint-disable-next-line
             borings.map(boring => {
                 if (boring.projectid === projectid) {
-                    
+
                     getborings.push(boring)
                 }
 
@@ -317,15 +356,16 @@ class UES {
         if (boring) {
             if (boring.hasOwnProperty("samples")) {
                 getsamples = boring.samples;
+                getsamples.sort((a, b) => {
+                    if (Number(a.depth) >= Number(b.depth)) {
+                        return 1;
+                    } else {
+                        return -1
+                    }
+                })
             }
+
         }
-        getsamples.sort((a, b) => {
-            if (Number(a.depth) >= Number(b.depth)) {
-                return 1;
-            } else {
-                return -1
-            }
-        })
         return getsamples;
     }
 
@@ -685,13 +725,13 @@ class UES {
                     }
                 })
             }
-    
-    
-    
+
+
+
         }
         return key;
     }
-    
+
     getFindingSectionbyID(reportid, sectionid) {
         const ues = new UES();
         const report = ues.getReportByID.call(this, reportid);
@@ -705,9 +745,9 @@ class UES {
                     }
                 })
             }
-    
-    
-    
+
+
+
         }
         return getsection;
     }
@@ -949,6 +989,98 @@ class UES {
 
         }
 
+    }
+
+    getAppendixKeybyID(reportid,appendixid) {
+
+        const ues = new UES();
+        let key = false;
+        const appendixs = ues.getAppendixsbyReportID.call(this,reportid)
+        if(appendixs) {
+            // eslint-disable-next-line
+            appendixs.map((appendix,i)=> {
+                if(appendix.appendixid === appendixid) {
+                    key = i;
+                }
+            })
+        }
+    
+        return key;
+    }
+    
+    getAppendixbyID(reportid,appendixid) {
+    
+        const ues = new UES();
+        let getappendix = false;
+        const appendixs = ues.getAppendixsbyReportID.call(this,reportid)
+        if(appendixs) {
+            // eslint-disable-next-line
+            appendixs.map(appendix=> {
+                if(appendix.appendixid === appendixid) {
+                    getappendix = appendix;
+                }
+            })
+        }
+    
+        return getappendix;
+    }
+    
+    getAppendixsbyReportID(reportid) {
+        const ues = new UES();
+        let getappendix = false;
+        const report = ues.getReportByID.call(this, reportid)
+        if (report) {
+            if (report.hasOwnProperty("appendix")) {
+                getappendix = report.appendix;
+            }
+        }
+        return getappendix;
+    }
+
+    getFigureKeybyID(reportid,figureid) {
+
+        const ues = new UES();
+        let key = false;
+        const figures = ues.getFiguresbyReportID.call(this,reportid)
+        if(figures) {
+            // eslint-disable-next-line
+            figures.map((figure,i)=> {
+                if(figure.figureid === figureid) {
+                    key = i;
+                }
+            })
+        }
+
+        return key;
+    }
+
+    getFigurebyID(reportid,figureid) {
+
+        const ues = new UES();
+        let getfigure = false;
+        const figures = ues.getFiguresbyReportID.call(this,reportid)
+        if(figures) {
+            // eslint-disable-next-line
+            figures.map(figure=> {
+                if(figure.figureid === figureid) {
+                    getfigure = figure;
+                }
+            })
+        }
+
+        return getfigure;
+    }
+
+    getFiguresbyReportID(reportid) {
+        const ues = new UES();
+        let getfigures = false;
+        const report = ues.getReportByID.call(this, reportid)
+        if (report) {
+            if (report.hasOwnProperty("figures")) {
+                getfigures = report.figures;
+            }
+        }
+        return getfigures;
     }
 
     getProjectKeybyID(projectid) {

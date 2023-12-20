@@ -4,8 +4,16 @@ export function newSieve(sampleid, wgt34, wgt38, wgt4, wgt10, wgt30, wgt40, wgt1
 export function newSample(sampleid, boringid, sampledepth, depth, samplenumber, sampleset, diameter, samplelength, description, uscs, spt, sptlength, wetwgt, wetwgt_2, drywgt, tarewgt, tareno, graphiclog, ll, pi, remarks) {
     return ({ sampleid, boringid, sampledepth, depth, samplenumber, sampleset, diameter, samplelength, description, uscs, spt,sptlength, wetwgt, wetwgt_2, drywgt, tarewgt, tareno, graphiclog, ll, pi, remarks })
 }
-export function newBoring(boringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, longitude, diameter) {
-    return { boringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, longitude, diameter }
+export function newBoring(boringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, longitude, diameter, remarks, drillmethod, contractor,samplingmethod,drivingmethod, checkedby,figure,backfill) {
+    return { boringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, longitude, diameter, remarks, drillmethod,contractor,samplingmethod,drivingmethod, checkedby,figure,backfill }
+}
+
+export function newAppendix(appendixid, appendixnumber, appendixname) {
+    return({appendixid, appendixnumber, appendixname})
+}
+
+export function newFigure(figureid,figurenumber,figurename) {
+    return ({figureid,figurenumber,figurename})
 }
 
 export function newPavementSection(pavementid, sectionid, ti,ac,ab,as, pcc,use) {
@@ -41,6 +49,31 @@ export function currentDate() {
     return currentdate;
 
 }
+
+export function  convertDegree(degree) {
+    degree = degree.toString();
+    let degreeArray = degree.split('.')
+    let decimal = `0.${degreeArray[1]}`;
+    decimal = Number(decimal)
+    let whole = degreeArray[0]
+    
+    let totalcentiseconds = decimal * (60*60*100)
+    
+    let minutes = Math.floor(decimal * (60))
+    let subtractseconds = minutes*(60*100)
+    
+    let remainingseconds = totalcentiseconds - subtractseconds
+    let seconds = Math.floor(remainingseconds/100);
+    remainingseconds = remainingseconds - (seconds*100)
+    let decimalseconds = Math.round(remainingseconds)
+    if(decimalseconds < 10) {
+        decimalseconds = `0${decimalseconds}`
+    }
+    return `${whole}.${minutes}'${seconds}.${decimalseconds}"`
+    
+    
+    
+  }
 
 export function formatDateReport(datestring) {
     datestring = datestring.replace(/-/g, '/');

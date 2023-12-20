@@ -24,7 +24,12 @@ import Samples from './components/samples';
 import Sieve from './components/sieve';
 import LogDraft from './components/logdraft';
 import ViewReport from './components/viewreport';
+import Figures from './components/figures'
 
+const ShowFigures = () => {
+  const { projectid, userid, reportid } = useParams();
+  return(<Figures userid={userid} projectid={projectid} reportid={reportid} />)
+}
 const ShowViewReport = () => {
   const { projectid, userid, reportid } = useParams();
   return(<ViewReport userid={userid} projectid={projectid} reportid={reportid} />)
@@ -188,6 +193,7 @@ class App extends Component {
               <Route exact path="/:userid/projects/:projectid/proposals" element={<ShowProposals />} />
               <Route exact path="/:userid/projects/:projectid/report" element={<ShowReport />} />
               <Route exact path="/:userid/projects/:projectid/report/:reportid" element={<ShowViewReport />} />
+              <Route exact path="/:userid/projects/:projectid/report/:reportid/figures" element={<ShowFigures />} />
               <Route exact path="/:userid/projects/:projectid/borings" element={<ShowBorings />} />
               <Route exact path="/:userid/projects/:projectid/pavement" element={<ShowPavement />} />
               <Route exact path="/:userid/projects/:projectid/borings/:boringid/samples" element={<ShowSamples />} />

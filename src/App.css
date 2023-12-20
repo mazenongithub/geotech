@@ -16,7 +16,7 @@
 
 @media print {
   .titleFont{
-    font-size: 12px;
+    font-size: 16px;
     font-family: ArialMT, Arial;
 
   } 
@@ -26,13 +26,13 @@
   }
 
   .headerFont{
-    font-size: 10px;
+    font-size: 12px;
     font-family: ArialMT, Arial;
 
   }
 
   .regularFont{
-    font-size: 8px;
+    font-size: 12px;
     font-family: ArialMT, Arial;
 
   }

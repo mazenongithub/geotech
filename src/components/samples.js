@@ -111,7 +111,7 @@ class Samples extends Component {
 
         if (myuser) {
             const userid = myuser.userid;
-            const boring = ues.getBoringbyID.call(this,boringid)
+            const boring = ues.getBoringbyID.call(this, boringid)
 
             const highlight = (sampleid) => {
                 if (this.state.activesampleid === sampleid) {
@@ -223,43 +223,43 @@ class Samples extends Component {
                 return (`${Math.round(Number(dryden()))}`)
             }
 
-            if(boring) {
-            return (
-                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={sample.sampleid}>
-                    <div style={{ ...styles.flex1 }}>
+            if (boring) {
+                return (
+                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={sample.sampleid}>
+                        <div style={{ ...styles.flex1 }}>
 
-                        <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                            <div style={{ ...styles.flex5, ...regularFont, ...styles.generalFont }} onClick={() => { this.handleSampleID(sample.sampleid) }}>
-                                <span style={{ ...highlight(sample.sampleid) }} >{boring.boringnumber}-{sample.sampleset}({sample.samplenumber}) SampleDepth:{sample.sampledepth} Depth:{sample.depth}ft Diameter:{sample.diameter} in. Length {sample.samplelength} in. Description {sample.description}  SPT: {sample.spt} SPTLength:{sample.sptlength} WetWgt: {sample.wetwgt}g  Wet Wgt 2: {sample.wetwgt_2}g Dry Wgt:{sample.drywgt}g Tare Wgt {sample.tarewgt}g  WgtWater:{showwgtwater()} NetWgt:{shownetwgt()} Moist: {Number(moist() * 100).toFixed(1)}% DryDen:{showdryden()}pcf Tare No: {sample.tareno} LL: {sample.ll} PI: {sample.pi}</span>
+                            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                                <div style={{ ...styles.flex5, ...regularFont, ...styles.generalFont }} onClick={() => { this.handleSampleID(sample.sampleid) }}>
+                                    <span style={{ ...highlight(sample.sampleid) }} >{boring.boringnumber}-{sample.sampleset}({sample.samplenumber}) SampleDepth:{sample.sampledepth} Depth:{sample.depth}ft Diameter:{sample.diameter} in. Length {sample.samplelength} in. Description {sample.description}  SPT: {sample.spt} SPTLength:{sample.sptlength} WetWgt: {sample.wetwgt}g  Wet Wgt 2: {sample.wetwgt_2}g Dry Wgt:{sample.drywgt}g Tare Wgt {sample.tarewgt}g  WgtWater:{showwgtwater()} NetWgt:{shownetwgt()} Moist: {Number(moist() * 100).toFixed(1)}% DryDen:{showdryden()}pcf Tare No: {sample.tareno} LL: {sample.ll} PI: {sample.pi}</span>
+
+                                </div>
+                                <div style={{ ...styles.flex1 }}>
+                                    <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeSampleID(sample.sampleid) }}>
+                                        {removeIcon()}
+                                    </button>
+                                </div>
 
                             </div>
-                            <div style={{ ...styles.flex1 }}>
-                                <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeSampleID(sample.sampleid) }}>
-                                    {removeIcon()}
-                                </button>
+
+                            <div style={{ ...styles.generalFlex }}>
+                                <div style={{ ...styles.flex1, ...highlight(sample.sampleid), ...styles.addLeftMargin }}>
+                                    <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }}
+                                        to={`/${userid}/projects/${projectid}/borings/${boringid}/samples/${sample.sampleid}/sieve`}>
+                                        Sieve Analysis
+                                    </Link>
+                                </div>
+
                             </div>
 
                         </div>
-
-                        <div style={{ ...styles.generalFlex }}>
-                            <div style={{ ...styles.flex1, ...highlight(sample.sampleid), ...styles.addLeftMargin }}>
-                                <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }}
-                                    to={`/${userid}/projects/${projectid}/borings/${boringid}/samples/${sample.sampleid}/sieve`}>
-                                    Sieve Analysis
-                                </Link>
-                            </div>
-
-                        </div>
-
                     </div>
-                </div>
 
 
-            )
+                )
+
+            }
 
         }
-
-    }
 
     }
 
@@ -1830,8 +1830,9 @@ class Samples extends Component {
                                 />
                                 <span style={{ ...styles.generalFont, ...regularFont }}>Description</span>
                             </div>
-
-                            {graphiclog.showGraphicLog.call(this)}
+                          
+                                {graphiclog.showGraphicLog.call(this)}
+                            
 
                             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                                 <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>

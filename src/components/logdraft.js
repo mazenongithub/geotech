@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { MyStylesheet } from './styles'
 import { Link } from 'react-router-dom';
 import UES from './ues';
-import { milestoneformatdatestring, calcdryden, moist } from './functions'
+import { milestoneformatdatestring, calcdryden, moist,convertDegree } from './functions'
 import '../logdraft.css';
 
 
@@ -91,7 +91,7 @@ class LogDraft extends Component {
         return (
             <foreignObject x="194.5" y={`${Math.ceil(224 + (50 * depth))}`} width="698" height="700">
                 <div>
-                    <text className='logdraft-12'><tspan x="0" y="0">{description}</tspan></text>
+                    <text className='logdraft-12 regularFont'><tspan x="0" y="0">{description}</tspan></text>
                 </div>
             </foreignObject>
         )
@@ -126,7 +126,7 @@ class LogDraft extends Component {
 
             return (
                 <foreignObject x="996.02" y={`${Math.ceil(224 + (50 * depth))}`} width="54" height="700">
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.showBorder }}>
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
 
                         <text className="logdraft-12"><tspan x="0" y="0">{spt}</tspan></text>
                     </div>
@@ -176,7 +176,7 @@ class LogDraft extends Component {
             return (
 
                 <foreignObject x="1051.02" y={`${Math.ceil(224 + (50 * depth))}`} width="55" height="700">
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.showBorder }}>
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                         <text className="logdraft-12"><tspan x="0" y="0">{moisturecontent}</tspan></text>
                     </div>
                 </foreignObject>)
@@ -190,7 +190,7 @@ class LogDraft extends Component {
 
             return (
                 <foreignObject x="1107.35" y={`${Math.ceil(224 + (50 * depth))}`} width="54" height="700">
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.showBorder }}>
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                         <text className="logdraft-12"><tspan x="0" y="0">{dryden}</tspan></text>
                     </div>
                 </foreignObject>)
@@ -452,7 +452,7 @@ class LogDraft extends Component {
                                 <text className="logdraftblock-4" transform="translate(9.25 216.57)"><tspan x="0" y="0">Drilling </tspan><tspan x="0" y="24">Method</tspan></text>
                                 <text className="logdraftblock-4" transform="translate(107.25 222.57)"><tspan x="0" y="0">{boring.drillmethod} </tspan></text>
                                 <text className="logdraftblock-4" transform="translate(9.25 153.57)"><tspan x="0" y="0">Date </tspan><tspan x="0" y="24">Drilled</tspan></text><text className="logdraftblock-2" transform="translate(16.25 30.43)"><tspan x="0" y="0" >Project:     </tspan></text>
-                                <text className="logdraftblock-2" transform="translate(854.63 34.43)"><tspan x="0" y="0">LOG OF SOI</tspan><tspan className="logdraftblock-3" x="140" y="0">L</tspan><tspan x="154.23" y="0" > BORING B1    </tspan></text>
+                                <text className="logdraftblock-2" transform="translate(854.63 34.43)"><tspan x="0" y="0">LOG OF SOI</tspan><tspan className="logdraftblock-3" x="140" y="0">L</tspan><tspan x="154.23" y="0" > BORING B{boring.boringnumber}    </tspan></text>
                                 <text className="logdraftblock-2" transform="translate(121.25 29.43)"><tspan x="0" y="0">{project.title} </tspan></text>
                                 <text className="logdraftblock-2" transform="translate(16.25 69.43)"><tspan x="0" y="0" >Project Location:   </tspan></text>
 
@@ -465,9 +465,9 @@ class LogDraft extends Component {
                                 <text className="logdraftblock-2" transform="translate(16.25 109.43)"><tspan x="0" y="0" >Project Number:   </tspan></text><text className="logdraftblock-2" transform="translate(228.25 109.43)"><tspan x="0" y="0" >{project.projectnumber}   </tspan></text>
 
                                 <text className="logdraftblock-4" transform="translate(107.25 159.57)"><tspan x="0" y="0">{milestoneformatdatestring(boring.datedrilled)}</tspan></text>
-                                <text className="logdraftblock-4" transform="translate(208.25 351.79)"><tspan x="0" y="0">4.0</tspan></text><text className="logdraftblock-4" transform="translate(548.25 414.98)"><tspan x="0" y="0">{Number(boring.latitude).toFixed(5)} N</tspan></text>
-                                <text className="logdraftblock-4" transform="translate(689.25 414.98)"><tspan x="0" y="0">{Number(boring.longitude).toFixed(5)} W</tspan></text><text className="logdraftblock-4" transform="translate(525.25 344.57)"><tspan x="0" y="0">  {boring.samplingmethod}</tspan></text>
-                                <text className="logdraftblock-4" transform="translate(428.25 414.98)"><tspan x="0" y="0">Location</tspan></text><text className="logdraftblock-4" transform="translate(428.25 343.57)"><tspan x="0" y="0">Sampling </tspan><tspan x="0" y="24">Methods</tspan></text>
+                                <text className="logdraftblock-4" transform="translate(208.25 351.79)"><tspan x="0" y="0">4.0</tspan></text><text className="logdraftblock-4" transform="translate(520.25 414.98)"><tspan x="0" y="0">{convertDegree(boring.latitude)} N</tspan></text>
+                                <text className="logdraftblock-4" transform="translate(659.25 414.98)"><tspan x="0" y="0">{convertDegree(boring.longitude)} W</tspan></text><text className="logdraftblock-4" transform="translate(525.25 344.57)"><tspan x="0" y="0">  {boring.samplingmethod}</tspan></text>
+                                <text className="logdraftblock-4" transform="translate(428.25 410.98)"><tspan x="0" y="0">Approx. </tspan><tspan x="0" y="24">Location</tspan></text><text className="logdraftblock-4" transform="translate(428.25 343.57)"><tspan x="0" y="0">Sampling </tspan><tspan x="0" y="24">Methods</tspan></text>
                                 <text className="logdraftblock-4" transform="translate(592.25 290.57)"><tspan x="0" y="0">{Number(boring.diameter)}</tspan></text><text className="logdraftblock-4" transform="translate(428.25 282.57)"><tspan x="0" y="0">Diameter of </tspan><tspan x="0" y="24">Hole, inches</tspan></text>
                                 <text className="logdraftblock-4" transform="translate(548.25 226.57)"><tspan x="0" y="0">{boring.contractor}</tspan></text><text className="logdraftblock-4" transform="translate(428.25 220.57)"><tspan x="0" y="0">Drilling </tspan><tspan x="0" y="24">Contractor</tspan></text><text className="logdraftblock-4" transform="translate(548.25 164.57)"><tspan x="0" y="0">{boring.loggedby}</tspan></text><text className="logdraftblock-4" transform="translate(427.25 164.57)"><tspan x="0" y="0">Logged By</tspan></text><text className="logdraftblock-4" transform="translate(857.25 403.98)"><tspan x="0" y="0">Driving Method </tspan><tspan x="0" y="24">and Drop</tspan></text><text className="logdraftblock-4" transform="translate(857.25 340.98)"><tspan x="0" y="0">Drill Hole </tspan><tspan x="0" y="24">Backfill</tspan></text>
 
@@ -500,11 +500,13 @@ class LogDraft extends Component {
         } else {
             y1 = y1 + (50 * 16)
         }
+        const boring = this.getBoring();
+        if(boring) {
         return (
             <g>
                 <rect className="logdraft-5" x="1" y="1" width="1266" height={y1} />
 
-                <g id="Layout" transform={`translate(0 ${y1} )`}><text className="logdraft-footer-5" transform="translate(1093.67 70.98)"><tspan x="0" y="0">FIGURE 3</tspan></text>
+                <g id="Layout" transform={`translate(0 ${y1} )`}><text className="logdraft-footer-5" transform="translate(1093.67 70.98)"><tspan x="0" y="0">FIGURE {boring.figure}</tspan></text>
                     <polyline className="logdraft-footer-3" points="0 24.63 8.13 26.04 20.04 27.85 33.92 29.05 27.77 43.72 19.64 58.79 2.18 81.29 0 73.65" />
                     <polygon className="logdraft-footer-3" points="63.88 27.25 80.34 24.63 80.34 42.51 80.34 67.43 80.34 75.31 77.46 83.6 72.11 93.54 64.52 102.58 51.87 111.62 50.24 96.86 51.28 72.15 55.74 50.45 63.88 27.25" />
                     <polygon className="logdraft-footer-4" points="16.96 103.19 12.6 99.57 7.09 92.64 14.53 82.69 22.86 68.13 30.6 52.96 36.85 36.89 39.67 28.75 45.63 28.75 35.21 57.68 28.37 74.86 16.96 103.19" />
@@ -520,6 +522,8 @@ class LogDraft extends Component {
                     <line className="logdraft-footer-2" x1="1263.52" y1="99" x2="1263.52" />
                 </g>
             </g>)
+
+        }
     }
 
     drawLabels() {
@@ -559,15 +563,16 @@ class LogDraft extends Component {
         }
         let getscale = [];
         let y1 = 237.91
-        for (let i = 0; i < bottom; i++) {
-            y1 = y1 + (50)
-            console.log(i, y1)
+        for (let i = 0; i <= bottom; i++) {
             getscale.push(
                 <g>
                     <line className="logdraft-5" x1="1" y1={y1} x2="61" y2={y1} />
                     <rect className="logdraft-2" x="1" y={y1} width="60" height="50" />
                 </g>
             )
+            y1 = y1 + (50)
+        
+           
         }
         return (<g>
             {getscale}
@@ -649,7 +654,7 @@ class LogDraft extends Component {
                                     <text className="logdraft-9" transform="translate(911.68 232.1) rotate(-90)"><tspan x="0" y="0">SAMPLE</tspan></text>
                                     <text className="logdraft-9" transform="translate(948.68 237.41) rotate(-90)"><tspan x="0" y="0" > SAMPLE </tspan><tspan x="0" y="28.8">NUMBER</tspan></text>
                                     <text className="logdraft-9" transform="translate(1018.68 234.41) rotate(-90)"><tspan x="0" y="0">BLOW </tspan><tspan x="0" y="28.8">COUN</tspan><tspan className="logdraft-19" x="70.66" y="28.8">T</tspan></text>
-                                    <text className="logdraft-8" transform="translate(120.26 220.41) rotate(-90)"><tspan x="0" y="0">GRAPTHIC </tspan><tspan x="0" y="34.8">LOG</tspan></text>
+                                    <text className="logdraft-8" transform="translate(120.26 220.41) rotate(-90)"><tspan x="0" y="0">GRAPHIC </tspan><tspan x="0" y="34.8">LOG</tspan></text>
                                     <path className="logdraft-13" d="m188.5,28.41v207H62.5V28.41h126m2-2H60.5v211h130V26.41h0Z" /><path className="logdraft-13" d="m888.5,28.41v207H192.5V28.41h696m2-2H190.5v211h700V26.41h0Z" />
                                     <text className="logdraft-8" transform="translate(282.95 81.18)"><tspan x="0" y="0">ENGINEERING CLASSIFIC</tspan><tspan className="logdraft-1" x="360.96" y="0">A</tspan><tspan x="378.15" y="0">TION</tspan><tspan className="logdraft-21" x="447.42" y="0"> </tspan><tspan x="453.88" y="0">AND </tspan><tspan x="158.46" y="34.8">DESCRIPTION</tspan></text>
                                     <text className="logdraft-6" transform="translate(1128.55 48.6)"><tspan x="0" y="0">TES</tspan><tspan className="logdraft-19" x="46.68" y="0">T</tspan><tspan x="60.9" y="0"> </tspan><tspan x=".89" y="28.8">D</tspan><tspan className="logdraft-1" x="18.22" y="28.8">AT</tspan><tspan className="logdraft-21" x="45.33" y="28.8">A</tspan></text>
@@ -690,7 +695,7 @@ class LogDraft extends Component {
                                     {this.showGroundWaterSym()}
 
                                     <line className="logdraft-5" x1="889.5" y1="237.41" x2="1266.5" y2="237.41" />
-                                    <circle className="logdraft-17" cx="60.5" cy="237.41" r="4" />
+                                  
                                     <line className="logdraft-5" x1="1267" y1="237.91" x2="1266.5" y2="86.41" />
                                 </g></svg>
 

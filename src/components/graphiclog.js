@@ -210,7 +210,7 @@ class GraphicLog {
         if(this.state.activesampleid) {
 
 
-        return (<div style={{ ...styles.generalContainer }}>
+        return (<div style={{ ...styles.generalContainer, ...styles.maxHeight400 }}>
 
             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
 

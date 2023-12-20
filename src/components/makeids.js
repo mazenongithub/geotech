@@ -2,15 +2,64 @@ import UES from "./ues";
 import { makeID } from "./functions";
 class MakeID {
 
+    appendixID(reportid) {
+        const ues = new UES();
+        const report = ues.getReportByID.call(this, reportid)
+        let appendixid = false;
+        if (report) {
+            while (!appendixid) {
+                appendixid = makeID(16);
+                if (report.hasOwnProperty("appendix")) {
+                    report.appendix.map(getappendix=> {
+                        if(getappendix.appendixid === appendixid) {
+                            appendixid = false;
+                        }
+                    })
+    
+                }
+    
+            }
+    
+        } else{
+            appendixid = makeID(16)
+        }
+        return appendixid;
+    }
+
+
+    figureID(reportid) {
+        const ues = new UES();
+        const report = ues.getReportByID.call(this, reportid)
+        let figureid = false;
+        if (report) {
+            while (!figureid) {
+                figureid = makeID(16);
+                if (report.hasOwnProperty("figures")) {
+                    report.figures.map(figure=> {
+                        if(figure.figureid === figureid) {
+                            figureid = false;
+                        }
+                    })
+
+                }
+
+            }
+
+        } else{
+            figureid = makeID(16)
+        }
+        return figureid;
+    }
+
     pavementSectionID() {
         let pavementid = false;
         const ues = new UES();
         const pavements = ues.getPavement.call(this);
         if (pavements) {
-           
+
             while (!pavementid) {
                 pavementid = makeID(16)
-                 // eslint-disable-next-line
+                // eslint-disable-next-line
                 pavements.map(pavement => {
                     if (pavement.hasOwnProperty("design")) {
 

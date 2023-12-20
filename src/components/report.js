@@ -5,9 +5,9 @@ import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
 import { arrowUp, generateIcon, removeIcon, saveIcon, arrowDown, linkArrow } from './svg';
-import { formatDateReport, currentDate, newReport, newList, newSublist, newSection, inputUTCStringForLaborID } from './functions'
+import { formatDateReport, currentDate, newReport, newList, newSublist, newSection } from './functions'
 import MakeID from './makeids';
-import { SaveReport } from './actions/api';
+
 
 
 class Report extends Component {
@@ -17,7 +17,7 @@ class Report extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activereportid: false, intro: '', activelistid: false, activesublistid: false, activegeneralid: false, activeconclusionid: false, activerecommendationid: false, activefindingid:false, content: ''
+            render: '', width: 0, height: 0, message: '', activereportid: false, intro: '', activelistid: false, activesublistid: false, activegeneralid: false, activeconclusionid: false, activerecommendationid: false, activefindingid: false, content: ''
 
         }
 
@@ -174,8 +174,13 @@ class Report extends Component {
 
                 </div>
 
-                <div style={{...styles.generalContainer}}>
-                    <Link style={{...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor}} to={`/${myuser.userid}/projects/${projectid}/report/${report.reportid}`}><button style={{...styles.generalButton, ...arrowWidth}}>{linkArrow()}</button> View Report </Link>   
+                <div style={{ ...styles.generalFlex }}>
+                    <div style={{ ...styles.flex1 }}>
+                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${projectid}/report/${report.reportid}`}><button style={{ ...styles.generalButton, ...arrowWidth }}>{linkArrow()}</button> View Report </Link>
+                    </div>
+                    <div style={{ ...styles.flex1 }}>
+                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${projectid}/report/${report.reportid}/figures`}><button style={{ ...styles.generalButton, ...arrowWidth }}>{linkArrow()}</button> Figures/Appendix </Link>
+                    </div>
                 </div>
 
             </div>)
@@ -1235,7 +1240,7 @@ class Report extends Component {
 
     removeFindingSection(sectionid) {
         const ues = new UES();
-    
+
         if (this.state.activereportid) {
             const reports = ues.getReports.call(this)
             if (reports) {
@@ -1245,19 +1250,19 @@ class Report extends Component {
                     const i = ues.getReportKeyByID.call(this, reportid)
                     const section = ues.getFindingSectionbyID.call(this, reportid, sectionid)
                     if (section) {
-    
+
                         const j = ues.getFindingSectionKeybyID.call(this, reportid, sectionid)
                         reports[i].finding.splice(j, 1);
                         this.props.reduxReports(reports);
                         this.setState({ activefindingid: false })
                     }
-    
+
                 }
-    
+
             }
-    
+
         }
-    
+
     }
 
 
@@ -1588,44 +1593,7 @@ class Report extends Component {
         //window.open('/mazen/projects/_projectid/report')
     }
 
-    async saveReport() {
-        try {
-            const ues = new UES();
-            const projectid = this.props.projectid;
-            const reports = ues.getReportsByProjectID.call(this, projectid)
-            const response = await SaveReport({ projectid, reports });
-            console.log(response)
-            if (response.hasOwnProperty("reportsdb")) {
-                // eslint-disable-next-line
-                response.reportsdb.map(reportdb => {
-                    const reportiddb = reportdb.reportid;
-                    const checkreport = ues.getReportByID.call(this, reportiddb);
-                    if (checkreport) {
-                        const i = ues.getReportKeyByID.call(this, reportiddb);
-                        reports[i] = reportdb;
-                    }
-
-                })
-                this.props.reduxReports(reports)
-
-            }
-
-            let message = "";
-            if (response.hasOwnProperty("message")) {
-                message += response.message;
-
-            }
-
-            if (response.hasOwnProperty("lastupdated")) {
-                message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
-            }
-
-            this.setState({ message })
-
-        } catch (err) {
-            alert(err)
-        }
-    }
+  
 
 
 
@@ -1647,12 +1615,12 @@ class Report extends Component {
             // eslint-disable-next-line
             sections.map(section => {
                 getsections.push(this.showOptionValue(section))
-    
+
             })
-    
+
         }
         return getsections;
-    
+
     }
 
 
@@ -1667,10 +1635,10 @@ class Report extends Component {
                 })
             }
         }
-    
+
         return getids;
-    
-    
+
+
     }
 
     showFindingID(section) {
@@ -1679,13 +1647,13 @@ class Report extends Component {
         const regularFont = ues.regularFont.call(this)
         const iconWidth = ues.removeIcon.call(this)
         const arrowWidth = ues.arrowUp.call(this)
-    
+
         const highlight = (sectionid) => {
             if (this.state.activefindingid === sectionid) {
                 return (styles.activeid)
             }
         }
-    
+
         return (
             <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }} key={section.sectionid}>
                 <div style={{ ...styles.flex5, ...highlight(section.sectionid) }} onClick={() => { this.handleFindingID(section.sectionid) }}>
@@ -1699,11 +1667,11 @@ class Report extends Component {
                     <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeFindingSection(section.sectionid) }}>{removeIcon()}</button>
                 </div>
             </div>
-    
+
         )
-    
+
     }
-    
+
 
     handleFindingID(sectionid) {
         if (this.state.activefindingid) {
@@ -1731,25 +1699,25 @@ class Report extends Component {
                         this.props.reduxReports(reports)
                         this.setState({ render: 'render' })
                     }
-    
+
                 } else {
                     const newsectionid = makeid.sectionid.call(this, reportid)
                     const content = this.state.content;
                     const newsection = newSection(newsectionid, value, content)
                     if (report.hasOwnProperty("finding")) {
                         reports[i].finding.push(newsection);
-    
+
                     } else {
                         reports[i].finding = [newsection]
-    
+
                     }
                     this.setState({ activefindingid: newsectionid })
                 }
-    
-    
+
+
             }
         }
-    
+
     }
 
     getFindingSection() {
@@ -1757,7 +1725,7 @@ class Report extends Component {
         let sectionname = "";
         if (this.state.activefindingid) {
             const sectionid = this.state.activefindingid;
-    
+
             if (report) {
                 // eslint-disable-next-line
                 if (report.hasOwnProperty("finding")) {
@@ -1765,18 +1733,18 @@ class Report extends Component {
                     report.finding.map(section => {
                         if (section.sectionid === sectionid) {
                             sectionname = section.sectionname;
-    
+
                         }
-    
+
                     })
                 }
-    
+
             }
-    
+
         }
-    
+
         return sectionname;
-    
+
     }
 
 
@@ -1785,7 +1753,7 @@ class Report extends Component {
         let content = "";
         if (this.state.activefindingid) {
             const sectionid = this.state.activefindingid;
-    
+
             if (report) {
                 // eslint-disable-next-line
                 if (report.hasOwnProperty("finding")) {
@@ -1793,20 +1761,20 @@ class Report extends Component {
                     report.finding.map(section => {
                         if (section.sectionid === sectionid) {
                             content = section.content;
-    
+
                         }
-    
+
                     })
                 }
-    
+
             }
-    
+
         }
-    
+
         return content;
-    
+
     }
-    
+
     handleFindingContent(value) {
         const ues = new UES();
         const makeid = new MakeID();
@@ -1825,25 +1793,25 @@ class Report extends Component {
                         this.props.reduxReports(reports)
                         this.setState({ render: 'render' })
                     }
-    
+
                 } else {
                     const newsectionid = makeid.sectionid.call(this, reportid)
                     const sectionname = this.state.sectionname;
                     const newsection = newSection(newsectionid, sectionname, value)
                     if (report.hasOwnProperty("finding")) {
                         reports[i].finding.push(newsection);
-    
+
                     } else {
                         reports[i].finding = [newsection]
-    
+
                     }
                     this.setState({ activefindingid: newsectionid })
                 }
-    
-    
+
+
             }
         }
-    
+
     }
 
     moveFindingSectionDown(sectionid) {
@@ -1865,16 +1833,16 @@ class Report extends Component {
                         reports[i].finding[j + 1] = section;
                         this.props.reduxReports(reports);
                         this.setState({ render: 'render' })
-    
+
                     }
                 }
             }
-    
-    
+
+
         }
-    
+
     }
-    
+
     moveFindingSectionUp(sectionid) {
         const ues = new UES();
         const reports = ues.getReports.call(this)
@@ -1893,18 +1861,18 @@ class Report extends Component {
                         reports[i].finding[j - 1] = section;
                         this.props.reduxReports(reports);
                         this.setState({ render: 'render' })
-    
+
                     }
                 }
             }
-    
-    
+
+
         }
-    
+
     }
-    
-    
-    
+
+
+
 
 
 
@@ -2045,7 +2013,7 @@ class Report extends Component {
                     </div>
 
                     {this.showFindingIDs()}
-                    
+
 
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
@@ -2110,7 +2078,7 @@ class Report extends Component {
                     </div>
 
                     <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                        <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { this.saveReport() }}>{saveIcon()}</button>
+                        <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { ues.saveReport.call(this) }}>{saveIcon()}</button>
                     </div>
 
                 </div>)
@@ -2136,7 +2104,7 @@ function mapStateToProps(state) {
         clients: state.clients,
         projects: state.projects,
         reports: state.reports,
-        pavement:state.pavement
+        pavement: state.pavement
     }
 }
 
