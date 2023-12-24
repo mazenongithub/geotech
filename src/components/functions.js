@@ -1,3 +1,22 @@
+export function validateUserID(value) {
+    const reg_ex = /^([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,34}(?:[A-Za-z0-9_]))?)$/
+    const test = reg_ex.test(value);
+    value = value.trim();
+    let errmsg = "";
+    if (!value) {
+        errmsg = " DriverID is required ";
+
+    }
+    else if (value.length > 36) {
+        errmsg = " DriverID should be less than 36 characters";
+    }
+    else if (!test) {
+        errmsg = ` Invalid Provider ID format ${value} `;
+    }
+
+    return errmsg;
+}
+
 export function newSieve(sampleid, wgt34, wgt38, wgt4, wgt10, wgt30, wgt40, wgt100, wgt200) {
     return ({ sampleid, wgt34, wgt38, wgt4, wgt10, wgt30, wgt40, wgt100, wgt200 })
 }

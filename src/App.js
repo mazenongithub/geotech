@@ -25,6 +25,12 @@ import Sieve from './components/sieve';
 import LogDraft from './components/logdraft';
 import ViewReport from './components/viewreport';
 import Figures from './components/figures'
+import MyAdmin from './components/myadmin'
+
+const ShowMyAdmin = () => {
+  const { userid } = useParams();
+  return (<MyAdmin userid={userid} />)
+}
 
 const ShowFigures = () => {
   const { projectid, userid, reportid } = useParams();
@@ -182,11 +188,15 @@ class App extends Component {
 
         <BrowserRouter>
           <div style={{ ...styles.generalContainer, ...styles.addMargin }}>
+   
             {header.showHeader.call(this)}
+        
+            
             <Routes>
               <Route exact path="/" element={defaultLogo(myuser)} />
               <Route exact path="/login" element={landing.handleLanding.call(this)} />
               <Route exact path="/:userid/profile" element={profile.showProfile.call(this)} />
+              <Route exact path="/:userid/myadmin" element={<ShowMyAdmin />} />
               <Route exact path="/:userid/clients" element={<Clients />} />
               <Route exact path="/:userid/projects" element={<Projects />} />
               <Route exact path="/:userid/projects/:projectid" element={<ShowProject />} />
@@ -200,6 +210,8 @@ class App extends Component {
               <Route exact path="/:userid/projects/:projectid/borings/:boringid/logdraft" element={<ShowLogDraft />} />
               <Route exact path="/:userid/projects/:projectid/borings/:boringid/samples/:sampleid/sieve" element={<ShowSieve />} />
             </Routes>
+
+          
           </div>
         </BrowserRouter>
       </div>

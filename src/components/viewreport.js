@@ -114,6 +114,9 @@ class ViewReport extends Component {
 
     showScope() {
         const report = this.getReport();
+        const ues = new UES();
+        const regularFont = ues.regularFont.call(this)
+        const styles = MyStylesheet();
         let getlist = [];
         let getsublist = [];
         if (report.hasOwnProperty("list")) {
@@ -139,7 +142,7 @@ class ViewReport extends Component {
             })
         }
 
-        return (<ol key={`reportlist`} type="1">{getlist}</ol>)
+        return (<ol style={{ ...styles.generalFont, ...regularFont }} key={`reportlist`} type="1">{getlist}</ol>)
 
     }
 
@@ -345,12 +348,18 @@ class ViewReport extends Component {
             report.general.map((section, i) => {
 
                 if (i < 10) {
-                    label = `1.${i + 2}`
+                    label = `1.${i + 1}`
 
                 } else {
-                    label = `1.${i + 2}`
+                    label = `1.${i + 1}`
                 }
                 getSections.push(this.showSection(label, section))
+
+                if (section.sectionname === "Scope of Work") {
+                    getSections.push(this.showScope())
+                } else if (section.sectionname === "Figures and Appendix") {
+                    getSections.push(this.showFigures())
+                }
 
             })
 
@@ -360,6 +369,87 @@ class ViewReport extends Component {
         }
 
         return getSections;
+    }
+
+    showFigure(figure) {
+        const styles = MyStylesheet();
+        const ues = new UES();
+        const regularFont = ues.regularFont.call(this)
+        return (<div style={{ ...styles.generalContainer }}>
+            <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
+                <div style={{ ...styles.flex1 }}>
+                    <span style={{ ...regularFont }}>F{figure.figurenumber} </span>
+
+                </div>
+                <div style={{ ...styles.flex5 }}>
+                    <span style={{ ...regularFont }}> {figure.figurename} </span>
+                </div>
+            </div>
+
+
+        </div>)
+    }
+
+    showAppendix(appendix) {
+        const styles = MyStylesheet();
+        const ues = new UES();
+        const regularFont = ues.regularFont.call(this)
+        return (<div style={{ ...styles.generalContainer }}>
+            <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
+                <div style={{ ...styles.flex1 }}>
+                    <span style={{ ...regularFont }}>A{appendix.appendixnumber} </span>
+
+                </div>
+                <div style={{ ...styles.flex5 }}>
+                    <span style={{ ...regularFont }}> {appendix.appendixname} </span>
+                </div>
+            </div>
+
+
+        </div>)
+    }
+
+    showFigures() {
+        const ues = new UES();
+        const reportid = this.props.reportid;
+        const styles = MyStylesheet();
+        const figures = ues.getFiguresbyReportID.call(this, reportid);
+        const regularFont = ues.regularFont.call(this);
+        const appendix = ues.getAppendixsbyReportID.call(this,reportid)
+       
+        let getfigures = [];
+       
+        if (figures) {
+
+            getfigures.push(<div style={{ ...styles.generalContainer, ...styles.generalFont }}>
+                <span style={{ ...regularFont }}><u>FIGURES</u></span>
+            </div>
+            )
+            // eslint-disable-next-line
+            figures.map(figure => {
+                getfigures.push(this.showFigure(figure))
+
+
+            })
+        }
+
+        if(appendix) {
+
+            getfigures.push(<div style={{ ...styles.generalContainer, ...styles.generalFont }}>
+                <span style={{ ...regularFont }}><u>Appendix</u></span>
+            </div>
+            )
+// eslint-disable-next-line
+            appendix.map(appendix => {
+                getfigures.push(this.showAppendix(appendix))
+
+
+            })
+            
+        }
+
+
+        return getfigures;
     }
 
     showFindingSections() {
@@ -394,7 +484,7 @@ class ViewReport extends Component {
             return (
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
                     <span style={{ ...styles.generalFont, ...headerFont }}>
-                       3.0
+                        3.0
                     </span>
 
 
@@ -417,8 +507,8 @@ class ViewReport extends Component {
             return (
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
 
-                      <span style={{ ...styles.generalFont, ...headerFont }}>
-                       4.0
+                    <span style={{ ...styles.generalFont, ...headerFont }}>
+                        4.0
                     </span>
 
 
@@ -470,7 +560,7 @@ class ViewReport extends Component {
                 if (report) {
 
                     return (
-                        <div style={{ ...styles.generalContainer }}>
+                        <div style={{ ...styles.generalContainer, ...styles.marginTop75 }}>
                             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                                 <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects`}>
                                     /Projects </Link>
@@ -511,16 +601,6 @@ class ViewReport extends Component {
 
                             </div>
 
-                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
-
-                                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
-                                    <span style={{ ...regularFont }}>1.1</span>
-                                    <span style={{ ...regularFont, ...styles.leftMargin40 }}>Scope of Work</span>
-                                </div>
-
-                                <div style={{ ...styles.generalContainer }}><span style={{ ...regularFont }}>Our scope of services included the following:</span></div>
-                                <div style={{ ...styles.generalFont, ...regularFont }}>{this.showScope()}</div>
-                            </div>
 
                             <div style={{ ...styles.generalContainer }}>
                                 {this.showGeneralSections()}

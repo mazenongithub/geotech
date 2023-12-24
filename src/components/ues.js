@@ -93,13 +93,14 @@ class UES {
     generalSections() {
         return ([
             { section: 'Supplement Information' },
-            { section: 'Previous Report' },
+            { section: 'Previous Studies' },
+            { section: 'Authorization' },
             { section: 'Proposed Development' },
-            { section: 'Figures and Attachments' },
+            { section: 'Figures and Appendix' },
             { section: 'Site Description' },
+            { section: 'Scope of Work' },
             { section: 'Historical Aerial Photographs' },
-            { section: 'Subsurface Conditions' },
-            { section: 'Groundwater Conditions' },
+
             { section: 'Site Geology' },
             { section: 'Field Exploration, Sampling, and Laboratory Testing' }
 
@@ -117,6 +118,110 @@ class UES {
             { section: 'Field Exploration, Sampling, and Laboratory Testing' }
 
         ])
+    }
+
+    getMyAdminRequestKeybyID(userid) {
+        const ues = new UES();
+        let key = false;
+        let requests = ues.getMyAdminRequests.call(this)
+        if (requests) {
+    // eslint-disable-next-line
+            requests.map((user, i) => {
+                if (user.userid === userid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+    }
+    
+    
+    
+    getMyAdminRequestbyID(userid) {
+        const ues = new UES();
+        let getuser = false;
+        let requests = ues.getMyAdminRequests.call(this)
+        if (requests) {
+    // eslint-disable-next-line
+            requests.map(user => {
+                if (user.userid === userid) {
+                    getuser = user;
+                }
+            })
+        }
+        return getuser;
+    }
+    
+    getMyAdminRequests() {
+        const ues = new UES();
+        let requests = false;
+        const myadmin = ues.getMyAdmin.call(this)
+        if (myadmin) {
+            if (myadmin.hasOwnProperty("requests")) {
+                requests = myadmin.requests;
+            }
+        }
+        return requests;
+    }
+
+
+    getMyAdminUserKeybyID(userid) {
+        const ues = new UES();
+        let key = false;
+        let users = ues.getMyAdminUsers.call(this)
+        if (users) {
+// eslint-disable-next-line
+            users.map((user, i) => {
+                if (user.userid === userid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+    }
+
+
+
+    getMyAdminUserbyID(userid) {
+        const ues = new UES();
+        let getuser = false;
+        let users = ues.getMyAdminUsers.call(this)
+       
+        if (users) {
+// eslint-disable-next-line
+            users.map(user => {
+                if (user.userid === userid) {
+                    getuser = user;
+                }
+            })
+        }
+  
+        return getuser;
+    }
+
+    getMyAdminUsers() {
+        const ues = new UES();
+        let users = false;
+        const myadmin = ues.getMyAdmin.call(this)
+        if (myadmin) {
+            if (myadmin.hasOwnProperty("users")) {
+                users = myadmin.users;
+            }
+        }
+        return users;
+    }
+
+    getMyAdmin() {
+        let myadmin = false;
+        if (this.props.myadmin) {
+            if (this.props.myadmin.hasOwnProperty("users")) {
+                myadmin = this.props.myadmin;
+
+            }
+
+        }
+
+        return myadmin;
     }
 
     async saveReport() {
@@ -256,6 +361,7 @@ class UES {
                     reports = response.reports;
                 }
                 this.props.reduxReports(reports);
+                this.setState({render:'render'})
 
             }
 
@@ -874,6 +980,21 @@ class UES {
 
     }
 
+    approveIcon() {
+
+        if (this.state.width > 1200) {
+            return ({ width: '60px', height: 'auto' })
+
+        } else if (this.state.width > 600) {
+            return ({ width: '50px', height: 'auto' })
+
+        } else {
+            return ({ width: '40px', height: 'auto' })
+
+        }
+
+    }
+
     removeIcon() {
 
         if (this.state.width > 1200) {
@@ -991,40 +1112,40 @@ class UES {
 
     }
 
-    getAppendixKeybyID(reportid,appendixid) {
+    getAppendixKeybyID(reportid, appendixid) {
 
         const ues = new UES();
         let key = false;
-        const appendixs = ues.getAppendixsbyReportID.call(this,reportid)
-        if(appendixs) {
+        const appendixs = ues.getAppendixsbyReportID.call(this, reportid)
+        if (appendixs) {
             // eslint-disable-next-line
-            appendixs.map((appendix,i)=> {
-                if(appendix.appendixid === appendixid) {
+            appendixs.map((appendix, i) => {
+                if (appendix.appendixid === appendixid) {
                     key = i;
                 }
             })
         }
-    
+
         return key;
     }
-    
-    getAppendixbyID(reportid,appendixid) {
-    
+
+    getAppendixbyID(reportid, appendixid) {
+
         const ues = new UES();
         let getappendix = false;
-        const appendixs = ues.getAppendixsbyReportID.call(this,reportid)
-        if(appendixs) {
+        const appendixs = ues.getAppendixsbyReportID.call(this, reportid)
+        if (appendixs) {
             // eslint-disable-next-line
-            appendixs.map(appendix=> {
-                if(appendix.appendixid === appendixid) {
+            appendixs.map(appendix => {
+                if (appendix.appendixid === appendixid) {
                     getappendix = appendix;
                 }
             })
         }
-    
+
         return getappendix;
     }
-    
+
     getAppendixsbyReportID(reportid) {
         const ues = new UES();
         let getappendix = false;
@@ -1037,15 +1158,15 @@ class UES {
         return getappendix;
     }
 
-    getFigureKeybyID(reportid,figureid) {
+    getFigureKeybyID(reportid, figureid) {
 
         const ues = new UES();
         let key = false;
-        const figures = ues.getFiguresbyReportID.call(this,reportid)
-        if(figures) {
+        const figures = ues.getFiguresbyReportID.call(this, reportid)
+        if (figures) {
             // eslint-disable-next-line
-            figures.map((figure,i)=> {
-                if(figure.figureid === figureid) {
+            figures.map((figure, i) => {
+                if (figure.figureid === figureid) {
                     key = i;
                 }
             })
@@ -1054,15 +1175,15 @@ class UES {
         return key;
     }
 
-    getFigurebyID(reportid,figureid) {
+    getFigurebyID(reportid, figureid) {
 
         const ues = new UES();
         let getfigure = false;
-        const figures = ues.getFiguresbyReportID.call(this,reportid)
-        if(figures) {
+        const figures = ues.getFiguresbyReportID.call(this, reportid)
+        if (figures) {
             // eslint-disable-next-line
-            figures.map(figure=> {
-                if(figure.figureid === figureid) {
+            figures.map(figure => {
+                if (figure.figureid === figureid) {
                     getfigure = figure;
                 }
             })

@@ -1662,7 +1662,7 @@ class Samples extends Component {
 
                     return (
 
-                        <div style={{ ...styles.generalContainer }}>
+                        <div style={{ ...styles.generalContainer, ...styles.marginTop75 }}>
 
 
                             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>

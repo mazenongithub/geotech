@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { arrowUp, generateIcon, removeIcon, saveIcon, arrowDown, linkArrow } from './svg';
 import { formatDateReport, currentDate, newReport, newList, newSublist, newSection } from './functions'
 import MakeID from './makeids';
+import GenerateReport from './generatereport';
 
 
 
@@ -889,6 +890,7 @@ class Report extends Component {
     }
 
     handleGeneralSection(value) {
+        console.log(value)
         const ues = new UES();
         const makeid = new MakeID();
         const reports = ues.getReports.call(this)
@@ -1593,7 +1595,7 @@ class Report extends Component {
         //window.open('/mazen/projects/_projectid/report')
     }
 
-  
+
 
 
 
@@ -1871,9 +1873,103 @@ class Report extends Component {
 
     }
 
+    generateGeneral() {
+
+        const ues = new UES();
+        const reportid = this.state.activereportid;
+        const report = ues.getReportByID.call(this, reportid)
+        const generatereport = new GenerateReport();
+        let generate = "";
+        if (report) {
+
+        
+            const sectionid = this.state.activegeneralid;
+            const section = ues.getGeneralSectionbyID.call(this, reportid, sectionid)
+            if (section) {
+         
+              
+                if (section.sectionname === 'Authorization') {
+
+                    generate += generatereport.authorization.call(this);
+
+                    this.handleGeneralContent(generate)
+                    // this.props.reduxReports(report)
+                    // this.setState({render:'render'})
+
+                }
+
+
+            }
+
+
+        }
 
 
 
+
+
+
+    }
+
+
+
+
+
+    showScopeofWork() {
+      
+        const styles = MyStylesheet();
+        const ues = new UES();
+        const regularFont = ues.regularFont.call(this)
+        const generateIconWidth = ues.generateIcon.call(this)
+        if(this.state.activegeneralid) {
+        const reportid = this.state.activereportid;
+        const report = ues.getReportByID.call(this,reportid);
+     
+        if(report) {
+            const sectionid = this.state.activegeneralid;
+            const section = ues.getGeneralSectionbyID.call(this,reportid,sectionid);
+
+            if(section) {
+                console.log(section)
+                if(section.sectionname === "Scope of Work") {
+
+        return (<div style={{ ...styles.generalContainer }}>
+
+            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+
+                <span style={{ ...styles.generalFont, ...regularFont }}>Scope of Report</span> <button style={{ ...styles.generalButton, ...generateIconWidth }}>{generateIcon()}</button>
+            </div>
+            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
+                    value={this.getList()}
+                    onChange={event => { this.handleList(event.target.value) }}
+                />
+                <div style={{ ...styles.generalContainer }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}
+                    >List</span>
+                </div>
+            </div>
+
+            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.marginLeft15 }}>
+                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
+                    value={this.getSublist()}
+                    onChange={event => { this.handleSublist(event.target.value) }}
+                />
+                <span style={{ ...styles.generalFont, ...regularFont }}>Sub-List</span>
+            </div>
+
+            {this.showLists()}
+        </div>
+        )
+
+            }
+
+        }
+
+        }
+
+        }
+    }
 
 
 
@@ -1891,7 +1987,7 @@ class Report extends Component {
             const project = ues.getProjectbyID.call(this, projectid)
             if (project) {
 
-                return (<div style={{ ...styles.generalContainer }}>
+                return (<div style={{ ...styles.generalContainer, ...styles.marginTop75 }}>
 
                     <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                         <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects`}>
@@ -1921,7 +2017,9 @@ class Report extends Component {
                     </div>
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex5 }}>&nbsp;</div>
-                        <div style={{ ...styles.flex1 }}><button style={{ ...styles.generalButton, ...generateIconWidth }}>{generateIcon()}</button></div>
+                        <div style={{ ...styles.flex1 }}><button style={{ ...styles.generalButton, ...generateIconWidth }}
+
+                        >{generateIcon()}</button></div>
                     </div>
                     <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
                         <textarea style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.areatext }}
@@ -1930,30 +2028,13 @@ class Report extends Component {
                         <span style={{ ...styles.generalFont, ...regularFont }}>Intro</span>
                     </div>
                     <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                       
+                    {this.showScopeofWork()}
+                        
 
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Scope of Report</span> <button style={{ ...styles.generalButton, ...generateIconWidth }}>{generateIcon()}</button>
-                        </div>
-                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                value={this.getList()}
-                                onChange={event => { this.handleList(event.target.value) }}
-                            />
-                            <div style={{ ...styles.generalContainer }}>
-                                <span style={{ ...styles.generalFont, ...regularFont }}
-                                >List</span>
-                            </div>
-                        </div>
-
-                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.marginLeft15 }}>
-                            <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                                value={this.getSublist()}
-                                onChange={event => { this.handleSublist(event.target.value) }}
-                            />
-                            <span style={{ ...styles.generalFont, ...regularFont }}>Sub-List</span>
-                        </div>
+                        
                     </div>
-                    {this.showLists()}
+                  
                     <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                         <div style={{ ...styles.flex1, ...styles.addMargin }}>
                             <span style={{ ...styles.generalFont, ...headerFont }}><u>General</u></span>
@@ -1965,7 +2046,7 @@ class Report extends Component {
 
                             </select>
                         </div>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}><button style={{ ...styles.generalButton, ...generateIconWidth }}>{generateIcon()}</button></div>
+                        <div style={{ ...styles.flex1, ...styles.addMargin }}><button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { this.generateGeneral() }}>{generateIcon()}</button></div>
                     </div>
                     <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
                         <input type="text" style={{ ...styles.generalField, ...regularFont }}
@@ -1981,6 +2062,8 @@ class Report extends Component {
                         />
                         <span style={{ ...styles.generalFont, ...regularFont }}>Content</span>
                     </div>
+
+                  
 
                     {this.showGeneralIDs()}
 

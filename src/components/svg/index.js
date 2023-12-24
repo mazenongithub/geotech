@@ -20,6 +20,12 @@ export function arrowDown() {
     </style></defs><g id="Layout"><polygon className="arrowUp-1" points=".87 27.5 8.37 27.5 8.37 .5 22.37 .5 22.37 27.5 29.87 27.5 15.37 52.59 .87 27.5"/></g></svg>)
 }
 
+export function approveIcon() {
+    return(
+        <svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 58.43 83.36"><defs><style>
+        </style></defs><g id="Layout"><path className="approve-1" d="m56.72,34.86h-16.39v48h-22.24v-48H1.7c-1.03,0-1.58-1.2-.91-1.98L28.3.92c.48-.56,1.34-.56,1.82,0l27.51,31.96c.67.78.12,1.98-.91,1.98Z"/></g></svg>)
+}
+
 export function uploadIcon() {
     return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 175 55"><defs><style>
     </style></defs><g id="Layout"><rect className="calculate-1" x=".5" y=".5" width="174" height="54" rx="5.81" ry="5.81"/><text className="calculate-2" transform="translate(22.6 35.29)"><tspan x="0" y="0">Upload</tspan></text></g></svg>)

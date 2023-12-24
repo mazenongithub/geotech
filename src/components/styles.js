@@ -63,6 +63,18 @@ export function MyStylesheet() {
         alignCenter: {
             textAlign: 'center'
         },
+        marginTop100:{
+            marginTop:'100px'
+        },
+        marginTop50:{
+            marginTop:'50px'
+        },
+        marginTop75:{
+            marginTop:'75px'
+        },
+        marginTop25:{
+            marginTop:'50px'
+        },
         maxHeight400:{
             maxHeight:'400px',
             overflow:'scroll'

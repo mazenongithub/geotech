@@ -478,7 +478,7 @@ class Figures extends Component {
                 const reportid = this.props.reportid;
                 const report = ues.getReportByID.call(this, reportid);
                 if (report) {
-                    return (<div style={{ ...styles.generalContainer }}>
+                    return (<div style={{ ...styles.generalContainer, ...styles.marginTop75 }}>
 
                         <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                             <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects`}>

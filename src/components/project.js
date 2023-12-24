@@ -58,7 +58,7 @@ class Project extends Component {
             const project = ues.getProjectbyID.call(this, projectid);
             if (project) {
                 return (
-                    <div style={{ ...styles.generalContainer }}>
+                    <div style={{ ...styles.generalContainer, ...styles.marginTop75 }}>
                         <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                             <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects`}>
                                 /Projects </Link>

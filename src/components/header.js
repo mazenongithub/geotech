@@ -20,6 +20,41 @@ class Header {
 
     }
 
+    showSubheader() {
+        const ues = new UES();
+        const myuser = ues.checkUser.call(this)
+        const styles = MyStylesheet();
+        const headerFont = ues.headerFont.call(this)
+
+        const showAdmin = (myuser) => {
+            if (myuser.admin === '1') {
+                return (
+                    <div style={{ ...styles.generalContainer }}>
+                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/myadmin`}> MyAdmin </Link>
+                    </div>
+                )
+            }
+        }
+        if (myuser) {
+            return (<div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.marginTop25 }}>
+                <div style={{ ...styles.flex1, ...styles.addMargin }}>
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects`}>  Projects </Link>
+                    </div>
+                </div>
+                <div style={{ ...styles.flex1, ...styles.addMargin }}>
+                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/clients`}> Clients </Link>
+                    </div>
+
+                </div>
+                <div style={{ ...styles.flex1, ...styles.addMargin, ...styles.alignCenter }}>
+                    {showAdmin(myuser)}
+                </div>
+            </div>)
+        }
+    }
+
     handleUser() {
         const ues = new UES();
         const styles = MyStylesheet();
@@ -54,14 +89,14 @@ class Header {
         }
 
         return (
-            <div className={`noPrint`} style={{  ...styles.drawheader, ...styles.bottomMargin15 }}>
-                <div style={{ ...styles.generalFlex, ...styles.marginTop15 }}>
+            <div className={`noPrint`} style={{ ...styles.drawheader, ...styles.bottomMargin15 }}>
+                <div style={{ ...styles.generalFlex, ...styles.marginTop15, ...styles.bottomMargin15 }}>
                     <div style={{ ...styles.flex1, ...styles.alignCenter }}>
 
                         <Link to="/" style={{ ...styles.whiteFont, ...styles.headerFont, ...hugeFont, ...styles.headerWeight, ...styles.generalLink }}>GeoTech</Link>
 
                     </div>
-                    <div style={{ ...styles.flex1, ...styles.alignCenter}}>
+                    <div style={{ ...styles.flex1, ...styles.alignCenter }}>
 
                         <Link to="/" style={{ ...styles.whiteFont, ...styles.headerFont, ...headerFont, ...styles.headerWeight, ...styles.generalLink }}>Home</Link>
 
@@ -75,6 +110,7 @@ class Header {
 
 
                 </div>
+                {header.showSubheader.call(this)}
 
             </div>)
     }

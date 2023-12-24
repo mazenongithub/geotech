@@ -84,6 +84,36 @@ export function SavePavement(values) {
 
 }
 
+export function HandleMyAdmin(values) {
+
+    const APIURL = `https://civilengineer.io/UES/api/handlemyadmin.php`
+  
+    return fetch(APIURL, {
+        method: 'post',
+        credentials: 'include',
+        headers: new Headers({
+            'Content-Type': 'application/json',
+        }),
+
+        body: JSON.stringify(values)
+    })
+        .then(resp => {
+
+            if (!resp.ok) {
+                if (resp.status >= 400 && resp.status < 500) {
+                    return resp.json().then(data => {
+
+                        throw data.message;
+                    })
+                }
+
+            }
+
+            return resp.json();
+        })
+
+}
+
 
 export function SaveBorings(values) {
 
@@ -181,6 +211,30 @@ export async function LoadReport(projectid) {
         return resp.json();
     })
 }
+
+
+export async function LoadMyAdmin() {
+
+    let APIURL = `https://civilengineer.io/UES/api/loadmyadmin.php`
+    
+    return fetch(APIURL, { credentials: 'include' }).then(resp => {
+
+        if (!resp.ok) {
+            if (resp.status >= 400 && resp.status < 500) {
+                return resp.json().then(data => {
+                    throw data.message
+                })
+            }
+            else {
+                let err =  'No network connection or the Server is not responding';
+                throw err;
+            }
+        }
+
+        return resp.json();
+    })
+}
+
 
 export async function LoadProjects() {
 

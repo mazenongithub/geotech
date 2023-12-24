@@ -18,7 +18,7 @@ class Pavement extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activesectionid: false, activepavementid: false, sectionname: '', ti: '', rvalue: '', ab: '', ac: '', as: '', pcc:'', use:''
+            render: '', width: 0, height: 0, message: '', activesectionid: false, activepavementid: false, sectionname: '', ti: '', rvalue: '', ab: '', ac: '', as: '', pcc: '', use: ''
 
         }
 
@@ -246,7 +246,7 @@ class Pavement extends Component {
         if (this.state.activesectionid) {
             const sectionid = this.state.activesectionid;
             const section = ues.getPavementByID.call(this, sectionid)
-    
+
             if (section) {
                 if (this.state.activepavementid) {
                     const pavementid = this.state.activepavementid;
@@ -254,18 +254,18 @@ class Pavement extends Component {
                     if (pavementsection) {
                         use = pavementsection.use
                     }
-    
+
                 }
-    
-    
+
+
             }
         }
-    
+
         return use;
-    
-    
+
+
     }
-    
+
     handleUse(value) {
         const ues = new UES()
         const makeid = new MakeID();
@@ -283,32 +283,32 @@ class Pavement extends Component {
                         pavements[i].design[j].use = value;
                         this.props.reduxPavement(pavements)
                         this.setState({ render: 'render' })
-    
+
                     }
-    
-    
+
+
                 } else {
                     const pavementid = makeid.pavementSectionID.call(this)
-    
+
                     const ac = this.state.ac;
                     const ab = this.state.ab;
                     const as = this.state.as;
                     const ti = this.state.ti;
                     const pcc = this.state.pcc;
-                    const newpavementsection = newPavementSection(pavementid, sectionid, ti, ac, ab, as, pcc,value)
+                    const newpavementsection = newPavementSection(pavementid, sectionid, ti, ac, ab, as, pcc, value)
                     if (pavement.hasOwnProperty("design")) {
-    
+
                         pavement.design.push(newpavementsection)
-    
+
                     } else {
                         pavement.design = [newpavementsection]
-    
+
                     }
                     this.setState({ activepavementid: pavementid })
                 }
             }
         }
-    
+
     }
 
 
@@ -417,7 +417,7 @@ class Pavement extends Component {
                     const as = this.state.as;
                     const use = this.state.use;
                     const pcc = this.state.pcc;
-                  
+
                     const newpavementsection = newPavementSection(pavementid, sectionid, ti, value, ab, as, use, pcc)
                     if (pavement.hasOwnProperty("design")) {
 
@@ -489,7 +489,7 @@ class Pavement extends Component {
                     const as = this.state.as;
                     const ac = this.state.ac;
                     const use = this.state.use;
-                    const newpavementsection = newPavementSection(pavementid, sectionid, ti, ac, ab, as,value, use )
+                    const newpavementsection = newPavementSection(pavementid, sectionid, ti, ac, ab, as, value, use)
                     if (pavement.hasOwnProperty("design")) {
 
                         pavement.design.push(newpavementsection)
@@ -684,7 +684,7 @@ class Pavement extends Component {
         const pcc = Number(this.getPCC())
         let GE = 0;
         if (ac > 0 || ab > 0 || as > 0 || pcc > 0) {
-            GE = (gfac * ac) + (1.8*pcc) + (ab * 1.1) + as
+            GE = (gfac * ac) + (1.8 * pcc) + (ab * 1.1) + as
         }
         return Math.round(GE)
     }
@@ -834,7 +834,12 @@ class Pavement extends Component {
             const project = ues.getProjectbyID.call(this, projectid)
             if (project) {
                 return (
-                    <div style={{ ...styles.generalContainer }}>
+                    <div style={{ ...styles.generalContainer, ...styles.marginTop75 }}>
+
+                        <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects`}>
+                                /Projects </Link>
+                        </div>
 
 
                         <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
@@ -892,7 +897,7 @@ class Pavement extends Component {
                         </div>
 
 
-                   
+
 
 
 

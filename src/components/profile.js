@@ -2,39 +2,47 @@ import React from 'react';
 import { MyStylesheet } from './styles';
 import UES from './ues'
 import { SaveUser } from './actions/api';
-import { linkArrow, saveIcon } from './svg';
-import { Link } from "react-router-dom";
-import {inputUTCStringForLaborID} from './functions'
+import { saveIcon } from './svg';
+import { inputUTCStringForLaborID, validateUserID } from './functions'
 
 class Profile {
 
     async saveuser() {
         const ues = new UES();
         const myuser = ues.checkUser.call(this)
-        const userid = myuser.userid;
-        const firstname = myuser.firstname;
-        const lastname = myuser.lastname;
-        const emailaddress = myuser.emailaddress;
-        const phonenumber = myuser.phonenumber;
-        try {
-            const values = {userid,firstname,lastname, emailaddress, phonenumber}
-            const response = await SaveUser(values)
-            console.log(response)
-            if(response.hasOwnProperty("myuser")) {
-                this.props.reduxUser(response.myuser)
-            }
-            let message = "";
-            if(response.hasOwnProperty("message")) {
-                message = response.message;
-            }
+        if (myuser) {
+            if (!myuser.hasOwnProperty("errmsg")) {
+                const userid = myuser.userid;
+                const firstname = myuser.firstname;
+                const lastname = myuser.lastname;
+                const emailaddress = myuser.emailaddress;
+                const phonenumber = myuser.phonenumber
+                const _id = myuser._id;
+                try {
+                    const values = { _id, userid, firstname, lastname, emailaddress, phonenumber }
+                    const response = await SaveUser(values)
+                    console.log(response)
+                    if (response.hasOwnProperty("myuser")) {
+                        this.props.reduxUser(response.myuser)
+                    }
+                    let message = "";
+                    if (response.hasOwnProperty("message")) {
+                        message = response.message;
+                    }
 
-            if (response.hasOwnProperty("lastupdated")) {
-                message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
+                    if (response.hasOwnProperty("lastupdated")) {
+                        message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
+                    }
+
+                    this.setState({ message })
+
+                } catch (err) {
+
+                }
+
+            } else {
+                alert(`Invalid User ID Cannot Save Profile`)
             }
-
-            this.setState({message})
-
-        } catch (err) {
 
         }
 
@@ -51,124 +59,132 @@ class Profile {
 
     }
 
-    getPhoneNumber() {
-        const ues = new UES();
-        const myuser = ues.checkUser.call(this)
-        let phonenumber = ''
-        if (myuser) {
-            phonenumber = myuser.phonenumber;
 
-        }
-        return phonenumber;
 
-    }
-
-    handleEmailAddress(value) {
-        const ues = new UES();
-        let myuser = ues.checkUser.call(this)
-        if (myuser) {
-            myuser.emailaddress = value;
-            this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
-        }
+getPhoneNumber() {
+    const ues = new UES();
+    const myuser = ues.checkUser.call(this)
+    let phonenumber = ''
+    if (myuser) {
+        phonenumber = myuser.phonenumber;
 
     }
+    return phonenumber;
 
-    getEmailAddress() {
-        const ues = new UES();
-        const myuser = ues.checkUser.call(this)
-        let emailaddress = ''
-        if (myuser) {
-            emailaddress = myuser.emailaddress;
+}
 
-        }
-        return emailaddress;
-
+handleEmailAddress(value) {
+    const ues = new UES();
+    let myuser = ues.checkUser.call(this)
+    if (myuser) {
+        myuser.emailaddress = value;
+        this.props.reduxUser(myuser)
+        this.setState({ render: 'render' })
     }
 
+}
 
-    handleLastName(value) {
-        const ues = new UES();
-        let myuser = ues.checkUser.call(this)
-        if (myuser) {
-            myuser.lastname = value;
-            this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
-        }
-
-    }
-
-    getLastName() {
-        const ues = new UES();
-        const myuser = ues.checkUser.call(this)
-        let lastname = ''
-        if (myuser) {
-            lastname = myuser.lastname;
-
-        }
-        return lastname;
+getEmailAddress() {
+    const ues = new UES();
+    const myuser = ues.checkUser.call(this)
+    let emailaddress = ''
+    if (myuser) {
+        emailaddress = myuser.emailaddress;
 
     }
+    return emailaddress;
+
+}
 
 
-    handleFirstName(value) {
-        const ues = new UES();
-        let myuser = ues.checkUser.call(this)
-        if (myuser) {
-            myuser.firstname = value;
-            this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
-        }
-
+handleLastName(value) {
+    const ues = new UES();
+    let myuser = ues.checkUser.call(this)
+    if (myuser) {
+        myuser.lastname = value;
+        this.props.reduxUser(myuser)
+        this.setState({ render: 'render' })
     }
 
-    getFirstName() {
-        const ues = new UES();
-        const myuser = ues.checkUser.call(this)
-        let firstname = ''
-        if (myuser) {
-            firstname = myuser.firstname;
+}
 
-        }
-        return firstname;
-
-    }
-
-    handleUserID(value) {
-        const ues = new UES();
-        let myuser = ues.checkUser.call(this)
-        if (myuser) {
-            myuser.userid = value;
-            this.props.reduxUser(myuser)
-            this.setState({ render: 'render' })
-        }
+getLastName() {
+    const ues = new UES();
+    const myuser = ues.checkUser.call(this)
+    let lastname = ''
+    if (myuser) {
+        lastname = myuser.lastname;
 
     }
+    return lastname;
 
-    getUserID() {
-        const ues = new UES();
-        const myuser = ues.checkUser.call(this)
-        let userid = ''
-        if (myuser) {
-            userid = myuser.userid;
+}
 
-        }
-        return userid;
 
+handleFirstName(value) {
+    const ues = new UES();
+    let myuser = ues.checkUser.call(this)
+    if (myuser) {
+        myuser.firstname = value;
+        this.props.reduxUser(myuser)
+        this.setState({ render: 'render' })
     }
 
-    showProfile() {
-        const ues = new UES();
-        const styles = MyStylesheet();
-        const headerFont = ues.headerFont.call(this)
-        const regularFont = ues.regularFont.call(this)
-        const profile = new Profile();
-        const myuser = ues.checkUser.call(this)
-        const arrowWidth = ues.arrowWidth.call(this)
-        const buttonWidth = ues.generateIcon.call(this)
-        if(myuser) {
+}
+
+getFirstName() {
+    const ues = new UES();
+    const myuser = ues.checkUser.call(this)
+    let firstname = ''
+    if (myuser) {
+        firstname = myuser.firstname;
+
+    }
+    return firstname;
+
+}
+
+handleUserID(value) {
+    value = value.toLowerCase();
+    const ues = new UES();
+    let myuser = ues.checkUser.call(this)
+    if (myuser) {
+        myuser.userid = value;
+        const errmsg = validateUserID(value);
+        if (errmsg.length > 0) {
+            myuser.errmsg = errmsg;
+        } else {
+            delete myuser.errmsg;
+        }
+        this.props.reduxUser(myuser)
+        this.setState({ render: 'render' })
+    }
+
+}
+
+getUserID() {
+    const ues = new UES();
+    const myuser = ues.checkUser.call(this)
+    let userid = ''
+    if (myuser) {
+        userid = myuser.userid;
+
+    }
+    return userid;
+
+}
+
+showProfile() {
+    const ues = new UES();
+    const styles = MyStylesheet();
+    const headerFont = ues.headerFont.call(this)
+    const regularFont = ues.regularFont.call(this)
+    const profile = new Profile();
+    const myuser = ues.checkUser.call(this)
+    const buttonWidth = ues.generateIcon.call(this)
+    if (myuser) {
         return (
-            <div style={{ ...styles.generalContainer }}>
+            <div style={{ ...styles.generalContainer, ...styles.marginTop100 }}>
                 <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                     <span style={{ ...headerFont }}>/</span>
                     <input type="text" style={{ ...styles.mediumwidth, ...styles.generalPadding, ...headerFont }}
@@ -226,30 +242,26 @@ class Profile {
                     </div>
 
                 </div>
-                
-                <div style={{...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15}}>
-                    <span style={{...styles.generalFont, ...regularFont}}>{this.state.message}</span>
+
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
+                    <span style={{ ...styles.generalFont, ...regularFont }}>{myuser.errmsg}</span>
                 </div>
 
-                <div style={{...styles.generalContainer, ...styles.alignCenter}}>
-                    <button style={{...styles.generalButton, ...buttonWidth}} onClick={()=>{profile.saveuser.call(this)}}>{saveIcon()}</button>
+                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { profile.saveuser.call(this) }}>{saveIcon()}</button>
                 </div>
 
-            
 
-                <div style={{...styles.generalContainer}}>
-                    <Link style={{...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor}} to={`/${myuser.userid}/projects`}><button style={{...styles.generalButton, ...arrowWidth}}>{linkArrow()}</button> Go To Projects </Link>   
-                </div>
 
-                <div style={{...styles.generalContainer}}>
-                    <Link style={{...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor}} to={`/${myuser.userid}/clients`}><button style={{...styles.generalButton, ...arrowWidth}}>{linkArrow()}</button> Clients </Link>   
-                </div>
+
+
 
 
             </div>)
 
-            }
     }
+}
 }
 
 export default Profile;

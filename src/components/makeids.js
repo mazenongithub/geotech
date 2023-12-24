@@ -2,6 +2,29 @@ import UES from "./ues";
 import { makeID } from "./functions";
 class MakeID {
 
+    userID() {
+        const ues = new UES();
+        let _id = false;
+        const users = ues.getMyAdminUsers.call(this)
+        if(users) {
+            while(!_id) {
+            _id = makeID(16)
+
+            users.map(user=> {
+                if(user._id === _id) {
+                    _id = false;
+                }
+            })
+
+
+            }
+
+        } else {
+            _id = makeID(16)
+        }
+        return _id;
+    }
+
     appendixID(reportid) {
         const ues = new UES();
         const report = ues.getReportByID.call(this, reportid)

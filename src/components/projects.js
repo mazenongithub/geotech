@@ -628,7 +628,7 @@ class Projects extends Component {
         const regularFont = ues.regularFont.call(this)
         const buttonWidth = ues.generateIcon.call(this)
         if (myuser) {
-            return (<div style={{ ...styles.generalContainer }}>
+            return (<div style={{ ...styles.generalContainer, ...styles.marginTop75 }}>
 
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                     <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects`}>

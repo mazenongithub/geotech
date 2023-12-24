@@ -5,7 +5,7 @@ import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
 import { removeIcon, linkArrow, saveIcon, calculateIcon } from './svg';
-import { currentDate, newBoring } from './functions';
+import { currentDate, newBoring,convertDegree } from './functions';
 import MakeID from './makeids';
 
 
@@ -1013,8 +1013,10 @@ class Borings extends Component {
 
         const displayGeoData = (position) => {
 
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude
+            let latitude = position.coords.latitude;
+            latitude = convertDegree(latitude)
+            let longitude = position.coords.longitude
+            longitude = convertDegree(longitude)
 
             this.handleLatitude(latitude);
             this.handleLongitude(longitude)
@@ -1238,7 +1240,7 @@ class Borings extends Component {
         const buttonWidth = ues.generateIcon.call(this)
         if (myuser) {
             if (project) {
-                return (<div style={{ ...styles.generalContainer }}>
+                return (<div style={{ ...styles.generalContainer, ...styles.marginTop75 }}>
 
                     <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                         <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${project.projectid}`}>
