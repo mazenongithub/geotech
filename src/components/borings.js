@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { removeIcon, linkArrow, saveIcon, calculateIcon } from './svg';
 import { currentDate, newBoring,convertDegree } from './functions';
 import MakeID from './makeids';
+import Spinner from './spinner'
 
 
 
@@ -1238,6 +1239,17 @@ class Borings extends Component {
         const myuser = ues.checkUser.call(this)
         const headerFont = ues.headerFont.call(this)
         const buttonWidth = ues.generateIcon.call(this)
+
+        const showSaveIcon =() => {
+            if(this.state.spinner) {
+                return (<Spinner/>)
+
+            } else {
+                return(<div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { ues.saveBorings.call(this) }}>{saveIcon()}</button>
+                </div>)
+            }
+        }
         if (myuser) {
             if (project) {
                 return (<div style={{ ...styles.generalContainer, ...styles.marginTop75 }}>
@@ -1431,9 +1443,7 @@ class Borings extends Component {
                         <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
                     </div>
 
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                        <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { ues.saveBorings.call(this) }}>{saveIcon()}</button>
-                    </div>
+                    {showSaveIcon()}
 
 
                     {this.showBorings()}

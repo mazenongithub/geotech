@@ -122,6 +122,9 @@ export function MyStylesheet() {
         smallwidth: {
             width: '25%'
         },
+        miniWidth:{
+            width: '15%'
+        },
         generalPadding: {
             padding: '3px'
 
@@ -134,6 +137,9 @@ export function MyStylesheet() {
         },
         addMargin: {
             margin: '3px'
+        },
+        centerDiv:{
+            margin:'0px auto'
         },
         font10: {
             fontSize: '10px'

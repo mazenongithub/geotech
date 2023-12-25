@@ -229,6 +229,7 @@ class UES {
             const ues = new UES();
             const projectid = this.props.projectid;
             const reports = ues.getReportsByProjectID.call(this, projectid)
+            this.setState({spinner:true})
             const response = await SaveReport({ projectid, reports });
             console.log(response)
             if (response.hasOwnProperty("reportsdb")) {
@@ -256,7 +257,7 @@ class UES {
                 message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
             }
 
-            this.setState({ message })
+            this.setState({ message, spinner:false })
 
         } catch (err) {
             alert(err)
@@ -269,6 +270,7 @@ class UES {
         const borings = ues.getBoringsbyProjectID.call(this, projectid);
         if (borings) {
             try {
+                this.setState({spinner:true})
 
                 const response = await SaveBorings({ projectid, borings })
                 console.log(response)
@@ -293,7 +295,7 @@ class UES {
                 if (response.hasOwnProperty("lastupdated")) {
                     message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
                 }
-                this.setState({ message })
+                this.setState({ message, spinner:false })
 
             } catch (err) {
                 alert(err)

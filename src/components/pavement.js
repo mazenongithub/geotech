@@ -8,6 +8,7 @@ import { SavePavement } from './actions/api';
 import { removeIcon, saveIcon } from './svg';
 import { newPavement, inputUTCStringForLaborID, newPavementSection } from './functions';
 import MakeID from './makeids';
+import Spinner from './spinner'
 
 
 
@@ -18,7 +19,7 @@ class Pavement extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activesectionid: false, activepavementid: false, sectionname: '', ti: '', rvalue: '', ab: '', ac: '', as: '', pcc: '', use: ''
+            render: '', width: 0, height: 0, message: '', activesectionid: false, activepavementid: false, sectionname: '', ti: '', rvalue: '', ab: '', ac: '', as: '', pcc: '', use: '', spinner:false
 
         }
 
@@ -705,6 +706,7 @@ class Pavement extends Component {
         const pavement = ues.getPavement.call(this)
         if (pavement) {
             try {
+                this.setState({spinner:true})
 
                 let response = await SavePavement({ pavement })
                 if (response.hasOwnProperty("pavement")) {
@@ -721,7 +723,7 @@ class Pavement extends Component {
                 if (response.hasOwnProperty("lastupdated")) {
                     message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
                 }
-                this.setState({ message })
+                this.setState({ message, spinner:false })
 
 
             } catch (err) {
@@ -829,6 +831,18 @@ class Pavement extends Component {
         const regularFont = ues.regularFont.call(this)
         const headerFont = ues.headerFont.call(this)
         const generateIconWidth = ues.generateIcon.call(this)
+
+        const showSaveIcon =() => {
+            if(this.state.spinner) {
+
+                return(<Spinner/>)
+
+            } else {
+                return(<div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { this.savePavement() }}>{saveIcon()}</button>
+                </div>)
+            }
+        }
         if (myuser) {
             const projectid = this.props.projectid;
             const project = ues.getProjectbyID.call(this, projectid)
@@ -994,9 +1008,7 @@ class Pavement extends Component {
                             <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
                         </div>
 
-                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { this.savePavement() }}>{saveIcon()}</button>
-                        </div>
+                        {showSaveIcon()}
 
 
 

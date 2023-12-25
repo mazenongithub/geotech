@@ -9,6 +9,7 @@ import MakeID from './makeids';
 import { newSample } from './functions';
 import SoilClassification from './soilclassification';
 import GraphicLog from './graphiclog';
+import Spinner from './spinner'
 
 
 class Samples extends Component {
@@ -17,7 +18,7 @@ class Samples extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activesampleid: false, sampleset: '', samplenumber: '', sampledepth: '', depth: '', diameter: '', samplelength: '', tareno: '', tarewgt: '', wetwgt: '', wetwgt_2: '', drywgt: '', spt: '', uscs: '', ll: '', pi: '', description: '', graphiclog: '', sptlength: '', remarks: ''
+            render: '', width: 0, height: 0, message: '', activesampleid: false, sampleset: '', samplenumber: '', sampledepth: '', depth: '', diameter: '', samplelength: '', tareno: '', tarewgt: '', wetwgt: '', wetwgt_2: '', drywgt: '', spt: '', uscs: '', ll: '', pi: '', description: '', graphiclog: '', sptlength: '', remarks: '', spinner:false
 
         }
 
@@ -1651,6 +1652,19 @@ class Samples extends Component {
         const buttonWidth = ues.generateIcon.call(this)
         const graphiclog = new GraphicLog();
         const arrowWidth = ues.arrowWidth.call(this)
+        
+        const showSaveIcon = () => {
+            if(this.state.spinner) {
+                return(<Spinner/>)
+
+            } else {
+                return(<div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { ues.saveBorings.call(this) }}>{saveIcon()}</button>
+                </div>)
+
+            }
+          
+        }
         if (myuser) {
             const projectid = this.props.projectid;
             const project = ues.getProjectbyID.call(this, projectid);
@@ -1838,9 +1852,7 @@ class Samples extends Component {
                                 <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
                             </div>
 
-                            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                                <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { ues.saveBorings.call(this) }}>{saveIcon()}</button>
-                            </div>
+                            {showSaveIcon()}
                             {this.showsampleids()}
                             <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
                                 <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${project.projectid}/borings/${boring.boringid}/logdraft`}><button style={{ ...styles.generalButton, ...arrowWidth }}>{linkArrow()}</button> View LogDraft </Link>

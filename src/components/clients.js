@@ -8,6 +8,7 @@ import { checkBox, emptyBox, removeIcon, saveIcon } from './svg';
 import { newClient, inputUTCStringForLaborID } from './functions';
 import MakeID from './makeids';
 import { SaveClients } from './actions/api';
+import Spinner from './spinner';
 
 class Clients extends Component {
 
@@ -16,7 +17,7 @@ class Clients extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activeclientid: false, firstname: '', lastname: '', title: '', company: '', city: '', address: '', contactstate: '', zipcode: '', prefix:''
+            render: '', width: 0, height: 0, message: '', activeclientid: false, firstname: '', lastname: '', title: '', company: '', city: '', address: '', contactstate: '', zipcode: '', prefix:'', spinner:false
 
         }
 
@@ -49,6 +50,7 @@ class Clients extends Component {
         const clients = ues.getClients.call(this);
         if (clients) {
             try {
+                this.setState({spinner:true})
                 const response = await SaveClients({ clients })
                 if (response.hasOwnProperty("clients")) {
                     this.props.reduxClients(response.clients);
@@ -63,7 +65,7 @@ class Clients extends Component {
                     message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
                 }
 
-                this.setState({ message })
+                this.setState({ message, spinner:false })
 
             } catch (err) {
                 alert(err)
@@ -674,6 +676,17 @@ class Clients extends Component {
         const regularFont = ues.regularFont.call(this)
         const buttonWidth = ues.generateIcon.call(this)
         const checkboxwidth = ues.checkBox.call(this)
+
+        const showSaveIcon = () => {
+            if(this.state.spinner) {
+                return(<Spinner/>)
+
+            } else {
+                return(  <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { this.saveClients() }}>{saveIcon()}</button>
+                </div>)
+            }
+        }
         if (myuser) {
             return (<div style={{ ...styles.generalContainer, ...styles.marginTop75 }}>
 
@@ -802,9 +815,7 @@ class Clients extends Component {
                     <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
                 </div>
 
-                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { this.saveClients() }}>{saveIcon()}</button>
-                </div>
+              {showSaveIcon()}
 
                 {this.showClients()}
 

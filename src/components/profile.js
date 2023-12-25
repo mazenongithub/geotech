@@ -4,6 +4,7 @@ import UES from './ues'
 import { SaveUser } from './actions/api';
 import { saveIcon } from './svg';
 import { inputUTCStringForLaborID, validateUserID } from './functions'
+import Spinner from './spinner'
 
 class Profile {
 
@@ -20,6 +21,7 @@ class Profile {
                 const _id = myuser._id;
                 try {
                     const values = { _id, userid, firstname, lastname, emailaddress, phonenumber }
+                    this.setState({spinner:true})
                     const response = await SaveUser(values)
                     console.log(response)
                     if (response.hasOwnProperty("myuser")) {
@@ -34,7 +36,7 @@ class Profile {
                         message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
                     }
 
-                    this.setState({ message })
+                    this.setState({ message, spinner:false })
 
                 } catch (err) {
 
@@ -182,6 +184,18 @@ showProfile() {
     const profile = new Profile();
     const myuser = ues.checkUser.call(this)
     const buttonWidth = ues.generateIcon.call(this)
+
+    const showSaveIcon = () => {
+        if(this.state.spinner) {
+            return(<Spinner/>)
+
+        } else {
+            return(<div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { profile.saveuser.call(this) }}>{saveIcon()}</button>
+            </div>
+)
+        }
+    }
     if (myuser) {
         return (
             <div style={{ ...styles.generalContainer, ...styles.marginTop100 }}>
@@ -248,10 +262,7 @@ showProfile() {
                     <span style={{ ...styles.generalFont, ...regularFont }}>{myuser.errmsg}</span>
                 </div>
 
-                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { profile.saveuser.call(this) }}>{saveIcon()}</button>
-                </div>
-
+                {showSaveIcon()}
 
 
 

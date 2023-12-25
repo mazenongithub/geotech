@@ -8,6 +8,7 @@ import { arrowUp, generateIcon, removeIcon, saveIcon, arrowDown, linkArrow } fro
 import { formatDateReport, currentDate, newReport, newList, newSublist, newSection } from './functions'
 import MakeID from './makeids';
 import GenerateReport from './generatereport';
+import Spinner from './spinner';
 
 
 
@@ -18,7 +19,7 @@ class Report extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activereportid: false, intro: '', activelistid: false, activesublistid: false, activegeneralid: false, activeconclusionid: false, activerecommendationid: false, activefindingid: false, content: ''
+            render: '', width: 0, height: 0, message: '', activereportid: false, intro: '', activelistid: false, activesublistid: false, activegeneralid: false, activeconclusionid: false, activerecommendationid: false, activefindingid: false, content: '', spinner:false
 
         }
 
@@ -1981,6 +1982,20 @@ class Report extends Component {
         const myuser = ues.checkUser.call(this)
         const regularFont = ues.regularFont.call(this)
         const generateIconWidth = ues.generateIcon.call(this)
+
+        const showSaveIcon = () => {
+            if(this.state.spinner) {
+
+                return(<Spinner/>)
+           
+
+            } else {
+                return( <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { ues.saveReport.call(this) }}>{saveIcon()}</button>
+                </div>)
+
+            }
+        }
         if (myuser) {
 
             const projectid = this.props.projectid;
@@ -2160,9 +2175,7 @@ class Report extends Component {
                         <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
                     </div>
 
-                    <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                        <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { ues.saveReport.call(this) }}>{saveIcon()}</button>
-                    </div>
+                   {showSaveIcon()}
 
                 </div>)
 

@@ -8,6 +8,7 @@ import 'firebase/compat/firestore'
 import { LoginUser } from './actions/api';
 import Profile from './profile';
 import { validateUserID } from './functions';
+import Spinner from './spinner';
 
 class Landing {
 
@@ -15,7 +16,7 @@ class Landing {
         
 
         try {
-
+            this.setState({spinner:true})
             let response = await LoginUser(values);
             let message = "";
             if (response.hasOwnProperty("message")) {
@@ -29,7 +30,7 @@ class Landing {
 
             }
 
-            this.setState({ message: message })
+            this.setState({ message: message, spinner:false })
 
 
 
@@ -180,6 +181,37 @@ class Landing {
         const landing = new Landing();
         const regularFont = ues.regularFont.call(this)
 
+        const showClientID = () => {
+            if(this.state.spinner) {
+                return (<Spinner/>)
+
+            } else {
+                return(<div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+                    <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+
+                        <button style={{ ...styles.generalButton, ...styles.noBorder, ...buttonWidth }}
+                            onClick={() => { landing.googleSignIn.call(this) }}>
+
+                            {GoogleSign()}
+
+                        </button>
+
+                    </div>
+
+
+                    <div style={{ ...styles.flex1, ...styles.alignCenter }}>
+
+                        <button style={{ ...styles.generalButton, ...styles.noBorder, ...buttonWidth }} onClick={() => landing.appleSignIn.call(this)}>
+                            {AppleID()}
+                        </button>
+
+                    </div>
+
+
+                </div>)
+            }
+        }
+
         const registerMessage = () => {
             if(this.state.register) {
                 return(<span style={{...regularFont}}>Only Click Register and Enter a User ID when creating an account for the first time. </span>)
@@ -228,29 +260,7 @@ class Landing {
 
 
 
-                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                    <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-
-                        <button style={{ ...styles.generalButton, ...styles.noBorder, ...buttonWidth }}
-                            onClick={() => { landing.googleSignIn.call(this) }}>
-
-                            {GoogleSign()}
-
-                        </button>
-
-                    </div>
-
-
-                    <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-
-                        <button style={{ ...styles.generalButton, ...styles.noBorder, ...buttonWidth }} onClick={() => landing.appleSignIn.call(this)}>
-                            {AppleID()}
-                        </button>
-
-                    </div>
-
-
-                </div>
+                {showClientID()}
                 <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                     <span style={{ ...regularFont }}>{this.state.message}</span>
                 </div>

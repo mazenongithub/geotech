@@ -6,6 +6,7 @@ import UES from './ues';
 import { Link } from "react-router-dom";
 import { saveIcon } from './svg';
 import { newSieve } from './functions';
+import Spinner from './spinner';
 
 class Sieve extends Component {
 
@@ -14,7 +15,7 @@ class Sieve extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', wgt34: '', wgt38: '', wgt4: '', wgt10: '', wgt30: '', wgt40: '', wgt100: '', wgt200: ''
+            render: '', width: 0, height: 0, message: '', wgt34: '', wgt38: '', wgt4: '', wgt10: '', wgt30: '', wgt40: '', wgt100: '', wgt200: '', spinner:false
 
         }
 
@@ -489,6 +490,17 @@ class Sieve extends Component {
         const myuser = ues.checkUser.call(this)
         const headerFont = ues.headerFont.call(this)
         const buttonWidth = ues.generateIcon.call(this)
+
+        const showSaveIcon = () => {
+            if(this.state.spinner) {
+                return (<Spinner/>)
+
+            } else {
+                return( <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { ues.saveBorings.call(this) }}>{saveIcon()}</button>
+                </div>)
+            }
+        }
         if (myuser) {
             const projectid = this.props.projectid;
             const project = ues.getProjectbyID.call(this, projectid);
@@ -593,9 +605,7 @@ class Sieve extends Component {
                                     <span style={{ ...styles.generalFont, ...regularFont }}>&nbsp;{this.state.message}</span>
                                 </div>
 
-                                <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { ues.saveBorings.call(this) }}>{saveIcon()}</button>
-                                </div>
+                               {showSaveIcon()}
 
                             </div>
                         )

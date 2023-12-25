@@ -7,6 +7,7 @@ import { LoadMyAdmin, HandleMyAdmin } from "./actions/api";
 import { removeIcon, approveIcon, saveIcon } from "./svg";
 import { inputUTCStringForLaborID, validateUserID } from './functions';
 import { Link } from "react-router-dom";
+import Spinner from "./spinner";
 
 class MyAdmin extends Component {
 
@@ -16,7 +17,7 @@ class MyAdmin extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activeprojectid: '', activeuserid: '', activerequestid: '', invaliduserid: false, invalidrequestid: false
+            render: '', width: 0, height: 0, message: '', activeprojectid: '', activeuserid: '', activerequestid: '', invaliduserid: false, invalidrequestid: false, spinner:false
 
         }
 
@@ -810,6 +811,7 @@ class MyAdmin extends Component {
         const myadmin = ues.getMyAdmin.call(this);
         if (!this.state.invaliduserid && !this.state.invalidrequestid) {
             try {
+                this.setState({spinner:true})
                 const response = await HandleMyAdmin({ myadmin });
                 let message = "";
                 if (response.hasOwnProperty("myadmin")) {
@@ -825,7 +827,7 @@ class MyAdmin extends Component {
                     message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
                 }
 
-                this.setState({ message })
+                this.setState({ message, spinner:false })
 
             } catch (err) {
                 alert(err)
@@ -844,6 +846,18 @@ class MyAdmin extends Component {
         const headerFont = ues.headerFont.call(this)
         const buttonWidth = ues.generateIcon.call(this)
         const myuser = ues.checkUser.call(this)
+
+        const showSaveIcon =() => {
+            if(this.state.spinner) {
+                return(<Spinner/>)
+
+            } else {
+                return(      <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { this.saveMyAdmin.call(this) }}>{saveIcon()}</button>
+                </div>
+)
+            }
+        }
         if (myuser) {
             if (myuser.admin === '1') {
                 return (
@@ -926,10 +940,7 @@ class MyAdmin extends Component {
                             <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
                         </div>
 
-                        <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                            <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { this.saveMyAdmin.call(this) }}>{saveIcon()}</button>
-                        </div>
-
+                  {showSaveIcon()}
 
 
 

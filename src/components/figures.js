@@ -9,6 +9,7 @@ import { formatDateReport, newFigure, newAppendix } from './functions';
 import { Link } from "react-router-dom";
 import { removeIcon, saveIcon } from './svg';
 import MakeID from './makeids';
+import Spinner from './spinner';
 
 class Figures extends Component {
 
@@ -17,7 +18,7 @@ class Figures extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activefigureid: false, activeappendixid: false, figurenumber: '', figurename: '', appendixnumber: '', appendixname: ''
+            render: '', width: 0, height: 0, message: '', activefigureid: false, activeappendixid: false, figurenumber: '', figurename: '', appendixnumber: '', appendixname: '', spinner:false
 
         }
 
@@ -469,6 +470,17 @@ class Figures extends Component {
         const regularFont = ues.regularFont.call(this)
         const headerFont = ues.headerFont.call(this)
         const generateIconWidth = ues.generateIcon.call(this)
+
+        const showSaveIcon = () => {
+            if(this.state.spinner) {
+                return(<Spinner/>)
+
+            } else {
+                return( <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { ues.saveReport.call(this) }}>{saveIcon()}</button>
+                </div>)
+            }
+        }
         if (myuser) {
 
             const projectid = this.props.projectid;
@@ -568,9 +580,7 @@ class Figures extends Component {
                             <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
                         </div>
 
-                        <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                            <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { ues.saveReport.call(this) }}>{saveIcon()}</button>
-                        </div>
+                       {showSaveIcon()}
 
 
 

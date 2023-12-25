@@ -8,6 +8,7 @@ import { removeIcon, linkArrow, saveIcon } from './svg';
 import { newProject, inputUTCStringForLaborID } from './functions';
 import MakeID from './makeids';
 import { SaveProjects } from './actions/api';
+import Spinner from './spinner'
 
 class Projects extends Component {
 
@@ -16,7 +17,7 @@ class Projects extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activeprojectid: '', projectnumber: '', title: '', address: '', city: '', description: '', clientid: '', projectstate: ''
+            render: '', width: 0, height: 0, message: '', activeprojectid: '', projectnumber: '', title: '', address: '', city: '', description: '', clientid: '', projectstate: '', spinner:false
 
         }
 
@@ -55,6 +56,7 @@ class Projects extends Component {
         const projects = ues.getProjects.call(this)
         if (projects) {
             try {
+                this.setState({spinner:true})
 
                 let response = await SaveProjects({ projects })
                 console.log(response)
@@ -70,7 +72,7 @@ class Projects extends Component {
                     message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
                 }
 
-                this.setState({ message })
+                this.setState({ message, spinner:false })
 
             } catch (err) {
                 alert(err)
@@ -627,6 +629,18 @@ class Projects extends Component {
         const headerFont = ues.headerFont.call(this)
         const regularFont = ues.regularFont.call(this)
         const buttonWidth = ues.generateIcon.call(this)
+
+        const showSaveIcon =() => {
+            if(this.state.spinner) {
+                return(<Spinner/>)
+        
+            } else {
+                return( <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { this.saveProjects() }}>{saveIcon()}</button>
+                </div>)
+
+            }
+        }
         if (myuser) {
             return (<div style={{ ...styles.generalContainer, ...styles.marginTop75 }}>
 
@@ -729,9 +743,7 @@ class Projects extends Component {
                     <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
                 </div>
 
-                <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { this.saveProjects() }}>{saveIcon()}</button>
-                </div>
+               {showSaveIcon()}
 
                 {this.showProjects()}
 
