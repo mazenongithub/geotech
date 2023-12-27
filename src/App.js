@@ -26,6 +26,7 @@ import LogDraft from './components/logdraft';
 import ViewReport from './components/viewreport';
 import Figures from './components/figures'
 import MyAdmin from './components/myadmin'
+import Spinner from './components/spinner'
 
 const ShowMyAdmin = () => {
   const { userid } = useParams();
@@ -89,7 +90,7 @@ class App extends Component {
 
     this.state = {
 
-      render: '', width: 0, height: 0, register: false, userid: '', message: ''
+      render: '', width: 0, height: 0, register: false, userid: '', message: '', spinner:false
 
     }
 
@@ -150,6 +151,7 @@ class App extends Component {
     const header = new Header();
     const profile = new Profile()
     const myuser = ues.checkUser.call(this)
+    
 
 
     const defaultLogo = (myuser) => {
@@ -195,6 +197,7 @@ class App extends Component {
             <Routes>
               <Route exact path="/" element={defaultLogo(myuser)} />
               <Route exact path="/login" element={landing.handleLanding.call(this)} />
+              <Route exact path="/spinner" element={<Spinner/>} />
               <Route exact path="/:userid/profile" element={profile.showProfile.call(this)} />
               <Route exact path="/:userid/myadmin" element={<ShowMyAdmin />} />
               <Route exact path="/:userid/clients" element={<Clients />} />

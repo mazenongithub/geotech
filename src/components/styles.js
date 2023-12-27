@@ -123,7 +123,7 @@ export function MyStylesheet() {
             width: '25%'
         },
         miniWidth:{
-            width: '15%'
+            width: '8%'
         },
         generalPadding: {
             padding: '3px'

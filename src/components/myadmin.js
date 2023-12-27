@@ -3,8 +3,8 @@ import UES from './ues';
 import { connect } from 'react-redux';
 import * as actions from './actions';
 import { MyStylesheet } from './styles';
-import { LoadMyAdmin, HandleMyAdmin } from "./actions/api";
-import { removeIcon, approveIcon, saveIcon } from "./svg";
+import { LoadMyAdmin, HandleMyAdmin, InviteEmail } from "./actions/api";
+import { removeIcon, approveIcon, saveIcon, sendInvite } from "./svg";
 import { inputUTCStringForLaborID, validateUserID } from './functions';
 import { Link } from "react-router-dom";
 import Spinner from "./spinner";
@@ -17,7 +17,7 @@ class MyAdmin extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activeprojectid: '', activeuserid: '', activerequestid: '', invaliduserid: false, invalidrequestid: false, spinner:false
+            render: '', width: 0, height: 0, s: '', activeprojectid: '', activeuserid: '', activerequestid: '', invaliduserid: false, invalidrequestid: false, spinner: false, sendemail: ''
 
         }
 
@@ -811,7 +811,7 @@ class MyAdmin extends Component {
         const myadmin = ues.getMyAdmin.call(this);
         if (!this.state.invaliduserid && !this.state.invalidrequestid) {
             try {
-                this.setState({spinner:true})
+                this.setState({ spinner: true })
                 const response = await HandleMyAdmin({ myadmin });
                 let message = "";
                 if (response.hasOwnProperty("myadmin")) {
@@ -827,7 +827,7 @@ class MyAdmin extends Component {
                     message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
                 }
 
-                this.setState({ message, spinner:false })
+                this.setState({ message, spinner: false })
 
             } catch (err) {
                 alert(err)
@@ -836,6 +836,24 @@ class MyAdmin extends Component {
         } else {
             alert(`Invalid user or request ID`)
         }
+    }
+
+    async sendEmail() {
+        try {
+            const emailaddress = this.state.sendemail;
+            this.setState({spinner:true})
+            let response = await InviteEmail({ emailaddress })
+            console.log(response)
+            let message = "";
+            if (response.hasOwnProperty("message")) {
+                message = response.message;
+            }
+            this.setState({ message, spinner:false })
+
+        } catch (err) {
+            alert(err)
+        }
+
     }
 
 
@@ -847,15 +865,24 @@ class MyAdmin extends Component {
         const buttonWidth = ues.generateIcon.call(this)
         const myuser = ues.checkUser.call(this)
 
-        const showSaveIcon =() => {
+        const getSendButton = () => {
             if(this.state.spinner) {
                 return(<Spinner/>)
+            } else {
+                return(<button style={{ ...styles.generalButton, ...buttonWidth }}
+                    onClick={() => { this.sendEmail() }}>{sendInvite()}</button>)
+            }
+        }
+
+        const showSaveIcon = () => {
+            if (this.state.spinner) {
+                return (<Spinner />)
 
             } else {
-                return(      <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
+                return (<div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                     <button style={{ ...styles.generalButton, ...buttonWidth }} onClick={() => { this.saveMyAdmin.call(this) }}>{saveIcon()}</button>
                 </div>
-)
+                )
             }
         }
         if (myuser) {
@@ -940,7 +967,7 @@ class MyAdmin extends Component {
                             <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
                         </div>
 
-                  {showSaveIcon()}
+                        {showSaveIcon()}
 
 
 
@@ -1011,6 +1038,25 @@ class MyAdmin extends Component {
                         </div>
 
                         {this.showrequests()}
+
+                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                            <span style={{ ...headerFont }}>Invite Email</span>
+                        </div>
+
+                        <div style={{ ...styles.generalContainer }}>
+                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                                <input type="text" style={{ ...styles.generalFont, ...regularFont }}
+                                    value={this.state.sendemail}
+                                    onChange={event => { this.setState({ sendemail: event.target.value }) }} />
+                            </div>
+                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                                <span style={{ ...regularFont, ...styles.generalFont, ...styles.bottomMargin15 }}>Send Email</span>
+                            </div>
+                            <div style={{ ...styles.generalContainer }}>
+
+                                {getSendButton()}
+                            </div>
+                        </div>
 
                     </div>)
 
