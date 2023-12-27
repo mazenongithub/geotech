@@ -27,7 +27,7 @@ import ViewReport from './components/viewreport';
 import Figures from './components/figures'
 import MyAdmin from './components/myadmin'
 import Spinner from './components/spinner'
-
+import Home from './components/home'
 const ShowMyAdmin = () => {
   const { userid } = useParams();
   return (<MyAdmin userid={userid} />)
@@ -35,16 +35,16 @@ const ShowMyAdmin = () => {
 
 const ShowFigures = () => {
   const { projectid, userid, reportid } = useParams();
-  return(<Figures userid={userid} projectid={projectid} reportid={reportid} />)
+  return (<Figures userid={userid} projectid={projectid} reportid={reportid} />)
 }
 const ShowViewReport = () => {
   const { projectid, userid, reportid } = useParams();
-  return(<ViewReport userid={userid} projectid={projectid} reportid={reportid} />)
+  return (<ViewReport userid={userid} projectid={projectid} reportid={reportid} />)
 
 }
 const ShowReport = () => {
   const { projectid, userid } = useParams();
-  return(<Report userid={userid} projectid={projectid} />)
+  return (<Report userid={userid} projectid={projectid} />)
 }
 
 const ShowProject = () => {
@@ -54,32 +54,32 @@ const ShowProject = () => {
 
 const ShowProposals = () => {
   const { projectid, userid } = useParams();
-  return(<Proposals userid={userid} projectid={projectid} />)
+  return (<Proposals userid={userid} projectid={projectid} />)
 }
 
 const ShowPavement = () => {
   const { projectid, userid } = useParams();
-  return(<Pavement userid={userid} projectid={projectid} />)
+  return (<Pavement userid={userid} projectid={projectid} />)
 }
 
 const ShowBorings = () => {
   const { projectid, userid } = useParams();
-  return(<Borings userid={userid} projectid={projectid} />)
+  return (<Borings userid={userid} projectid={projectid} />)
 }
 
 const ShowLogDraft = () => {
   const { projectid, userid, boringid } = useParams();
-  return(<LogDraft userid={userid} projectid={projectid} boringid={boringid} />)
+  return (<LogDraft userid={userid} projectid={projectid} boringid={boringid} />)
 }
 
-const ShowSamples = ()=> {
+const ShowSamples = () => {
   const { projectid, userid, boringid } = useParams();
-  return(<Samples userid={userid} projectid={projectid} boringid={boringid} />)
+  return (<Samples userid={userid} projectid={projectid} boringid={boringid} />)
 }
 
-const ShowSieve = ()=> {
+const ShowSieve = () => {
   const { projectid, userid, boringid, sampleid } = useParams();
-  return(<Sieve userid={userid} projectid={projectid} boringid={boringid} sampleid={sampleid} />)
+  return (<Sieve userid={userid} projectid={projectid} boringid={boringid} sampleid={sampleid} />)
 }
 
 
@@ -90,11 +90,11 @@ class App extends Component {
 
     this.state = {
 
-      render: '', width: 0, height: 0, register: false, userid: '', message: '', spinner:false
+      render: '', width: 0, height: 0, register: false, userid: '', message: '', spinner: false
 
     }
 
-     this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this)
 
   }
   componentDidMount() {
@@ -151,7 +151,8 @@ class App extends Component {
     const header = new Header();
     const profile = new Profile()
     const myuser = ues.checkUser.call(this)
-    
+    const home = new Home();
+
 
 
     const defaultLogo = (myuser) => {
@@ -161,43 +162,27 @@ class App extends Component {
 
       } else {
 
-        return (<div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>
-              Hello <code>src/App.js</code> and save to reload.
-            </p>
-            <a
-              className="App-link"
-              href="https://reactjs.org"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn React
-            </a>
-          </header>
-        </div>)
+        return (home.showHome.call(this))
 
       }
 
     }
 
-   
-   
+
 
     return (
       <div style={{ ...styles.generalContainer }}>
 
         <BrowserRouter>
           <div style={{ ...styles.generalContainer, ...styles.addMargin }}>
-   
+
             {header.showHeader.call(this)}
-        
-            
+
+
             <Routes>
               <Route exact path="/" element={defaultLogo(myuser)} />
               <Route exact path="/login" element={landing.handleLanding.call(this)} />
-              <Route exact path="/spinner" element={<Spinner/>} />
+              <Route exact path="/spinner" element={<Spinner />} />
               <Route exact path="/:userid/profile" element={profile.showProfile.call(this)} />
               <Route exact path="/:userid/myadmin" element={<ShowMyAdmin />} />
               <Route exact path="/:userid/clients" element={<Clients />} />
@@ -214,7 +199,7 @@ class App extends Component {
               <Route exact path="/:userid/projects/:projectid/borings/:boringid/samples/:sampleid/sieve" element={<ShowSieve />} />
             </Routes>
 
-          
+
           </div>
         </BrowserRouter>
       </div>
