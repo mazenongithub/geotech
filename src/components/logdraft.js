@@ -617,7 +617,7 @@ class LogDraft extends Component {
                 const viewbox = `0 0 1268 ${y1}`
 
                 return (
-                    <div style={{ ...styles.generalContainer, ...styles.marginTop50 }}>
+                    <div style={{ ...styles.generalContainer, ...styles.marginTop75 }}>
 
 
                         <div className={`noPrint`} style={{ ...styles.alignCenter }}>
