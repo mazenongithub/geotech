@@ -2,19 +2,67 @@ import UES from "./ues";
 import { makeID } from "./functions";
 class MakeID {
 
+    reportSectionID(reportid) {
+        let sectionid = false;
+        const ues = new UES();
+
+        const report = ues.getReportByID.call(this,reportid) 
+        if(report) {
+            while(!sectionid) {
+            sectionid = makeID(16)
+            if(report.hasOwnProperty("chapters")) {
+                report.chapters.map(chapter=> {
+                    if(chapter.chapterid === sectionid) {
+                        sectionid = false;
+                    }
+
+                    if(chapter.hasOwnProperty("sections")) {
+                        chapter.sections.map(section=> {
+                            if(section.sectionid === sectionid) {
+                                sectionid = false;
+                            }
+
+                            if(section.hasOwnProperty("subsections")) {
+                                section.subsections.map(subsection=> {
+                                    if(subsection.subsectionid === sectionid) {
+                                        sectionid = false;
+                                    }
+                                })
+                            }
+                       
+                       
+                       
+                        })
+                    }
+                
+                
+                
+                })
+
+            } 
+
+        }
+            
+        } else {
+            sectionid = makeID(16)
+        }
+
+        return sectionid;
+    }
+
     userID() {
         const ues = new UES();
         let _id = false;
         const users = ues.getMyAdminUsers.call(this)
-        if(users) {
-            while(!_id) {
-            _id = makeID(16)
+        if (users) {
+            while (!_id) {
+                _id = makeID(16)
 
-            users.map(user=> {
-                if(user._id === _id) {
-                    _id = false;
-                }
-            })
+                users.map(user => {
+                    if (user._id === _id) {
+                        _id = false;
+                    }
+                })
 
 
             }
@@ -33,17 +81,17 @@ class MakeID {
             while (!appendixid) {
                 appendixid = makeID(16);
                 if (report.hasOwnProperty("appendix")) {
-                    report.appendix.map(getappendix=> {
-                        if(getappendix.appendixid === appendixid) {
+                    report.appendix.map(getappendix => {
+                        if (getappendix.appendixid === appendixid) {
                             appendixid = false;
                         }
                     })
-    
+
                 }
-    
+
             }
-    
-        } else{
+
+        } else {
             appendixid = makeID(16)
         }
         return appendixid;
@@ -58,8 +106,8 @@ class MakeID {
             while (!figureid) {
                 figureid = makeID(16);
                 if (report.hasOwnProperty("figures")) {
-                    report.figures.map(figure=> {
-                        if(figure.figureid === figureid) {
+                    report.figures.map(figure => {
+                        if (figure.figureid === figureid) {
                             figureid = false;
                         }
                     })
@@ -68,7 +116,7 @@ class MakeID {
 
             }
 
-        } else{
+        } else {
             figureid = makeID(16)
         }
         return figureid;
@@ -183,6 +231,61 @@ class MakeID {
             sectionid = makeID(16)
         }
         return sectionid;
+    }
+
+    sectionID(reportid, chapterid) {
+        const ues = new UES();
+        let sectionid = false;
+        const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+        if (chapter) {
+
+            if (chapter.hasOwnProperty("sections")) {
+                while (!sectionid) {
+                    sectionid = makeID(16);
+                    chapter.sections.map(section => {
+                        if (section.sectionid === sectionid) {
+                            sectionid = false;
+                        }
+                    })
+
+                }
+
+            } else {
+
+                sectionid = makeID(16);
+
+            }
+
+
+        }
+        return sectionid;
+
+    }
+
+    chapterID(reportid) {
+
+        const ues = new UES();
+        let chapterid = false;
+        const report = ues.getReportByID.call(this, reportid)
+        if (report) {
+            while (!chapterid) {
+                chapterid = makeID(16)
+                if (report.hasOwnProperty("chapters")) {
+                    report.chapters.map(chapter => {
+                        if (chapter.chapterid === chapterid) {
+                            chapterid = false;
+                        }
+                    })
+                }
+
+            }
+
+        } else {
+            chapterid = makeID(16)
+        }
+
+        return chapterid;
+
     }
 
     sectionid(reportid) {

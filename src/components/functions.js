@@ -1,3 +1,15 @@
+export function newChapter(reportid,chapterid,chaptername,content) {
+    return({reportid,chapterid,chaptername,content})
+}
+
+export function newReportSection(sectionid,sectionname,content) {
+    return({sectionid,sectionname,content})
+}
+
+export function newSubSection(subsectionid,sectionname,content) {
+    return({subsectionid,sectionname,content})
+}
+
 export function validateUserID(value) {
     const reg_ex = /^([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,34}(?:[A-Za-z0-9_]))?)$/
     const test = reg_ex.test(value);

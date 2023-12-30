@@ -5,10 +5,13 @@ import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
 import { arrowUp, generateIcon, removeIcon, saveIcon, arrowDown, linkArrow } from './svg';
-import { formatDateReport, currentDate, newReport, newList, newSublist, newSection } from './functions'
+import { formatDateReport, currentDate, newReport, newChapter, newSublist, newReportSection, newSubSection } from './functions'
 import MakeID from './makeids';
 import GenerateReport from './generatereport';
 import Spinner from './spinner';
+import Chapters from './chapters';
+import Sections from './sections';
+import SubSections from './subsection';
 
 
 
@@ -19,7 +22,7 @@ class Report extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activereportid: false, intro: '', activelistid: false, activesublistid: false, activegeneralid: false, activeconclusionid: false, activerecommendationid: false, activefindingid: false, content: '', spinner:false
+            render: '', width: 0, height: 0, message: '', activechapterid: false, activesectionid: false, activesubsectionid: false, activereportid: false, intro: '', activelistid: false, activesublistid: false, activegeneralid: false, activeconclusionid: false, activerecommendationid: false, activefindingid: false, content: '', spinner: false
 
         }
 
@@ -149,6 +152,26 @@ class Report extends Component {
 
     }
 
+    showChapterIDs() {
+        const ues = new UES();
+        const chapter = new Chapters();
+        let ids = [];
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            const getchapters = ues.getChaptersByReportID.call(this, reportid)
+
+            if (getchapters) {
+                getchapters.map(getchapter => {
+                    ids.push(chapter.showChapterID.call(this, getchapter))
+
+
+                })
+            }
+
+        }
+        return ids;
+    }
+
     showReport(report) {
         const ues = new UES();
         const regularFont = ues.regularFont.call(this)
@@ -240,1737 +263,1039 @@ class Report extends Component {
 
     }
 
-    getIntro() {
+    handleChapterName(value) {
         const ues = new UES();
-        let intro = "";
-        if (this.state.activereportid) {
-            const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this, reportid)
-            if (report) {
-                intro = report.intro;
-            }
-        }
-
-        return intro;
-
-    }
-
-    handleIntro(value) {
-        const ues = new UES();
-        let reports = ues.getReports.call(this)
-        if (this.state.activereportid) {
-            const reportid = this.state.activereportid;
-
-
-            const report = ues.getReportByID.call(this, reportid)
-            if (report) {
-                const i = ues.getReportKeyByID.call(this, reportid)
-                reports[i].intro = value;
-                this.props.reduxReports(reports)
-                this.setState({ render: 'render' })
-            }
-
-        } else {
-            const makeid = new MakeID();
-            const reportid = makeid.reportid.call(this)
-            const projectid = this.props.projectid;
-            const datereport = this.getDateReport()
-            const newreport = newReport(reportid, projectid, datereport, value)
-
-            if (reports) {
-                reports.push(newreport)
-
-            } else {
-                reports = [newreport]
-
-            }
-            this.setState({ activereportid: reportid })
-
-        }
-
-    }
-
-    handlelistid(listid) {
-        if (this.state.activelistid) {
-            this.setState({ activelistid: false, activesublistid: false })
-        } else {
-            this.setState({ activelistid: listid })
-        }
-    }
-
-    handlesublistid(sublistid) {
-        const ues = new UES();
-        if (this.state.activereportid) {
-
-
-            if (this.state.activesublistid) {
-                this.setState({ activesublistid: false })
-            } else {
+        const reports = ues.getReports.call(this)
+        const makeid = new MakeID();
+        if (reports) {
+            if (this.state.activereportid) {
                 const reportid = this.state.activereportid;
-                const listid = ues.getListIDfromSublistID.call(this, reportid, sublistid)
-                this.setState({ activesublistid: sublistid, activelistid: listid })
-            }
+                const report = ues.getReportByID.call(this, reportid)
+                if (report) {
+                    const i = ues.getReportKeyByID.call(this, reportid)
+                    if (this.state.activechapterid) {
+                        const chapterid = this.state.activechapterid;
 
-        }
-    }
-
-
-    showLists() {
-        const ues = new UES();
-        let getlist = [];
-        let getsublist = [];
-        if (this.state.activereportid) {
-            const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this, reportid);
-
-            if (report) {
-                if (report.hasOwnProperty("list")) {
-                    // eslint-disable-next-line
-                    report.list.map(list => {
-
-                        getlist.push(this.showList(list))
-
-                        if (list.hasOwnProperty("sublist")) {
-                            // eslint-disable-next-line
-                            list.sublist.map(sublist => {
-                                getsublist.push(this.showsublist(sublist))
-                            })
-                            getlist.push(<ol key={`reportsublist`} type="a">{getsublist}</ol>)
-
-
+                        const chapter = ues.getChapterByID.call(this, reportid, chapterid);
+                        if (chapter) {
+                            const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+                            reports[i].chapters[j].chaptername = value;
+                            this.props.reduxReports(reports)
+                            this.setState({ render: 'render' })
                         }
 
 
+                    } else {
 
-                    })
+                        const chapterid = makeid.chapterID.call(this, reportid)
+                        const content = this.state.content;
+                        const newchapter = newChapter(reportid, chapterid, value, content)
 
+                        if (report.hasOwnProperty("chapters")) {
 
-
-                }
-            }
-        }
-
-        return (<ol key={`reportlist`} type="1">{getlist}</ol>)
-
-    }
-
-    removeList(listid) {
-        const ues = new UES();
-        const reports = ues.getReports.call(this);
-        if (this.state.activereportid) {
-            const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this, reportid)
-            if (report) {
-                const i = ues.getReportKeyByID.call(this, reportid)
-                const list = ues.getListbyID.call(this, reportid, listid)
-                if (list) {
-                    const j = ues.getListKeybyID.call(this, reportid, listid)
-                    reports[i].list.splice(j, 1)
-                    this.props.reduxReports(reports)
-                    this.setState({ activelistid: false, activesublistid: false })
-                }
-            }
-        }
-
-    }
-
-    movelistup(listid) {
-        const ues = new UES();
-        const report = this.getReport();
-        const reports = ues.getReports.call(this)
-        if (report) {
-            const reportid = this.state.activereportid;
-            const i = ues.getReportKeyByID.call(this, reportid)
-            const list = ues.getListbyID.call(this, reportid, listid)
-            if (list) {
-                const j = ues.getListKeybyID.call(this, reportid, listid)
-                if (report.list.length > 1 && j > 0) {
-                    const list_1 = reports[i].list[j - 1]
-                    reports[i].list[j] = list_1;
-                    reports[i].list[j - 1] = list;
-                    this.props.reduxReports(reports);
-                    this.setState({ render: 'render' })
-                }
-            }
-        }
-    }
-
-    movelistdown(listid) {
-        const ues = new UES();
-        const report = this.getReport();
-        const reports = ues.getReports.call(this)
-        if (report) {
-            const reportid = this.state.activereportid;
-            const i = ues.getReportKeyByID.call(this, reportid)
-            const list = ues.getListbyID.call(this, reportid, listid)
-            if (list) {
-                const j = ues.getListKeybyID.call(this, reportid, listid)
-                const listcount = report.list.length;
-                if (listcount > 1 && j < listcount - 1) {
-                    const list_1 = reports[i].list[j + 1]
-                    reports[i].list[j] = list_1;
-                    reports[i].list[j + 1] = list;
-                    this.props.reduxReports(reports);
-                    this.setState({ render: 'render' })
-                }
-            }
-        }
-    }
-
-    showList(list) {
-        const ues = new UES();
-        const styles = MyStylesheet();
-        const regularFont = ues.regularFont.call(this);
-        const iconWidth = ues.removeIcon.call(this)
-        const arrowWidth = ues.arrowUp.call(this)
-        const highlight = (listid) => {
-            if (this.state.activelistid === listid) {
-                return (styles.activeid)
-            }
-        }
-
-        return (<li style={{ ...styles.bottomMargin15 }} key={list.listid}>
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex3 }}><span style={{ ...styles.generalFont, ...regularFont, ...highlight(list.listid) }} onClick={() => { this.handlelistid(list.listid) }}>{list.content}</span></div>
-
-                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.movelistup(list.listid) }}>{arrowUp()}</button>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.movelistdown(list.listid) }}>{arrowDown()}</button>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...iconWidth, ...styles.leftMargin40 }} onClick={() => { this.removeList(list.listid) }}>{removeIcon()}</button>
-                </div>
-
-            </div>
-
-
-        </li>)
-
-    }
-
-    removeSubbList(sublistid) {
-
-        const ues = new UES();
-        const reports = ues.getReports.call(this)
-        if (this.state.activereportid) {
-            const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this, reportid);
-            if (report) {
-
-                const i = ues.getReportKeyByID.call(this, reportid)
-
-                const listid = ues.getListIDfromSublistID.call(this, reportid, sublistid)
-                const list = ues.getListbyID.call(this, reportid, listid)
-                if (list) {
-
-                    const j = ues.getListKeybyID.call(this, reportid, listid);
-                    const sublist = ues.getSublistbyID.call(this, reportid, listid, sublistid)
-
-                    if (sublist) {
-                        const k = ues.getSublistKeybyID.call(this, reportid, listid, sublistid)
-                        reports[i].list[j].sublist.splice(k, 1)
-                        this.setState({ activesublistid: false })
-                    }
-
-
-                }
-
-
-
-            }
-        }
-    }
-
-    movesublistup(sublistid) {
-        const ues = new UES();
-        const reports = ues.getReports.call(this)
-        const report = this.getReport();
-        if (report) {
-            const reportid = this.state.activereportid;
-            const i = ues.getReportKeyByID.call(this, reportid)
-            const listid = ues.getListIDfromSublistID.call(this, reportid, sublistid)
-            const list = ues.getListbyID.call(this, reportid, listid);
-            if (list) {
-                const j = ues.getListKeybyID.call(this, reportid, listid)
-                const sublist = ues.getSublistbyID.call(this, reportid, listid, sublistid)
-                if (sublist) {
-                    const k = ues.getSublistKeybyID.call(this, reportid, listid, sublistid)
-                    const listcount = reports[i].list[j].sublist.length;
-                    if (listcount > 1 && k > 0) {
-                        const sublist_1 = reports[i].list[j].sublist[k - 1];
-                        reports[i].list[j].sublist[k] = sublist_1;
-                        reports[i].list[j].sublist[k - 1] = sublist;
-                        this.props.reduxReports(reports);
-                        this.setState({ render: 'render' })
-
-                    }
-
-                }
-            }
-        }
-
-    }
-
-    movesublistdown(sublistid) {
-
-        const ues = new UES();
-        const reports = ues.getReports.call(this)
-        const report = this.getReport();
-        if (report) {
-            const reportid = this.state.activereportid;
-            const i = ues.getReportKeyByID.call(this, reportid)
-            const listid = ues.getListIDfromSublistID.call(this, reportid, sublistid)
-            const list = ues.getListbyID.call(this, reportid, listid);
-            if (list) {
-                const j = ues.getListKeybyID.call(this, reportid, listid)
-                const sublist = ues.getSublistbyID.call(this, reportid, listid, sublistid)
-                if (sublist) {
-                    const k = ues.getSublistKeybyID.call(this, reportid, listid, sublistid)
-                    const listcount = reports[i].list[j].sublist.length;
-                    if (listcount > 1 && k < listcount - 1) {
-                        const sublist_1 = reports[i].list[j].sublist[k + 1];
-                        reports[i].list[j].sublist[k] = sublist_1;
-                        reports[i].list[j].sublist[k + 1] = sublist;
-                        this.props.reduxReports(reports);
-                        this.setState({ render: 'render' })
-
-                    }
-
-                }
-            }
-        }
-
-    }
-
-    showsublist(sublist) {
-        const ues = new UES();
-        const styles = MyStylesheet();
-        const regularFont = ues.regularFont.call(this)
-        const iconWidth = ues.removeIcon.call(this)
-        const arrowWidth = ues.arrowUp.call(this)
-        const highlight = (sublistid) => {
-            if (this.state.activesublistid === sublistid) {
-                return (styles.activeid)
-            }
-        }
-        return (<li key={sublist.sublistid} style={{ ...styles.bottomMargin15 }}>
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex3 }}>
-                    <span style={{ ...styles.generalFont, ...regularFont, ...highlight(sublist.sublistid) }} onClick={() => { this.handlesublistid(sublist.sublistid) }}>{sublist.content}</span>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.movesublistup(sublist.sublistid) }}>{arrowUp()}</button>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.movesublistdown(sublist.sublistid) }}>{arrowDown()}</button>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...iconWidth, ...styles.leftMargin40 }} onClick={() => { this.removeSubbList(sublist.sublistid) }}>{removeIcon()}</button>
-                </div>
-            </div>
-
-
-
-        </li>)
-    }
-
-    getSublist() {
-        const ues = new UES();
-        let getsublist = "";
-        if (this.state.activereportid) {
-            const reportid = this.state.activereportid;
-            const listid = this.state.activelistid;
-            if (this.state.activesublistid) {
-                const sublistid = this.state.activesublistid;
-                const sublist = ues.getSublistbyID.call(this, reportid, listid, sublistid)
-                getsublist = sublist.content;
-            }
-        }
-        return getsublist;
-
-    }
-
-    handleSublist(value) {
-
-        const ues = new UES();
-        const makeid = new MakeID();
-        let reports = ues.getReports.call(this)
-        if (this.state.activereportid) {
-            const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this, reportid);
-            if (report) {
-                const i = ues.getReportKeyByID.call(this, reportid)
-                if (this.state.activelistid) {
-
-                    const listid = this.state.activelistid;
-                    const list = ues.getListbyID.call(this, reportid, listid)
-                    if (list) {
-                        const j = ues.getListKeybyID.call(this, reportid, listid)
-                        if (this.state.activesublistid) {
-                            const sublistid = this.state.activesublistid;
-                            const sublist = ues.getSublistbyID.call(this, reportid, listid, sublistid);
-                            if (sublist) {
-                                const k = ues.getSublistKeybyID.call(this, reportid, listid, sublistid)
-
-                                reports[i].list[j].sublist[k].content = value
-                                this.props.reduxReports(reports)
-                                this.setState({ render: 'render' })
-                            }
-
+                            reports[i].chapters.push(newchapter)
 
 
                         } else {
 
-                            const sublistid = makeid.sublistid.call(this);
-                            const newsublist = newSublist(sublistid, value)
+                            reports[i].chapters = [newchapter];
 
-                            if (list.hasOwnProperty("sublist")) {
-                                reports[i].list[j].sublist.push(newsublist)
+                        }
+
+                        this.props.reduxReports(reports)
+                        this.setState({ activechapterid: chapterid })
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    getChapterName() {
+        const ues = new UES();
+        let chaptername = "";
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                if (this.state.activechapterid) {
+                    const chapterid = this.state.activechapterid;
+                    const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                    if (chapter) {
+                        chaptername = chapter.chaptername;
+                    }
+
+                }
+            }
+        }
+        return chaptername;
+    }
+
+    handleChapterContent(value) {
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        const makeid = new MakeID();
+        if (reports) {
+            if (this.state.activereportid) {
+                const reportid = this.state.activereportid;
+                const report = ues.getReportByID.call(this, reportid)
+                if (report) {
+                    const i = ues.getReportKeyByID.call(this, reportid)
+                    if (this.state.activechapterid) {
+                        const chapterid = this.state.activechapterid;
+
+                        const chapter = ues.getChapterByID.call(this, reportid, chapterid);
+                        if (chapter) {
+                            const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+                            reports[i].chapters[j].content = value;
+                            this.props.reduxReports(reports)
+                            this.setState({ render: 'render' })
+                        }
+
+
+                    } else {
+
+                        const chapterid = makeid.chapterID.call(this, reportid)
+                        const chaptername = this.state.chaptername;
+                        const newchapter = newChapter(reportid, chapterid, chaptername, value)
+
+                        if (report.hasOwnProperty("chapters")) {
+
+                            reports[i].chapters.push(newchapter)
+
+
+                        } else {
+
+                            reports[i].chapters = [newchapter];
+
+                        }
+
+                        this.props.reduxReports(reports)
+                        this.setState({ activechapterid: chapterid })
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    getChapterContent() {
+        const ues = new UES();
+        let content = "";
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                if (this.state.activechapterid) {
+                    const chapterid = this.state.activechapterid;
+                    const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                    if (chapter) {
+                        content = chapter.content;
+                    }
+
+                }
+            }
+        }
+        return content;
+    }
+
+    removeChapter(chapterid) {
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid)
+                const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                if (chapter) {
+                    const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+                    reports[i].chapters.splice(j, 1)
+                    this.props.reduxReports(reports)
+                    this.setState({ activechapterid: false })
+                }
+            }
+        }
+    }
+
+
+    showSectionIDs() {
+        const ues = new UES();
+        const sections = new Sections();
+        let ids = [];
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            if (this.state.activechapterid) {
+                const chapterid = this.state.activechapterid;
+                let getsections = ues.getSectionsbyChapterID.call(this, reportid, chapterid)
+                if (getsections) {
+                    getsections.map(section => {
+
+                        ids.push(sections.showSectionID.call(this, section))
+
+                    })
+                }
+            }
+
+        }
+
+        return ids;
+
+    }
+
+    handleSectionName(value) {
+
+        const ues = new UES();
+        const makeid = new MakeID();
+        const reports = ues.getReports.call(this)
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid)
+                if (this.state.activechapterid) {
+                    const chapterid = this.state.activechapterid;
+                    const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                    if (chapter) {
+                        const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+                        if (this.state.activesectionid) {
+                            let sectionid = this.state.activesectionid;
+                            const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+                            if (section) {
+                                const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
+                                reports[i].chapters[j].sections[k].sectionname = value;
+                                this.props.reduxReports(reports)
+                                this.setState({ render: 'render' })
+                            }
+
+                        } else {
+                            let sectionid = makeid.sectionID.call(this, reportid, chapterid)
+
+                            const content = this.state.content;
+                            const newsection = newReportSection(sectionid, value, content)
+
+                            if (chapter.hasOwnProperty("sections")) {
+
+                                reports[i].chapters[j].sections.push(newsection)
+
 
                             } else {
-                                reports[i].list[j].sublist = [newsublist]
+
+                                reports[i].chapters[j].sections = [newsection]
+
                             }
-                            this.setState({ activesublistid: sublistid })
+                            this.props.reduxReports(reports)
+                            this.setState({ activesectionid: sectionid })
+
+
+
 
 
                         }
+
+
                     }
                 }
             }
         }
 
+
     }
 
-    getList() {
+    getSectionName() {
         const ues = new UES();
-        let content = "";
-        if (this.state.activereportid) {
-            const reportid = this.state.activereportid;
-            if (this.state.activelistid) {
-                const listid = this.state.activelistid;
-
-                const list = ues.getListbyID.call(this, reportid, listid)
-                if (list) {
-                    content = list.content;
-                }
-
-            }
-
-        }
-
-        return content;
-
-    }
-
-    handleList(value) {
-        const ues = new UES();
-        let reports = ues.getReports.call(this);
-        const makeid = new MakeID();
-        if (this.state.activereportid) {
-            const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this, reportid)
-            if (report) {
-                const i = ues.getReportKeyByID.call(this, reportid)
-
-                if (this.state.activelistid) {
-
-                    const listid = this.state.activelistid;
-                    const list = ues.getListbyID.call(this, reportid, listid);
-                    if (list) {
-                        const j = ues.getListKeybyID.call(this, reportid, listid)
-                        reports[i].list[j].content = value;
-                        this.props.reduxReports(reports);
-                        this.setState({ render: 'render' })
-
-                    }
-
-                } else {
-                    const listid = makeid.listid.call(this);
-                    const newlist = newList(listid, value)
-                    if (report.hasOwnProperty("list")) {
-                        reports[i].list.push(newlist)
-
-                    } else {
-                        reports[i].list = [newlist]
-
-                    }
-
-                    this.setState({ activelistid: listid })
-
-                }
-
-
-
-
-
-            }
-
-
-
-        }
-
-    }
-    getReport() {
-        const ues = new UES();
-        let getreport = false;
-        if (this.state.activereportid) {
-            const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this, reportid)
-            if (report) {
-                getreport = report;
-            }
-        }
-
-        return getreport;
-
-    }
-
-    showGeneralIDs() {
-        const report = this.getReport();
-        let getids = [];
-        if (report) {
-            if (report.hasOwnProperty("general")) {
-                // eslint-disable-next-line
-                report.general.map(section => {
-                    getids.push(this.showGeneralID(section))
-                })
-            }
-        }
-
-        return getids;
-
-
-    }
-
-    removeGeneralSection(sectionid) {
-        const ues = new UES();
-
-        if (this.state.activereportid) {
-            const reports = ues.getReports.call(this)
-            if (reports) {
-                const reportid = this.state.activereportid;
-                const report = ues.getReportByID.call(this, reportid)
-                if (report) {
-                    const i = ues.getReportKeyByID.call(this, reportid)
-                    const section = ues.getGeneralSectionbyID.call(this, reportid, sectionid)
-                    if (section) {
-
-                        const j = ues.getGeneralSectionKeybyID.call(this, reportid, sectionid)
-                        reports[i].general.splice(j, 1);
-                        this.props.reduxReports(reports);
-                        this.setState({ activegeneralid: false })
-                    }
-
-                }
-
-            }
-
-        }
-
-    }
-
-    handleGeneralID(sectionid) {
-        if (this.state.activegeneralid) {
-            this.setState({ activegeneralid: false })
-        } else {
-            this.setState({ activegeneralid: sectionid })
-        }
-    }
-
-    moveGeneralSectionDown(sectionid) {
-
-        const ues = new UES();
-        const reports = ues.getReports.call(this)
-        if (reports) {
-            const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this, reportid)
-            if (report) {
-                const i = ues.getReportKeyByID.call(this, reportid);
-                const section = ues.getGeneralSectionbyID.call(this, reportid, sectionid)
-                if (section) {
-                    const j = ues.getGeneralSectionKeybyID.call(this, reportid, sectionid)
-                    const sectioncount = reports[i].general.length;
-                    if (sectioncount > 1 && j < sectioncount - 1) {
-                        const section_1 = reports[i].general[j + 1];
-                        reports[i].general[j] = section_1;
-                        reports[i].general[j + 1] = section;
-                        this.props.reduxReports(reports);
-                        this.setState({ render: 'render' })
-
-                    }
-                }
-            }
-
-
-        }
-
-    }
-
-    moveGeneralSectionUp(sectionid) {
-        const ues = new UES();
-        const reports = ues.getReports.call(this)
-        if (reports) {
-            const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this, reportid)
-            if (report) {
-                const i = ues.getReportKeyByID.call(this, reportid);
-                const section = ues.getGeneralSectionbyID.call(this, reportid, sectionid)
-                if (section) {
-                    const j = ues.getGeneralSectionKeybyID.call(this, reportid, sectionid)
-                    const sectioncount = reports[i].general.length;
-                    if (sectioncount > 1 && j > 0) {
-                        const section_1 = reports[i].general[j - 1];
-                        reports[i].general[j] = section_1;
-                        reports[i].general[j - 1] = section;
-                        this.props.reduxReports(reports);
-                        this.setState({ render: 'render' })
-
-                    }
-                }
-            }
-
-
-        }
-
-    }
-
-    showGeneralID(section) {
-        const styles = MyStylesheet();
-        const ues = new UES();
-        const regularFont = ues.regularFont.call(this)
-        const iconWidth = ues.removeIcon.call(this);
-        const arrowWidth = ues.arrowUp.call(this)
-
-        const highlight = (sectionid) => {
-            if (this.state.activegeneralid === sectionid) {
-                return (styles.activeid)
-            }
-        }
-
-        return (
-            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }} key={section.sectionid}>
-                <div style={{ ...styles.flex5, ...highlight(section.sectionid) }} onClick={() => { this.handleGeneralID(section.sectionid) }}>
-                    <span style={{ ...regularFont }}>{section.sectionname}</span>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveGeneralSectionUp(section.sectionid) }}>{arrowUp()}</button>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveGeneralSectionDown(section.sectionid) }}>{arrowDown()}</button>
-                </div>
-                <div style={{ ...styles.flex1 }}>
-                    <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeGeneralSection(section.sectionid) }}>{removeIcon()}</button>
-                </div>
-            </div>
-
-        )
-
-    }
-
-    getGeneralSection() {
-        const report = this.getReport();
         let sectionname = "";
-        if (this.state.activegeneralid) {
-            const sectionid = this.state.activegeneralid;
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            if (this.state.activechapterid) {
+                const chapterid = this.state.activechapterid;
 
-            if (report) {
-                // eslint-disable-next-line
-                if (report.hasOwnProperty("general")) {
-                    // eslint-disable-next-line 
-                    report.general.map(section => {
-                        if (section.sectionid === sectionid) {
-                            sectionname = section.sectionname;
+                if (this.state.activesectionid) {
+                    const sectionid = this.state.activesectionid;
+                    const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
 
-                        }
-
-                    })
+                    if (section) {
+                        sectionname = section.sectionname;
+                    }
                 }
-
             }
-
         }
 
         return sectionname;
 
     }
 
-    handleGeneralSection(value) {
-        console.log(value)
+    handleSectionContent(value) {
+
         const ues = new UES();
         const makeid = new MakeID();
         const reports = ues.getReports.call(this)
-        if (reports) {
-            const report = this.getReport();
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this, reportid)
             if (report) {
-                const reportid = this.state.activereportid;
                 const i = ues.getReportKeyByID.call(this, reportid)
-                if (this.state.activegeneralid) {
-                    const sectionid = this.state.activegeneralid;
-                    const section = ues.getGeneralSectionbyID.call(this, reportid, sectionid)
-                    if (section) {
-                        const j = ues.getGeneralSectionKeybyID.call(this, reportid, sectionid)
-                        reports[i].general[j].sectionname = value;
-                        this.props.reduxReports(reports)
-                        this.setState({ render: 'render' })
-                    }
+                if (this.state.activechapterid) {
+                    const chapterid = this.state.activechapterid;
+                    const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                    if (chapter) {
+                        const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+                        if (this.state.activesectionid) {
+                            let sectionid = this.state.activesectionid;
+                            const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+                            if (section) {
 
-                } else {
-                    const newsectionid = makeid.sectionid.call(this, reportid)
-                    const content = this.state.content;
-                    const newsection = newSection(newsectionid, value, content)
-                    if (report.hasOwnProperty("general")) {
-                        reports[i].general.push(newsection);
+                                const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
+                                reports[i].chapters[j].sections[k].content = value;
+                                this.props.reduxReports(reports)
+                                this.setState({ render: 'render' })
+                            }
 
-                    } else {
-                        reports[i].general = [newsection]
+                        } else {
+                            let sectionid = makeid.sectionID.call(this, reportid, chapterid)
 
-                    }
-                    this.setState({ activegeneralid: newsectionid })
-                }
+                            const content = this.state.content;
+                            const newsection = newReportSection(sectionid, value, content)
 
+                            if (chapter.hasOwnProperty("sections")) {
 
-            }
-        }
-
-    }
+                                reports[i].chapters[j].sections.push(newsection)
 
 
-    getGeneralContent() {
-        const report = this.getReport();
-        let content = "";
-        if (this.state.activegeneralid) {
-            const sectionid = this.state.activegeneralid;
+                            } else {
 
-            if (report) {
-                // eslint-disable-next-line
-                if (report.hasOwnProperty("general")) {
-                    // eslint-disable-next-line 
-                    report.general.map(section => {
+                                reports[i].chapters[j].sections = [newsection]
 
-                        if (section.sectionid === sectionid) {
-                            content = section.content;
+                            }
+                            this.props.reduxReports(reports)
+                            this.setState({ activesectionid: sectionid })
+
+
+
+
 
                         }
 
-                    })
-                }
-
-            }
-
-        }
-
-        return content;
-
-    }
-
-    handleGeneralContent(value) {
-        const ues = new UES();
-        const makeid = new MakeID();
-        const reports = ues.getReports.call(this)
-        if (reports) {
-            const report = this.getReport();
-            if (report) {
-                const reportid = this.state.activereportid;
-                const i = ues.getReportKeyByID.call(this, reportid)
-                if (this.state.activegeneralid) {
-                    const sectionid = this.state.activegeneralid;
-                    const section = ues.getGeneralSectionbyID.call(this, reportid, sectionid)
-                    if (section) {
-                        const j = ues.getGeneralSectionKeybyID.call(this, reportid, sectionid)
-                        reports[i].general[j].content = value;
-                        this.props.reduxReports(reports)
-                        this.setState({ render: 'render' })
-                    }
-
-                } else {
-                    const newsectionid = makeid.sectionid.call(this, reportid)
-                    const sectionname = this.state.sectionname;
-                    const newsection = newSection(newsectionid, sectionname, value)
-                    if (report.hasOwnProperty("general")) {
-                        reports[i].general.push(newsection);
-
-                    } else {
-                        reports[i].general = [newsection]
 
                     }
-                    this.setState({ activegeneralid: newsectionid })
                 }
-
-
             }
         }
 
+
     }
 
-
-    handleConclusionID(sectionid) {
-        if (this.state.activeconclusionid) {
-            this.setState({ activeconclusionid: false })
-        } else {
-            this.setState({ activeconclusionid: sectionid })
-        }
-    }
-
-    removeConclusionSection(sectionid) {
+    getSectionContent() {
         const ues = new UES();
-
+        let sectioncontent = "";
         if (this.state.activereportid) {
-            const reports = ues.getReports.call(this)
-            if (reports) {
+            const reportid = this.state.activereportid;
+            if (this.state.activechapterid) {
+                const chapterid = this.state.activechapterid;
+
+                if (this.state.activesectionid) {
+                    const sectionid = this.state.activesectionid;
+                    const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+
+                    if (section) {
+                        sectioncontent = section.content;
+                    }
+                }
+            }
+        }
+
+        return sectioncontent;
+
+    }
+
+    removeSection(sectionid) {
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid)
+                if (this.state.activechapterid) {
+                    const chapterid = this.state.activechapterid;
+                    const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                    if (chapter) {
+                        const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+                        const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+                        if (section) {
+                            const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
+                            reports[i].chapters[j].sections.splice(k, 1)
+                            this.props.reduxReports(reports)
+                            this.setState({ activesectionid: false })
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    showSubSectionIDs() {
+        const ues = new UES();
+        const subsections = new SubSections();
+        let ids = [];
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+
+            if (this.state.activechapterid) {
+                const chapterid = this.state.activechapterid;
+
+                if (this.state.activesectionid) {
+                    const sectionid = this.state.activesectionid;
+                    const getsubsections = ues.getSubSections.call(this, reportid, chapterid, sectionid)
+                    if (getsubsections) {
+                        getsubsections.map(section => {
+
+                            ids.push(subsections.showSubSectionID.call(this, section))
+
+                        })
+                    }
+                }
+            }
+        }
+
+        return ids;
+
+    }
+
+    getSubSectionName() {
+        let subsectionname = "";
+
+        const ues = new UES();
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            if (this.state.activechapterid) {
+                const chapterid = this.state.activechapterid;
+
+                if (this.state.activesectionid) {
+                    const sectionid = this.state.activesectionid;
+
+                    if (this.state.activesubsectionid) {
+                        const subsectionid = this.state.activesubsectionid;
+
+                        const subsection = ues.getSubSectionbyID.call(this, reportid, chapterid, sectionid, subsectionid)
+
+                        subsectionname = subsection.sectionname;
+
+
+                    }
+
+                }
+            }
+        }
+
+        return subsectionname;
+
+
+    }
+
+    handleSubSectionName(value) {
+
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        const makeid = new MakeID();
+        if (reports) {
+
+            if (this.state.activereportid) {
+
                 const reportid = this.state.activereportid;
+
                 const report = ues.getReportByID.call(this, reportid)
                 if (report) {
+
                     const i = ues.getReportKeyByID.call(this, reportid)
-                    const section = ues.getConclusionSectionbyID.call(this, reportid, sectionid)
-                    if (section) {
 
-                        const j = ues.getConclusionSectionKeybyID.call(this, reportid, sectionid)
-                        reports[i].conclusion.splice(j, 1);
-                        this.props.reduxReports(reports);
-                        this.setState({ activeconclusionid: false })
-                    }
+                    if (this.state.activechapterid) {
+                        const chapterid = this.state.activechapterid;
 
-                }
+                        const chapter = ues.getChapterByID.call(this, reportid, chapterid)
 
-            }
+                        if (chapter) {
 
-        }
+                            const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
 
-    }
+                            if (this.state.activesectionid) {
 
-    getConclusionSection() {
-        const report = this.getReport();
-        let sectionname = "";
-        if (this.state.activeconclusionid) {
-            const sectionid = this.state.activeconclusionid;
+                                const sectionid = this.state.activesectionid;
 
-            if (report) {
-                // eslint-disable-next-line
-                if (report.hasOwnProperty("conclusion")) {
-                    // eslint-disable-next-line 
-                    report.conclusion.map(section => {
-                        if (section.sectionid === sectionid) {
-                            sectionname = section.sectionname;
+                                const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
 
-                        }
+                                if (section) {
 
-                    })
-                }
+                                    const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
 
-            }
+                                    if (this.state.activesubsectionid) {
+                                        const subsectionid = this.state.activesubsectionid;
 
-        }
-
-        return sectionname;
-
-    }
-
-    handleConclusionSection(value) {
-        const ues = new UES();
-        const makeid = new MakeID();
-        const reports = ues.getReports.call(this)
-        if (reports) {
-            const report = this.getReport();
-            if (report) {
-                const reportid = this.state.activereportid;
-                const i = ues.getReportKeyByID.call(this, reportid)
-                if (this.state.activeconclusionid) {
-                    const sectionid = this.state.activeconclusionid;
-                    const section = ues.getConclusionSectionbyID.call(this, reportid, sectionid)
-                    if (section) {
-                        const j = ues.getConclusionSectionKeybyID.call(this, reportid, sectionid)
-                        reports[i].conclusion[j].sectionname = value;
-                        this.props.reduxReports(reports)
-                        this.setState({ render: 'render' })
-                    }
-
-                } else {
-                    const newsectionid = makeid.sectionid.call(this, reportid)
-                    const content = this.state.content;
-                    const newsection = newSection(newsectionid, value, content)
-                    if (report.hasOwnProperty("conclusion")) {
-                        reports[i].conclusion.push(newsection);
-
-                    } else {
-                        reports[i].conclusion = [newsection]
-
-                    }
-                    this.setState({ activeconclusionid: newsectionid })
-                }
+                                        const subsection = ues.getSubSectionbyID.call(this, reportid, chapterid, sectionid, subsectionid)
+                                        if (subsection) {
 
 
-            }
-        }
+                                            const l = ues.getSubSectionKeybyID.call(this, reportid, chapterid, sectionid, subsectionid)
 
-    }
+                                            reports[i].chapters[j].sections[k].subsections[l].sectionname = value;
+                                            this.props.reduxReports(reports)
+                                            this.setState({ render: 'render' })
 
-    getConclusionContent() {
-        const report = this.getReport();
-        let content = "";
-        if (this.state.activeconclusionid) {
-            const sectionid = this.state.activeconclusionid;
 
-            if (report) {
-                // eslint-disable-next-line
-                if (report.hasOwnProperty("conclusion")) {
-                    // eslint-disable-next-line 
-                    report.conclusion.map(section => {
-                        if (section.sectionid === sectionid) {
-                            content = section.content;
+
+                                        }
+
+
+                                    } else {
+                                        let subsectionid = makeid.reportSectionID.call(this, reportid)
+                                        const content = this.state.content;
+                                        const newsubsection = newSubSection(subsectionid, value, content)
+                                        if (section.hasOwnProperty("subsections")) {
+
+                                            reports[i].chapters[j].sections[k].subsections.push(newsubsection)
+
+
+                                        } else {
+                                            reports[i].chapters[j].sections[k].subsections = [newsubsection]
+
+                                        }
+
+                                        this.props.reduxReports(reports)
+
+                                        this.setState({ activesubsectionid: subsectionid })
+                                    }
+
+
+
+                                }
+
+
+
+
+                            }
+
+
+
+
 
                         }
-
-                    })
-                }
-
-            }
-
-        }
-
-        return content;
-
-    }
-
-    handleConclusionContent(value) {
-        const ues = new UES();
-        const makeid = new MakeID();
-        const reports = ues.getReports.call(this)
-        if (reports) {
-            const report = this.getReport();
-            if (report) {
-                const reportid = this.state.activereportid;
-                const i = ues.getReportKeyByID.call(this, reportid)
-                if (this.state.activeconclusionid) {
-                    const sectionid = this.state.activeconclusionid;
-                    const section = ues.getConclusionSectionbyID.call(this, reportid, sectionid)
-                    if (section) {
-                        const j = ues.getConclusionSectionKeybyID.call(this, reportid, sectionid)
-                        reports[i].conclusion[j].content = value;
-                        this.props.reduxReports(reports)
-                        this.setState({ render: 'render' })
                     }
 
-                } else {
-                    const newsectionid = makeid.sectionid.call(this, reportid)
-                    const sectionname = this.state.sectionname;
-                    const newsection = newSection(newsectionid, sectionname, value)
-                    if (report.hasOwnProperty("conclusion")) {
-                        reports[i].conclusion.push(newsection);
 
-                    } else {
-                        reports[i].conclusion = [newsection]
 
-                    }
-                    this.setState({ activeconclusionid: newsectionid })
+
+
                 }
 
 
+
+
             }
+
+
         }
 
     }
 
-
-    showConclusionIDs() {
-        const report = this.getReport();
-        let getids = [];
-        if (report) {
-            if (report.hasOwnProperty("conclusion")) {
-                // eslint-disable-next-line
-                report.conclusion.map(section => {
-                    getids.push(this.showConclusionID(section))
-                })
-            }
-        }
-
-        return getids;
-
-
-    }
-
-    moveConclusionSectionDown(sectionid) {
+    getSubSectionContent() {
+        let subsectioncontent = "";
 
         const ues = new UES();
-        const reports = ues.getReports.call(this)
-        if (reports) {
-            const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this, reportid)
-            if (report) {
-                const i = ues.getReportKeyByID.call(this, reportid);
-                const section = ues.getConclusionSectionbyID.call(this, reportid, sectionid)
-                if (section) {
-                    const j = ues.getConclusionSectionKeybyID.call(this, reportid, sectionid)
-                    const sectioncount = reports[i].conclusion.length;
-                    if (sectioncount > 1 && j < sectioncount - 1) {
-                        const section_1 = reports[i].conclusion[j + 1];
-                        reports[i].conclusion[j] = section_1;
-                        reports[i].conclusion[j + 1] = section;
-                        this.props.reduxReports(reports);
-                        this.setState({ render: 'render' })
-
-                    }
-                }
-            }
-
-
-        }
-
-    }
-
-    moveConclusionSectionUp(sectionid) {
-        const ues = new UES();
-        const reports = ues.getReports.call(this)
-        if (reports) {
-            const reportid = this.state.activereportid;
-            const report = ues.getReportByID.call(this, reportid)
-            if (report) {
-                const i = ues.getReportKeyByID.call(this, reportid);
-                const section = ues.getConclusionSectionbyID.call(this, reportid, sectionid)
-                if (section) {
-                    const j = ues.getConclusionSectionKeybyID.call(this, reportid, sectionid)
-                    const sectioncount = reports[i].conclusion.length;
-                    if (sectioncount > 1 && j > 0) {
-                        const section_1 = reports[i].conclusion[j - 1];
-                        reports[i].conclusion[j] = section_1;
-                        reports[i].conclusion[j - 1] = section;
-                        this.props.reduxReports(reports);
-                        this.setState({ render: 'render' })
-
-                    }
-                }
-            }
-
-
-        }
-
-    }
-
-    removeFindingSection(sectionid) {
-        const ues = new UES();
-
         if (this.state.activereportid) {
-            const reports = ues.getReports.call(this)
-            if (reports) {
+            const reportid = this.state.activereportid;
+            if (this.state.activechapterid) {
+                const chapterid = this.state.activechapterid;
+
+                if (this.state.activesectionid) {
+                    const sectionid = this.state.activesectionid;
+
+                    if (this.state.activesubsectionid) {
+                        const subsectionid = this.state.activesubsectionid;
+
+                        const subsection = ues.getSubSectionbyID.call(this, reportid, chapterid, sectionid, subsectionid)
+
+                        subsectioncontent = subsection.content;
+
+
+                    }
+
+                }
+            }
+        }
+
+        return subsectioncontent;
+
+
+    }
+
+    handleSubSectionContent(value) {
+
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        const makeid = new MakeID();
+        if (reports) {
+
+            if (this.state.activereportid) {
+
                 const reportid = this.state.activereportid;
+
                 const report = ues.getReportByID.call(this, reportid)
                 if (report) {
-                    const i = ues.getReportKeyByID.call(this, reportid)
-                    const section = ues.getFindingSectionbyID.call(this, reportid, sectionid)
-                    if (section) {
 
-                        const j = ues.getFindingSectionKeybyID.call(this, reportid, sectionid)
-                        reports[i].finding.splice(j, 1);
-                        this.props.reduxReports(reports);
-                        this.setState({ activefindingid: false })
+                    const i = ues.getReportKeyByID.call(this, reportid)
+
+                    if (this.state.activechapterid) {
+                        const chapterid = this.state.activechapterid;
+
+                        const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+
+                        if (chapter) {
+
+                            const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+
+                            if (this.state.activesectionid) {
+
+                                const sectionid = this.state.activesectionid;
+
+                                const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+
+                                if (section) {
+
+                                    const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
+
+                                    if (this.state.activesubsectionid) {
+                                        const subsectionid = this.state.activesubsectionid;
+
+                                        const subsection = ues.getSubSectionbyID.call(this, reportid, chapterid, sectionid, subsectionid)
+                                        if (subsection) {
+
+
+                                            const l = ues.getSubSectionKeybyID.call(this, reportid, chapterid, sectionid, subsectionid)
+
+                                            reports[i].chapters[j].sections[k].subsections[l].content = value;
+                                            this.props.reduxReports(reports)
+                                            this.setState({ render: 'render' })
+
+
+
+                                        }
+
+
+                                    } else {
+                                        let subsectionid = makeid.reportSectionID.call(this, reportid)
+                                        const sectionname = this.state.sectionname
+                                        const newsubsection = newSubSection(subsectionid, sectionname, value)
+                                        if (section.hasOwnProperty("subsections")) {
+
+                                            reports[i].chapters[j].sections[k].subsections.push(newsubsection)
+
+
+                                        } else {
+                                            reports[i].chapters[j].sections[k].subsections = [newsubsection]
+
+                                        }
+
+                                        this.props.reduxReports(reports)
+
+                                        this.setState({ activesubsectionid: subsectionid })
+                                    }
+
+
+
+                                }
+
+
+
+
+                            }
+
+
+
+
+
+                        }
                     }
+
+
+
+
 
                 }
 
+
+
+
             }
 
+
         }
 
     }
 
-
-
-    showConclusionID(section) {
-        const styles = MyStylesheet();
+    removeSubSection(subsectionid) {
         const ues = new UES();
-        const regularFont = ues.regularFont.call(this)
-        const iconWidth = ues.removeIcon.call(this)
-        const arrowWidth = ues.arrowUp.call(this)
+        const reports = ues.getReports.call(this)
+        if (reports) {
 
-        const highlight = (sectionid) => {
-            if (this.state.activeconclusionid === sectionid) {
-                return (styles.activeid)
-            }
-        }
+            if (this.state.activereportid) {
 
-        return (
-            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }} key={section.sectionid}>
-                <div style={{ ...styles.flex5, ...highlight(section.sectionid) }} onClick={() => { this.handleConclusionID(section.sectionid) }}>
-                    <span style={{ ...regularFont }}>{section.sectionname}</span>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveConclusionSectionUp(section.sectionid) }}>{arrowUp()}</button>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveConclusionSectionDown(section.sectionid) }}>{arrowDown()}</button>
-                </div>
-                <div style={{ ...styles.flex1 }}>
-                    <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeConclusionSection(section.sectionid) }}>{removeIcon()}</button>
-                </div>
-            </div>
-
-        )
-
-    }
-
-
-    handleRecommendationID(sectionid) {
-        if (this.state.activerecommendationid) {
-            this.setState({ activerecommendationid: false })
-        } else {
-            this.setState({ activerecommendationid: sectionid })
-        }
-    }
-
-    removeRecommendationSection(sectionid) {
-        const ues = new UES();
-
-        if (this.state.activereportid) {
-            const reports = ues.getReports.call(this)
-            if (reports) {
                 const reportid = this.state.activereportid;
+
                 const report = ues.getReportByID.call(this, reportid)
                 if (report) {
+
                     const i = ues.getReportKeyByID.call(this, reportid)
-                    const section = ues.getRecommendationSectionbyID.call(this, reportid, sectionid)
-                    if (section) {
 
-                        const j = ues.getRecommendationSectionKeybyID.call(this, reportid, sectionid)
-                        reports[i].recommendation.splice(j, 1);
-                        this.props.reduxReports(reports);
-                        this.setState({ activerecommendationid: false })
+                    if (this.state.activechapterid) {
+                        const chapterid = this.state.activechapterid;
+
+                        const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+
+                        if (chapter) {
+
+                            const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+
+                            if (this.state.activesectionid) {
+
+                                const sectionid = this.state.activesectionid;
+
+                                const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+
+                                if (section) {
+
+                                    const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
+
+                                    const subsection = ues.getSubSectionbyID.call(this, reportid, chapterid, sectionid, subsectionid)
+                                    if (subsection) {
+
+
+                                        const l = ues.getSubSectionKeybyID.call(this, reportid, chapterid, sectionid, subsectionid)
+
+                                        reports[i].chapters[j].sections[k].subsections.splice(l, 1)
+                                        this.props.reduxReports(reports)
+                                        this.setState({ activesubsectionid: false })
+
+
+
+                                    }
+
+
+
+                                }
+
+
+
+
+                            }
+
+
+
+
+
+                        }
                     }
+
+
+
+
 
                 }
 
+
+
+
             }
+
 
         }
 
     }
 
-    showRecommendationIDs() {
-        const report = this.getReport();
-        let getids = [];
-        if (report) {
-            if (report.hasOwnProperty("recommendation")) {
-                // eslint-disable-next-line
-                report.recommendation.map(section => {
-                    getids.push(this.showRecommendationID(section))
-                })
-            }
-        }
-
-        return getids;
-
-
-    }
-
-    moveRecommendationSectionDown(sectionid) {
-
+    moveChapterUp(chapterid) {
         const ues = new UES();
         const reports = ues.getReports.call(this)
-        if (reports) {
+        if (this.state.activereportid) {
             const reportid = this.state.activereportid;
             const report = ues.getReportByID.call(this, reportid)
             if (report) {
                 const i = ues.getReportKeyByID.call(this, reportid);
-                const section = ues.getRecommendationSectionbyID.call(this, reportid, sectionid)
-                if (section) {
-                    const j = ues.getRecommendationSectionKeybyID.call(this, reportid, sectionid)
-                    const sectioncount = reports[i].recommendation.length;
-                    if (sectioncount > 1 && j < sectioncount - 1) {
-                        const section_1 = reports[i].recommendation[j + 1];
-                        reports[i].recommendation[j] = section_1;
-                        reports[i].recommendation[j + 1] = section;
+                const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                if (chapter) {
+                    const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+
+                    const chaptercount = reports[i].chapters.length;
+
+                    if (chaptercount > 1 && j > 0) {
+                        const chapter_1 = reports[i].chapters[j - 1];
+                        reports[i].chapters[j] = chapter_1;
+                        reports[i].chapters[j - 1] = chapter;
                         this.props.reduxReports(reports);
                         this.setState({ render: 'render' })
 
                     }
+
+
                 }
+
+
+
+
             }
-
-
         }
+
 
     }
 
-    moveRecommendationSectionUp(sectionid) {
+    moveChapterDown(chapterid) {
+
         const ues = new UES();
         const reports = ues.getReports.call(this)
-        if (reports) {
+        if (this.state.activereportid) {
             const reportid = this.state.activereportid;
             const report = ues.getReportByID.call(this, reportid)
             if (report) {
                 const i = ues.getReportKeyByID.call(this, reportid);
-                const section = ues.getRecommendationSectionbyID.call(this, reportid, sectionid)
-                if (section) {
-                    const j = ues.getRecommendationSectionKeybyID.call(this, reportid, sectionid)
-                    const sectioncount = reports[i].recommendation.length;
-                    if (sectioncount > 1 && j > 0) {
-                        const section_1 = reports[i].recommendation[j - 1];
-                        reports[i].recommendation[j] = section_1;
-                        reports[i].recommendation[j - 1] = section;
+                const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                if (chapter) {
+                    const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+
+                    const chaptercount = reports[i].chapters.length;
+
+                    if (chaptercount > 1 && j < chaptercount - 1) {
+                        const chapter_1 = reports[i].chapters[j + 1];
+                        reports[i].chapters[j] = chapter_1;
+                        reports[i].chapters[j + 1] = chapter;
                         this.props.reduxReports(reports);
                         this.setState({ render: 'render' })
 
                     }
-                }
-            }
 
-
-        }
-
-    }
-
-
-    showRecommendationID(section) {
-        const styles = MyStylesheet();
-        const ues = new UES();
-        const regularFont = ues.regularFont.call(this)
-        const iconWidth = ues.removeIcon.call(this)
-        const arrowWidth = ues.arrowUp.call(this)
-
-        const highlight = (sectionid) => {
-            if (this.state.activerecommendationid === sectionid) {
-                return (styles.activeid)
-            }
-        }
-
-        return (
-            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }} key={section.sectionid}>
-                <div style={{ ...styles.flex5, ...highlight(section.sectionid) }} onClick={() => { this.handleRecommendationID(section.sectionid) }}>
-                    <span style={{ ...regularFont }}>{section.sectionname}</span>
-                </div>
-
-                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveRecommendationSectionUp(section.sectionid) }}>{arrowUp()}</button>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveRecommendationSectionDown(section.sectionid) }}>{arrowDown()}</button>
-                </div>
-
-                <div style={{ ...styles.flex1 }}>
-                    <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeRecommendationSection(section.sectionid) }}>{removeIcon()}</button>
-                </div>
-            </div>
-
-        )
-
-    }
-
-
-    getRecommendationContent() {
-        const report = this.getReport();
-        let content = "";
-        if (this.state.activerecommendationid) {
-            const sectionid = this.state.activerecommendationid;
-
-            if (report) {
-                // eslint-disable-next-line
-                if (report.hasOwnProperty("recommendation")) {
-                    // eslint-disable-next-line 
-                    report.recommendation.map(section => {
-                        if (section.sectionid === sectionid) {
-                            content = section.content;
-
-                        }
-
-                    })
-                }
-
-            }
-
-        }
-
-        return content;
-
-    }
-
-    handleRecommendationContent(value) {
-        const ues = new UES();
-        const makeid = new MakeID();
-        const reports = ues.getReports.call(this)
-        if (reports) {
-            const report = this.getReport();
-            if (report) {
-                const reportid = this.state.activereportid;
-                const i = ues.getReportKeyByID.call(this, reportid)
-                if (this.state.activerecommendationid) {
-                    const sectionid = this.state.activerecommendationid;
-                    const section = ues.getRecommendationSectionbyID.call(this, reportid, sectionid)
-                    if (section) {
-                        const j = ues.getRecommendationSectionKeybyID.call(this, reportid, sectionid)
-                        reports[i].recommendation[j].content = value;
-                        this.props.reduxReports(reports)
-                        this.setState({ render: 'render' })
-                    }
-
-                } else {
-                    const newsectionid = makeid.sectionid.call(this, reportid)
-                    const sectionname = this.state.sectionname;
-                    const newsection = newSection(newsectionid, sectionname, value)
-                    if (report.hasOwnProperty("recommendation")) {
-                        reports[i].recommendation.push(newsection);
-
-                    } else {
-                        reports[i].recommendation = [newsection]
-
-                    }
-                    this.setState({ activerecommendationid: newsectionid })
                 }
 
 
-            }
-        }
-
-    }
-
-    getRecommendationSection() {
-        const report = this.getReport();
-        let sectionname = "";
-        if (this.state.activerecommendationid) {
-            const sectionid = this.state.activerecommendationid;
-
-            if (report) {
-                // eslint-disable-next-line
-                if (report.hasOwnProperty("recommendation")) {
-                    // eslint-disable-next-line 
-                    report.recommendation.map(section => {
-                        if (section.sectionid === sectionid) {
-                            sectionname = section.sectionname;
-
-                        }
-
-                    })
-                }
-
-            }
-
-        }
-
-        return sectionname;
-
-    }
-
-    handleRecommendationSection(value) {
-        const ues = new UES();
-        const makeid = new MakeID();
-        const reports = ues.getReports.call(this)
-        if (reports) {
-            const report = this.getReport();
-            if (report) {
-                const reportid = this.state.activereportid;
-                const i = ues.getReportKeyByID.call(this, reportid)
-                if (this.state.activerecommendationid) {
-                    const sectionid = this.state.activerecommendationid;
-                    const section = ues.getRecommendationSectionbyID.call(this, reportid, sectionid)
-                    if (section) {
-                        const j = ues.getRecommendationSectionKeybyID.call(this, reportid, sectionid)
-                        reports[i].recommendation[j].sectionname = value;
-                        this.props.reduxReports(reports)
-                        this.setState({ render: 'render' })
-                    }
-
-                } else {
-                    const newsectionid = makeid.sectionid.call(this, reportid)
-                    const content = this.state.content;
-                    const newsection = newSection(newsectionid, value, content)
-                    if (report.hasOwnProperty("recommendation")) {
-                        reports[i].recommendation.push(newsection);
-
-                    } else {
-                        reports[i].recommendation = [newsection]
-
-                    }
-                    this.setState({ activerecommendationid: newsectionid })
-                }
 
 
             }
         }
 
-    }
-
-    handleGeneralMenu(value) {
-
-        this.handleGeneralSection(value)
-        //window.open('/mazen/projects/_projectid/report')
-    }
-
-    handleConclusionMenu(value) {
-
-        this.handleConclusionSection(value)
-        //window.open('/mazen/projects/_projectid/report')
-    }
-
-    handleRecommendationMenu(value) {
-
-        this.handleRecommendationSection(value)
-        //window.open('/mazen/projects/_projectid/report')
-    }
-
-
-
-
-
-
-    handleFindingMenu(value) {
-
-        this.handleFindingSection(value)
-        //window.open('/mazen/projects/_projectid/report')
-    }
-
-
-
-    loadFindingSections() {
-
-        const ues = new UES();
-        const sections = ues.findingSections();
-        let getsections = [];
-        if (sections) {
-            // eslint-disable-next-line
-            sections.map(section => {
-                getsections.push(this.showOptionValue(section))
-
-            })
-
-        }
-        return getsections;
 
     }
 
 
-    showFindingIDs() {
-        const report = this.getReport();
-        let getids = [];
-        if (report) {
-            if (report.hasOwnProperty("finding")) {
-                // eslint-disable-next-line
-                report.finding.map(section => {
-                    getids.push(this.showFindingID(section))
-                })
-            }
-        }
-
-        return getids;
-
-
-    }
-
-    showFindingID(section) {
-        const styles = MyStylesheet();
-        const ues = new UES();
-        const regularFont = ues.regularFont.call(this)
-        const iconWidth = ues.removeIcon.call(this)
-        const arrowWidth = ues.arrowUp.call(this)
-
-        const highlight = (sectionid) => {
-            if (this.state.activefindingid === sectionid) {
-                return (styles.activeid)
-            }
-        }
-
-        return (
-            <div style={{ ...styles.generalFlex, ...styles.bottomMargin15, ...styles.generalFont }} key={section.sectionid}>
-                <div style={{ ...styles.flex5, ...highlight(section.sectionid) }} onClick={() => { this.handleFindingID(section.sectionid) }}>
-                    <span style={{ ...regularFont }}>{section.sectionname}</span>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.alignCenter }}>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveFindingSectionUp(section.sectionid) }}>{arrowUp()}</button>
-                    <button style={{ ...styles.generalButton, ...arrowWidth }} onClick={() => { this.moveFindingSectionDown(section.sectionid) }}>{arrowDown()}</button>
-                </div>
-                <div style={{ ...styles.flex1 }}>
-                    <button style={{ ...styles.generalButton, ...iconWidth }} onClick={() => { this.removeFindingSection(section.sectionid) }}>{removeIcon()}</button>
-                </div>
-            </div>
-
-        )
-
-    }
-
-
-    handleFindingID(sectionid) {
-        if (this.state.activefindingid) {
-            this.setState({ activefindingid: false })
-        } else {
-            this.setState({ activefindingid: sectionid })
-        }
-    }
-
-    handleFindingSection(value) {
-        const ues = new UES();
-        const makeid = new MakeID();
-        const reports = ues.getReports.call(this)
-        if (reports) {
-            const report = this.getReport();
-            if (report) {
-                const reportid = this.state.activereportid;
-                const i = ues.getReportKeyByID.call(this, reportid)
-                if (this.state.activefindingid) {
-                    const sectionid = this.state.activefindingid;
-                    const section = ues.getFindingSectionbyID.call(this, reportid, sectionid)
-                    if (section) {
-                        const j = ues.getFindingSectionKeybyID.call(this, reportid, sectionid)
-                        reports[i].finding[j].sectionname = value;
-                        this.props.reduxReports(reports)
-                        this.setState({ render: 'render' })
-                    }
-
-                } else {
-                    const newsectionid = makeid.sectionid.call(this, reportid)
-                    const content = this.state.content;
-                    const newsection = newSection(newsectionid, value, content)
-                    if (report.hasOwnProperty("finding")) {
-                        reports[i].finding.push(newsection);
-
-                    } else {
-                        reports[i].finding = [newsection]
-
-                    }
-                    this.setState({ activefindingid: newsectionid })
-                }
-
-
-            }
-        }
-
-    }
-
-    getFindingSection() {
-        const report = this.getReport();
-        let sectionname = "";
-        if (this.state.activefindingid) {
-            const sectionid = this.state.activefindingid;
-
-            if (report) {
-                // eslint-disable-next-line
-                if (report.hasOwnProperty("finding")) {
-                    // eslint-disable-next-line 
-                    report.finding.map(section => {
-                        if (section.sectionid === sectionid) {
-                            sectionname = section.sectionname;
-
-                        }
-
-                    })
-                }
-
-            }
-
-        }
-
-        return sectionname;
-
-    }
-
-
-    getFindingContent() {
-        const report = this.getReport();
-        let content = "";
-        if (this.state.activefindingid) {
-            const sectionid = this.state.activefindingid;
-
-            if (report) {
-                // eslint-disable-next-line
-                if (report.hasOwnProperty("finding")) {
-                    // eslint-disable-next-line 
-                    report.finding.map(section => {
-                        if (section.sectionid === sectionid) {
-                            content = section.content;
-
-                        }
-
-                    })
-                }
-
-            }
-
-        }
-
-        return content;
-
-    }
-
-    handleFindingContent(value) {
-        const ues = new UES();
-        const makeid = new MakeID();
-        const reports = ues.getReports.call(this)
-        if (reports) {
-            const report = this.getReport();
-            if (report) {
-                const reportid = this.state.activereportid;
-                const i = ues.getReportKeyByID.call(this, reportid)
-                if (this.state.activefindingid) {
-                    const sectionid = this.state.activefindingid;
-                    const section = ues.getFindingSectionbyID.call(this, reportid, sectionid)
-                    if (section) {
-                        const j = ues.getFindingSectionKeybyID.call(this, reportid, sectionid)
-                        reports[i].finding[j].content = value;
-                        this.props.reduxReports(reports)
-                        this.setState({ render: 'render' })
-                    }
-
-                } else {
-                    const newsectionid = makeid.sectionid.call(this, reportid)
-                    const sectionname = this.state.sectionname;
-                    const newsection = newSection(newsectionid, sectionname, value)
-                    if (report.hasOwnProperty("finding")) {
-                        reports[i].finding.push(newsection);
-
-                    } else {
-                        reports[i].finding = [newsection]
-
-                    }
-                    this.setState({ activefindingid: newsectionid })
-                }
-
-
-            }
-        }
-
-    }
-
-    moveFindingSectionDown(sectionid) {
+    moveSectionUp(sectionid) {
 
         const ues = new UES();
         const reports = ues.getReports.call(this)
-        if (reports) {
+        if (this.state.activereportid) {
             const reportid = this.state.activereportid;
             const report = ues.getReportByID.call(this, reportid)
             if (report) {
                 const i = ues.getReportKeyByID.call(this, reportid);
-                const section = ues.getFindingSectionbyID.call(this, reportid, sectionid)
-                if (section) {
-                    const j = ues.getFindingSectionKeybyID.call(this, reportid, sectionid)
-                    const sectioncount = reports[i].finding.length;
-                    if (sectioncount > 1 && j < sectioncount - 1) {
-                        const section_1 = reports[i].finding[j + 1];
-                        reports[i].finding[j] = section_1;
-                        reports[i].finding[j + 1] = section;
-                        this.props.reduxReports(reports);
-                        this.setState({ render: 'render' })
+                if (this.state.activechapterid) {
+                    const chapterid = this.state.activechapterid;
+                    const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                    if (chapter) {
+                        const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+                        const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+                        if (section) {
+                            const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
+                            const sectioncount = reports[i].chapters[j].sections.length;
+
+                            if (sectioncount > 1 && k > 0) {
+                                const section_1 = reports[i].chapters[j].sections[k - 1];
+                                reports[i].chapters[j].sections[k] = section_1;
+                                reports[i].chapters[j].sections[k - 1] = section;
+                                this.props.reduxReports(reports);
+                                this.setState({ render: 'render' })
+
+                            }
+
+                        }
 
                     }
+
+
+
+
                 }
+
             }
-
-
         }
+
 
     }
 
-    moveFindingSectionUp(sectionid) {
+
+    moveSectionDown(sectionid) {
+
         const ues = new UES();
         const reports = ues.getReports.call(this)
-        if (reports) {
+        if (this.state.activereportid) {
             const reportid = this.state.activereportid;
             const report = ues.getReportByID.call(this, reportid)
             if (report) {
                 const i = ues.getReportKeyByID.call(this, reportid);
-                const section = ues.getFindingSectionbyID.call(this, reportid, sectionid)
-                if (section) {
-                    const j = ues.getFindingSectionKeybyID.call(this, reportid, sectionid)
-                    const sectioncount = reports[i].finding.length;
-                    if (sectioncount > 1 && j > 0) {
-                        const section_1 = reports[i].finding[j - 1];
-                        reports[i].finding[j] = section_1;
-                        reports[i].finding[j - 1] = section;
-                        this.props.reduxReports(reports);
-                        this.setState({ render: 'render' })
+                if (this.state.activechapterid) {
+                    const chapterid = this.state.activechapterid;
+                    const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                    if (chapter) {
+                        const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+                        const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+                        if (section) {
+                            const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
+                            const sectioncount = reports[i].chapters[j].sections.length;
+
+                            if (sectioncount > 1 && k < sectioncount - 1) {
+                                const section_1 = reports[i].chapters[j].sections[k + 1];
+                                reports[i].chapters[j].sections[k] = section_1;
+                                reports[i].chapters[j].sections[k + 1] = section;
+                                this.props.reduxReports(reports);
+                                this.setState({ render: 'render' })
+
+                            }
+
+                        }
 
                     }
-                }
-            }
 
 
-        }
 
-    }
-
-    generateGeneral() {
-
-        const ues = new UES();
-        const reportid = this.state.activereportid;
-        const report = ues.getReportByID.call(this, reportid)
-        const generatereport = new GenerateReport();
-        let generate = "";
-        if (report) {
-
-        
-            const sectionid = this.state.activegeneralid;
-            const section = ues.getGeneralSectionbyID.call(this, reportid, sectionid)
-            if (section) {
-         
-              
-                if (section.sectionname === 'Authorization') {
-
-                    generate += generatereport.authorization.call(this);
-
-                    this.handleGeneralContent(generate)
-                    // this.props.reduxReports(report)
-                    // this.setState({render:'render'})
 
                 }
 
-
             }
-
-
         }
-
-
-
-
 
 
     }
 
 
 
+    moveSubSectionUp(subsectionid) {
 
-
-    showScopeofWork() {
-      
-        const styles = MyStylesheet();
         const ues = new UES();
-        const regularFont = ues.regularFont.call(this)
-        const generateIconWidth = ues.generateIcon.call(this)
-        if(this.state.activegeneralid) {
-        const reportid = this.state.activereportid;
-        const report = ues.getReportByID.call(this,reportid);
-     
-        if(report) {
-            const sectionid = this.state.activegeneralid;
-            const section = ues.getGeneralSectionbyID.call(this,reportid,sectionid);
+        const reports = ues.getReports.call(this)
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid);
+                if (this.state.activechapterid) {
+                    const chapterid = this.state.activechapterid;
+                    const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                    if (chapter) {
+                        const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+                        if (this.state.activesectionid) {
+                        const sectionid = this.state.activesectionid;
+                        const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+                        if (section) {
+                          
+                                const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
 
-            if(section) {
-                console.log(section)
-                if(section.sectionname === "Scope of Work") {
+                                const subsection = ues.getSubSectionbyID.call(this,reportid,chapterid,sectionid,subsectionid);
 
-        return (<div style={{ ...styles.generalContainer }}>
+                                if(subsection) {
 
-            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
 
-                <span style={{ ...styles.generalFont, ...regularFont }}>Scope of Report</span> <button style={{ ...styles.generalButton, ...generateIconWidth }}>{generateIcon()}</button>
-            </div>
-            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                    value={this.getList()}
-                    onChange={event => { this.handleList(event.target.value) }}
-                />
-                <div style={{ ...styles.generalContainer }}>
-                    <span style={{ ...styles.generalFont, ...regularFont }}
-                    >List</span>
-                </div>
-            </div>
+                                const l = ues.getSubSectionKeybyID.call(this,reportid,chapterid,sectionid,subsectionid)
+                                const subsectioncount = reports[i].chapters[j].sections[k].subsections.length;
 
-            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.marginLeft15 }}>
-                <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
-                    value={this.getSublist()}
-                    onChange={event => { this.handleSublist(event.target.value) }}
-                />
-                <span style={{ ...styles.generalFont, ...regularFont }}>Sub-List</span>
-            </div>
+                                if (subsectioncount > 1 && l > 0) {
+                                    const section_1 = reports[i].chapters[j].sections[k].subsections[l - 1];
+                                    reports[i].chapters[j].sections[k].subsections[l] = section_1;
+                                    reports[i].chapters[j].sections[k].subsections[l - 1] = section;
+                                    this.props.reduxReports(reports);
+                                    this.setState({ render: 'render' })
+    
+                                }
 
-            {this.showLists()}
-        </div>
-        )
+                            }
+
+                            }
+
+                        }
+
+                    }
+
+
+
+
+                }
 
             }
-
         }
 
-        }
 
-        }
     }
+
+
+
+    moveSubSectionDown(subsectionid) {
+
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid);
+                if (this.state.activechapterid) {
+                    const chapterid = this.state.activechapterid;
+                    const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                    if (chapter) {
+                        const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+                        if (this.state.activesectionid) {
+                        const sectionid = this.state.activesectionid;
+                        const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+                        if (section) {
+                          
+                                const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
+
+                                const subsection = ues.getSubSectionbyID.call(this,reportid,chapterid,sectionid,subsectionid);
+
+                                if(subsection) {
+
+
+                                const l = ues.getSubSectionKeybyID.call(this,reportid,chapterid,sectionid,subsectionid)
+                                const subsectioncount = reports[i].chapters[j].sections[k].subsections.length;
+
+                                if (subsectioncount > 1 && l < subsectioncount - 1) {
+                                    const section_1 = reports[i].chapters[j].sections[k].subsections[l + 1];
+                                    reports[i].chapters[j].sections[k].subsections[l] = section_1;
+                                    reports[i].chapters[j].sections[k].subsections[l + 1] = subsection;
+                                    this.props.reduxReports(reports);
+                                    this.setState({ render: 'render' })
+
+                                }
+
+
+                            }
+
+                            }
+
+                        }
+
+                    }
+
+
+
+
+                }
+
+            }
+        }
+
+
+    }
+
+
+
+
+
 
 
 
@@ -1982,15 +1307,18 @@ class Report extends Component {
         const myuser = ues.checkUser.call(this)
         const regularFont = ues.regularFont.call(this)
         const generateIconWidth = ues.generateIcon.call(this)
+        const chapters = new Chapters();
+        const sections = new Sections();
+        const subsections = new SubSections();
 
         const showSaveIcon = () => {
-            if(this.state.spinner) {
+            if (this.state.spinner) {
 
-                return(<Spinner/>)
-           
+                return (<Spinner />)
+
 
             } else {
-                return( <div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                return (<div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                     <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { ues.saveReport.call(this) }}>{saveIcon()}</button>
                 </div>)
 
@@ -2030,152 +1358,20 @@ class Report extends Component {
                         </div>
                         {this.showReports()}
                     </div>
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex5 }}>&nbsp;</div>
-                        <div style={{ ...styles.flex1 }}><button style={{ ...styles.generalButton, ...generateIconWidth }}
 
-                        >{generateIcon()}</button></div>
-                    </div>
-                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                        <textarea style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.areatext }}
-                            value={this.getIntro()}
-                            onChange={event => { this.handleIntro(event.target.value) }}></textarea>
-                        <span style={{ ...styles.generalFont, ...regularFont }}>Intro</span>
-                    </div>
-                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                       
-                    {this.showScopeofWork()}
-                        
+                    {chapters.showChapters.call(this)}
 
-                        
-                    </div>
-                  
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
-                            <span style={{ ...styles.generalFont, ...headerFont }}><u>General</u></span>
-                        </div>
-                        <div style={{ ...styles.flex4, ...styles.addMargin }}>
-                            <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }} onChange={event => { this.handleGeneralMenu(event.target.value) }}>
-                                <option value="">Select Section</option>
-                                {this.loadGeneralSections()}
+                    {sections.showSections.call(this)}
 
-                            </select>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}><button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { this.generateGeneral() }}>{generateIcon()}</button></div>
-                    </div>
-                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        <input type="text" style={{ ...styles.generalField, ...regularFont }}
-                            value={this.getGeneralSection()}
-                            onChange={event => { this.handleGeneralSection(event.target.value) }}
-                        />
-                        <span style={{ ...styles.generalFont, ...regularFont }}>Section</span>
-                    </div>
-                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        <textarea style={{ ...styles.generalField, ...regularFont, ...styles.areatext, ...styles.generalFont }}
-                            value={this.getGeneralContent()}
-                            onChange={event => { this.handleGeneralContent(event.target.value) }}
-                        />
-                        <span style={{ ...styles.generalFont, ...regularFont }}>Content</span>
-                    </div>
+                    {subsections.showSubSections.call(this)}
 
-                  
-
-                    {this.showGeneralIDs()}
-
-
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
-                            <span style={{ ...styles.generalFont, ...headerFont }}><u>Findings</u></span>
-                        </div>
-                        <div style={{ ...styles.flex4, ...styles.addMargin }}>
-                            <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }}
-                                onChange={event => { this.handleFindingMenu(event.target.value) }}>
-                                <option value="">Select Section</option>
-                                {this.loadFindingSections()}
-                            </select>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}><button style={{ ...styles.generalButton, ...generateIconWidth }}>{generateIcon()}</button></div>
-                    </div>
-                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        <input type="text" style={{ ...styles.generalField, ...regularFont }}
-                            value={this.getFindingSection()}
-                            onChange={event => { this.handleFindingSection(event.target.value) }} />
-                        <span style={{ ...styles.generalFont, ...regularFont }}>Section</span>
-                    </div>
-                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        <textarea style={{ ...styles.generalField, ...regularFont, ...styles.areatext, ...styles.generalFont }}
-                            value={this.getFindingContent()}
-                            onChange={event => { this.handleFindingContent(event.target.value) }}
-                        />
-                        <span style={{ ...styles.generalFont, ...regularFont }}>Content</span>
-                    </div>
-
-                    {this.showFindingIDs()}
-
-
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
-                            <span style={{ ...styles.generalFont, ...headerFont }}><u>Conclusions</u></span>
-                        </div>
-                        <div style={{ ...styles.flex4, ...styles.addMargin }}>
-                            <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }}
-                                onChange={event => { this.handleConclusionMenu(event.target.value) }}>
-                                <option value="">Select Section</option>
-                                {this.loadConclusionSections()}
-                            </select>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}><button style={{ ...styles.generalButton, ...generateIconWidth }}>{generateIcon()}</button></div>
-                    </div>
-                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        <input type="text" style={{ ...styles.generalField, ...regularFont }}
-                            value={this.getConclusionSection()}
-                            onChange={event => { this.handleConclusionSection(event.target.value) }} />
-                        <span style={{ ...styles.generalFont, ...regularFont }}>Section</span>
-                    </div>
-                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        <textarea style={{ ...styles.generalField, ...regularFont, ...styles.areatext, ...styles.generalFont }}
-                            value={this.getConclusionContent()}
-                            onChange={event => { this.handleConclusionContent(event.target.value) }}
-                        />
-                        <span style={{ ...styles.generalFont, ...regularFont }}>Content</span>
-                    </div>
-
-                    {this.showConclusionIDs()}
-                    <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}>
-                            <span style={{ ...styles.generalFont, ...headerFont }}><u>Recommendations</u></span>
-                        </div>
-                        <div style={{ ...styles.flex4, ...styles.addMargin }}>
-                            <select style={{ ...styles.generalField, ...styles.generalFont, ...styles.alignCenter, ...regularFont }}
-                                onChange={(event) => { this.handleRecommendationMenu(event.target.value) }}>
-                                <option value="">Select Section</option>
-                                {this.loadRecommendationSections()}
-                            </select>
-                        </div>
-                        <div style={{ ...styles.flex1, ...styles.addMargin }}><button style={{ ...styles.generalButton, ...generateIconWidth }}>{generateIcon()}</button></div>
-                    </div>
-                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        <input type="text" style={{ ...styles.generalField, ...regularFont }}
-                            value={this.getRecommendationSection()}
-                            onChange={event => { this.handleRecommendationSection(event.target.value) }}
-                        />
-                        <span style={{ ...styles.generalFont, ...regularFont }}>Section</span>
-                    </div>
-                    <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                        <textarea style={{ ...styles.generalField, ...regularFont, ...styles.areatext, ...styles.generalFont }}
-                            value={this.getRecommendationContent()}
-                            onChange={event => { this.handleRecommendationContent(event.target.value) }}
-                        />
-                        <span style={{ ...styles.generalFont, ...regularFont }}>Content</span>
-                    </div>
-                    {this.showRecommendationIDs()}
 
 
                     <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                         <span style={{ ...styles.generalFont, ...regularFont }}>{this.state.message}</span>
                     </div>
 
-                   {showSaveIcon()}
+                    {showSaveIcon()}
 
                 </div>)
 

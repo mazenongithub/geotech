@@ -26,7 +26,7 @@ export async function UploadGraphicLog(formData) {
 }
 export function SaveReport(values) {
 
-    const APIURL = `https://civilengineer.io/UES/api/handlereport.php`
+    const APIURL = `https://civilengineer.io/UES/api/handlegeneralreport.php`
   
     return fetch(APIURL, {
         method: 'post',
@@ -222,7 +222,7 @@ export async function LoadBorings(projectid) {
 
 export async function LoadReport(projectid) {
 
-    let APIURL = `https://civilengineer.io/UES/api/loadreport.php?projectid=${projectid}`
+    let APIURL = `https://civilengineer.io/UES/api/loadgeneralreport.php?projectid=${projectid}`
     
     return fetch(APIURL, { credentials: 'include' }).then(resp => {
 

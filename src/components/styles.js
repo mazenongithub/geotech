@@ -82,6 +82,9 @@ export function MyStylesheet() {
         leftMargin40: {
             marginLeft: '40px'
         },
+        leftMargin80: {
+            marginLeft: '80px'
+        },
         showBorder: {
             border: '0.5px solid'
         },
@@ -126,7 +129,7 @@ export function MyStylesheet() {
             width: '8%'
         },
         generalPadding: {
-            padding: '3px'
+            padding: '5px'
 
         },
         whiteFont: {

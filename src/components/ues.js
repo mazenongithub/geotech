@@ -260,6 +260,7 @@ class UES {
             this.setState({ message, spinner:false })
 
         } catch (err) {
+            this.setState({spinner:false})
             alert(err)
         }
     }
@@ -298,6 +299,7 @@ class UES {
                 this.setState({ message, spinner:false })
 
             } catch (err) {
+                this.setState({spinner:false})
                 alert(err)
             }
 
@@ -632,6 +634,140 @@ class UES {
         }
 
         return pavement;
+    }
+
+    getChapterKeyByID(reportid,chapterid) {
+        const ues = new UES();
+        const report = ues.getReportByID.call(this,reportid)
+        let key = false;
+        if(report) {
+            const chapters = ues.getChaptersByReportID.call(this,reportid)
+            if(chapters) {
+                chapters.map((chapter,i)=> {
+                    if(chapter.chapterid === chapterid) {
+                        key = i;
+                    }
+                })
+            }
+        }
+
+        return key;
+    }
+
+    getChapterByID(reportid,chapterid) {
+        const ues = new UES();
+        const report = ues.getReportByID.call(this,reportid)
+        let getchapter = false;
+        if(report) {
+            const chapters = ues.getChaptersByReportID.call(this,reportid)
+            if(chapters) {
+                chapters.map(chapter=> {
+                    if(chapter.chapterid === chapterid) {
+                        getchapter =chapter;
+                    }
+                })
+            }
+        }
+
+        return getchapter;
+    }
+
+    getSubSectionKeybyID(reportid,chapterid,sectionid,subsectionid) {
+        const ues = new UES();
+        let key = false;
+        const subsections = ues.getSubSections.call(this,reportid,chapterid,sectionid)
+        if(subsections) {
+            subsections.map((subsection,i)=> {
+                if(subsection.subsectionid === subsectionid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+    }
+
+    getSubSectionbyID(reportid,chapterid,sectionid,subsectionid) {
+        const ues = new UES();
+        let getsection = false;
+        const subsections = ues.getSubSections.call(this,reportid,chapterid,sectionid)
+
+        if(subsections) {
+            subsections.map(subsection=> {
+                if(subsection.subsectionid === subsectionid) {
+                    getsection = subsection;
+                }
+            })
+        }
+   
+        return getsection;
+    }
+
+    getSubSections(reportid,chapterid,sectionid) {
+        const ues = new UES();
+        let getsubsections = false;
+        const section = ues.getSectionbyID.call(this,reportid,chapterid,sectionid)
+        if(section) {
+            if(section.hasOwnProperty("subsections")) {
+                getsubsections = section.subsections;
+
+            }
+        }
+        return getsubsections;
+    }
+
+    getSectionKeybyID(reportid,chapterid,sectionid) {
+        const ues = new UES();
+        let key = false;
+        const sections = ues.getSectionsbyChapterID.call(this,reportid,chapterid)
+        if(sections) {
+            sections.map((section,i)=> {
+                if(section.sectionid === sectionid) {
+                    key = i
+                }
+            })
+        }
+        return key;
+
+    }
+
+    
+    getSectionbyID(reportid,chapterid,sectionid) {
+        const ues = new UES();
+        let getsection = false;
+        const sections = ues.getSectionsbyChapterID.call(this,reportid,chapterid)
+        if(sections) {
+            sections.map(section=> {
+                if(section.sectionid === sectionid) {
+                    getsection = section;
+                }
+            })
+        }
+        return getsection;
+
+    }
+
+
+    getSectionsbyChapterID(reportid,chapterid) {
+        const ues = new UES();
+        let getsections = false;
+        const chapter = ues.getChapterByID.call(this,reportid,chapterid)
+        if(chapter) {
+            if(chapter.hasOwnProperty("sections")) {
+                getsections = chapter.sections;
+            }
+        }
+        return getsections;
+    }
+
+    getChaptersByReportID(reportid) {
+        const ues = new UES();
+        let chapters = false;
+        const report = ues.getReportByID.call(this,reportid)
+ 
+        if(report.hasOwnProperty("chapters")) {
+            chapters = report.chapters;
+        }
+        return chapters;
     }
 
     getReports() {
