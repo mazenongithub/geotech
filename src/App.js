@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 import './App.css';
 import { MyStylesheet } from './components/styles';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import { LoadUser } from './components/actions/api'
 import { connect } from 'react-redux';
 import * as actions from './components/actions';

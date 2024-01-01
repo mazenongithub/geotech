@@ -6,43 +6,46 @@ class MakeID {
         let sectionid = false;
         const ues = new UES();
 
-        const report = ues.getReportByID.call(this,reportid) 
-        if(report) {
-            while(!sectionid) {
-            sectionid = makeID(16)
-            if(report.hasOwnProperty("chapters")) {
-                report.chapters.map(chapter=> {
-                    if(chapter.chapterid === sectionid) {
-                        sectionid = false;
-                    }
+        const report = ues.getReportByID.call(this, reportid)
+        if (report) {
+            while (!sectionid) {
+                sectionid = makeID(16)
+                if (report.hasOwnProperty("chapters")) {
+                    // eslint-disable-next-line
+                    report.chapters.map(chapter => {
+                        if (chapter.chapterid === sectionid) {
+                            sectionid = false;
+                        }
 
-                    if(chapter.hasOwnProperty("sections")) {
-                        chapter.sections.map(section=> {
-                            if(section.sectionid === sectionid) {
-                                sectionid = false;
-                            }
+                        if (chapter.hasOwnProperty("sections")) {
+                            // eslint-disable-next-line
+                            chapter.sections.map(section => {
+                                if (section.sectionid === sectionid) {
+                                    sectionid = false;
+                                }
 
-                            if(section.hasOwnProperty("subsections")) {
-                                section.subsections.map(subsection=> {
-                                    if(subsection.subsectionid === sectionid) {
-                                        sectionid = false;
-                                    }
-                                })
-                            }
-                       
-                       
-                       
-                        })
-                    }
-                
-                
-                
-                })
+                                if (section.hasOwnProperty("subsections")) {
+                                    // eslint-disable-next-line
+                                    section.subsections.map(subsection => {
+                                        if (subsection.subsectionid === sectionid) {
+                                            sectionid = false;
+                                        }
+                                    })
+                                }
 
-            } 
 
-        }
-            
+
+                            })
+                        }
+
+
+
+                    })
+
+                }
+
+            }
+
         } else {
             sectionid = makeID(16)
         }
@@ -57,7 +60,7 @@ class MakeID {
         if (users) {
             while (!_id) {
                 _id = makeID(16)
-
+                // eslint-disable-next-line
                 users.map(user => {
                     if (user._id === _id) {
                         _id = false;
@@ -81,6 +84,7 @@ class MakeID {
             while (!appendixid) {
                 appendixid = makeID(16);
                 if (report.hasOwnProperty("appendix")) {
+                    // eslint-disable-next-line
                     report.appendix.map(getappendix => {
                         if (getappendix.appendixid === appendixid) {
                             appendixid = false;
@@ -106,6 +110,7 @@ class MakeID {
             while (!figureid) {
                 figureid = makeID(16);
                 if (report.hasOwnProperty("figures")) {
+                    // eslint-disable-next-line
                     report.figures.map(figure => {
                         if (figure.figureid === figureid) {
                             figureid = false;
@@ -242,6 +247,7 @@ class MakeID {
             if (chapter.hasOwnProperty("sections")) {
                 while (!sectionid) {
                     sectionid = makeID(16);
+                    // eslint-disable-next-line
                     chapter.sections.map(section => {
                         if (section.sectionid === sectionid) {
                             sectionid = false;
@@ -271,6 +277,7 @@ class MakeID {
             while (!chapterid) {
                 chapterid = makeID(16)
                 if (report.hasOwnProperty("chapters")) {
+                    // eslint-disable-next-line
                     report.chapters.map(chapter => {
                         if (chapter.chapterid === chapterid) {
                             chapterid = false;

@@ -9,11 +9,16 @@ class SubSections {
 
 
 
-    handleSubSectionID(sectionid) {
+    handleSubSectionID(subsectionid) {
         if (this.state.activesubsectionid) {
+            if(this.state.activesubsectionid === subsectionid) {
             this.setState({ activesubsectionid: false })
+
+            } else {
+                this.setState({activesubsectionid:subsectionid})
+            }
         } else {
-            this.setState({ activesubsectionid: sectionid })
+            this.setState({ activesubsectionid: subsectionid })
         }
     }
 
@@ -36,7 +41,7 @@ class SubSections {
 
 
 
-        return (<div style={{ ...styles.generalContainer, ...styles.generalFont }}>
+        return (<div style={{ ...styles.generalContainer, ...styles.generalFont }} key={section.subsectionid}>
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex5, ...highlight(section.subsectionid) }}>
                     <span style={{ ...regularFont }}
@@ -65,7 +70,7 @@ class SubSections {
         const headerFont = ues.headerFont.call(this)
 
 
-
+        if(this.state.activesectionid) {
         return (
 
             <div style={{ ...styles.generalContainer, ...styles.leftMargin80, ...styles.generalPadding, ...styles.showBorder }}>
@@ -92,6 +97,8 @@ class SubSections {
 
 
             </div>)
+
+        }
 
 
     }

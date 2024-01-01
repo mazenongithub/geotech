@@ -51,8 +51,8 @@ export function newPavementSection(pavementid, sectionid, ti,ac,ab,as, pcc,use) 
     return({pavementid, sectionid,ti,ac,ab,as,pcc,use})
 }
 
-export function newPavement(sectionid,projectid,sectionname,rvalue) {
-    return({sectionid, projectid, sectionname, rvalue})
+export function newPavement(sectionid, project_id, projectid,sectionname,rvalue) {
+    return({sectionid, project_id, projectid, sectionname, rvalue})
 }
 export function newSection(sectionid,sectionname,content) {
     return({sectionid,sectionname,content})
@@ -63,8 +63,8 @@ export function newSublist(sublistid,content) {
 export function newList(listid,content) {
     return ({listid,content})
 }
-export function newReport(reportid,projectid,datereport,intro) {
-    return({reportid,projectid,datereport,intro})
+export function newReport(reportid,project_id,projectid,datereport,intro) {
+    return({reportid,project_id, projectid,datereport,intro})
 }
 export function currentDate() {
     let currentdate = "";

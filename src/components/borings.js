@@ -29,17 +29,22 @@ class Borings extends Component {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
         const ues = new UES();
-        const projects = ues.getProjects.call(this)
-        const projectid = this.props.projectid;
+        
+       
 
-        if (!projects) {
-            ues.loadProjects.call(this);
-        }
+        
+            const projects = ues.getProjects.call(this)
+            if (!projects) {
+                ues.loadProjects.call(this);
+            }
+        
 
-        const borings = ues.getBoringsbyProjectID.call(this, projectid)
-        console.log(borings)
+       
+
+        const borings = ues.getBorings.call(this)
+    
         if (!borings) {
-            ues.loadBorings.call(this, projectid)
+            ues.loadBorings.call(this)
 
         }
 

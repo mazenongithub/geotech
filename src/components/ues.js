@@ -125,7 +125,7 @@ class UES {
         let key = false;
         let requests = ues.getMyAdminRequests.call(this)
         if (requests) {
-    // eslint-disable-next-line
+            // eslint-disable-next-line
             requests.map((user, i) => {
                 if (user.userid === userid) {
                     key = i;
@@ -134,15 +134,15 @@ class UES {
         }
         return key;
     }
-    
-    
-    
+
+
+
     getMyAdminRequestbyID(userid) {
         const ues = new UES();
         let getuser = false;
         let requests = ues.getMyAdminRequests.call(this)
         if (requests) {
-    // eslint-disable-next-line
+            // eslint-disable-next-line
             requests.map(user => {
                 if (user.userid === userid) {
                     getuser = user;
@@ -151,7 +151,7 @@ class UES {
         }
         return getuser;
     }
-    
+
     getMyAdminRequests() {
         const ues = new UES();
         let requests = false;
@@ -170,7 +170,7 @@ class UES {
         let key = false;
         let users = ues.getMyAdminUsers.call(this)
         if (users) {
-// eslint-disable-next-line
+            // eslint-disable-next-line
             users.map((user, i) => {
                 if (user.userid === userid) {
                     key = i;
@@ -186,16 +186,16 @@ class UES {
         const ues = new UES();
         let getuser = false;
         let users = ues.getMyAdminUsers.call(this)
-       
+
         if (users) {
-// eslint-disable-next-line
+            // eslint-disable-next-line
             users.map(user => {
                 if (user.userid === userid) {
                     getuser = user;
                 }
             })
         }
-  
+
         return getuser;
     }
 
@@ -225,25 +225,22 @@ class UES {
     }
 
     async saveReport() {
+        const ues = new UES();
+        const projectid = this.props.projectid;
+        const project = ues.getProjectbyID.call(this,projectid)
+        if(project) {
+        const project_id = project._id;
+        const reports = ues.getReportsByProjectID.call(this, projectid)
+       
         try {
-            const ues = new UES();
-            const projectid = this.props.projectid;
-            const reports = ues.getReportsByProjectID.call(this, projectid)
-            this.setState({spinner:true})
-            const response = await SaveReport({ projectid, reports });
+       
+            this.setState({ spinner: true })
+            const response = await SaveReport({ project_id, reports });
             console.log(response)
             if (response.hasOwnProperty("reportsdb")) {
                 // eslint-disable-next-line
-                response.reportsdb.map(reportdb => {
-                    const reportiddb = reportdb.reportid;
-                    const checkreport = ues.getReportByID.call(this, reportiddb);
-                    if (checkreport) {
-                        const i = ues.getReportKeyByID.call(this, reportiddb);
-                        reports[i] = reportdb;
-                    }
-
-                })
-                this.props.reduxReports(reports)
+                
+                this.props.reduxReports(response.reportsdb)
 
             }
 
@@ -257,50 +254,65 @@ class UES {
                 message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
             }
 
-            this.setState({ message, spinner:false })
+            this.setState({ message, spinner: false })
 
         } catch (err) {
-            this.setState({spinner:false})
+            this.setState({ spinner: false })
             alert(err)
         }
+
+
+    }
+
+    
     }
 
     async saveBorings() {
         const ues = new UES();
         const projectid = this.props.projectid;
-        const borings = ues.getBoringsbyProjectID.call(this, projectid);
-        if (borings) {
-            try {
-                this.setState({spinner:true})
+        const project = ues.getProjectbyID.call(this, projectid)
+        if (project) {
+            const project_id = project._id;
+            if (projectid) {
+                const borings = ues.getBoringsbyProjectID.call(this, projectid);
+                if (borings) {
+                    try {
+                        this.setState({ spinner: true })
 
-                const response = await SaveBorings({ projectid, borings })
-                console.log(response)
-                if (response.hasOwnProperty("borings")) {
-                    // eslint-disable-next-line
-                    response.borings.map(boring => {
-                        const boringid = boring.boringid;
-                        const getboring = ues.getBoringbyID.call(this, boringid)
-                        if (getboring) {
-                            const i = ues.getBoringKeybyID.call(this, boringid)
-                            borings[i] = boring;
+                        const response = await SaveBorings({ project_id, borings })
+                        console.log(response)
+                        if (response.hasOwnProperty("borings")) {
+                            // eslint-disable-next-line
+                            response.borings.map(boring => {
+                                const boringid = boring.boringid;
+                                const getboring = ues.getBoringbyID.call(this, boringid)
+                                if (getboring) {
+                                    const i = ues.getBoringKeybyID.call(this, boringid)
+                                    borings[i] = boring;
+                                }
+                            })
+                            this.props.reduxBorings(borings)
                         }
-                    })
-                    this.props.reduxBorings(borings)
-                }
-                let message = "";
-                if (response.hasOwnProperty("message")) {
-                    message += response.message;
+                        let message = "";
+                        if (response.hasOwnProperty("message")) {
+                            message += response.message;
+
+                        }
+
+                        if (response.hasOwnProperty("lastupdated")) {
+                            message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
+                        }
+                        this.setState({ message, spinner: false })
+
+                    } catch (err) {
+                        this.setState({ spinner: false })
+                        alert(err)
+                    }
 
                 }
 
-                if (response.hasOwnProperty("lastupdated")) {
-                    message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
-                }
-                this.setState({ message, spinner:false })
-
-            } catch (err) {
-                this.setState({spinner:false})
-                alert(err)
+            } else {
+                alert(`Save Project Before Save Borings`)
             }
 
         }
@@ -308,23 +320,15 @@ class UES {
     }
 
 
-    async loadBorings(projectid) {
-        const ues = new UES();
-        let borings = ues.getBorings.call(this);
+    async loadBorings() {
+
+
         try {
-            let response = await LoadBorings(projectid);
+            let response = await LoadBorings();
             console.log(response)
             if (response.hasOwnProperty("borings")) {
-                if (borings) {
-                    // eslint-disable-next-line
-                    response.borings.map(boring => {
-                        borings.push(boring)
-                    })
-
-                } else {
-                    borings = response.borings;
-                }
-                this.props.reduxBorings(borings)
+                this.props.reduxBorings(response.borings)
+                this.setState({ render: 'render' })
 
             }
 
@@ -348,24 +352,17 @@ class UES {
     }
 
 
-    async loadReports(projectid) {
-        const ues = new UES();
-        let reports = ues.getReports.call(this)
+    async loadReports() {
+     
+
         try {
 
-            let response = await LoadReport(projectid);
+            let response = await LoadReport();
             console.log(response)
             if (response.hasOwnProperty("reports")) {
-                if (reports) {
-                    // eslint-disable-next-line
-                    response.reports.map(report => {
-                        reports.push(report)
-                    })
-                } else {
-                    reports = response.reports;
-                }
-                this.props.reduxReports(reports);
-                this.setState({render:'render'})
+
+                this.props.reduxReports(response.reports);
+                this.setState({ render: 'render' })
 
             }
 
@@ -636,15 +633,16 @@ class UES {
         return pavement;
     }
 
-    getChapterKeyByID(reportid,chapterid) {
+    getChapterKeyByID(reportid, chapterid) {
         const ues = new UES();
-        const report = ues.getReportByID.call(this,reportid)
+        const report = ues.getReportByID.call(this, reportid)
         let key = false;
-        if(report) {
-            const chapters = ues.getChaptersByReportID.call(this,reportid)
-            if(chapters) {
-                chapters.map((chapter,i)=> {
-                    if(chapter.chapterid === chapterid) {
+        if (report) {
+            const chapters = ues.getChaptersByReportID.call(this, reportid)
+            if (chapters) {
+                // eslint-disable-next-line
+                chapters.map((chapter, i) => {
+                    if (chapter.chapterid === chapterid) {
                         key = i;
                     }
                 })
@@ -654,16 +652,17 @@ class UES {
         return key;
     }
 
-    getChapterByID(reportid,chapterid) {
+    getChapterByID(reportid, chapterid) {
         const ues = new UES();
-        const report = ues.getReportByID.call(this,reportid)
+        const report = ues.getReportByID.call(this, reportid)
         let getchapter = false;
-        if(report) {
-            const chapters = ues.getChaptersByReportID.call(this,reportid)
-            if(chapters) {
-                chapters.map(chapter=> {
-                    if(chapter.chapterid === chapterid) {
-                        getchapter =chapter;
+        if (report) {
+            const chapters = ues.getChaptersByReportID.call(this, reportid)
+            if (chapters) {
+                // eslint-disable-next-line
+                chapters.map(chapter => {
+                    if (chapter.chapterid === chapterid) {
+                        getchapter = chapter;
                     }
                 })
             }
@@ -672,13 +671,14 @@ class UES {
         return getchapter;
     }
 
-    getSubSectionKeybyID(reportid,chapterid,sectionid,subsectionid) {
+    getSubSectionKeybyID(reportid, chapterid, sectionid, subsectionid) {
         const ues = new UES();
         let key = false;
-        const subsections = ues.getSubSections.call(this,reportid,chapterid,sectionid)
-        if(subsections) {
-            subsections.map((subsection,i)=> {
-                if(subsection.subsectionid === subsectionid) {
+        const subsections = ues.getSubSections.call(this, reportid, chapterid, sectionid)
+        if (subsections) {
+            // eslint-disable-next-line
+            subsections.map((subsection, i) => {
+                if (subsection.subsectionid === subsectionid) {
                     key = i;
                 }
             })
@@ -686,28 +686,29 @@ class UES {
         return key;
     }
 
-    getSubSectionbyID(reportid,chapterid,sectionid,subsectionid) {
+    getSubSectionbyID(reportid, chapterid, sectionid, subsectionid) {
         const ues = new UES();
         let getsection = false;
-        const subsections = ues.getSubSections.call(this,reportid,chapterid,sectionid)
+        const subsections = ues.getSubSections.call(this, reportid, chapterid, sectionid)
 
-        if(subsections) {
-            subsections.map(subsection=> {
-                if(subsection.subsectionid === subsectionid) {
+        if (subsections) {
+            // eslint-disable-next-line
+            subsections.map(subsection => {
+                if (subsection.subsectionid === subsectionid) {
                     getsection = subsection;
                 }
             })
         }
-   
+
         return getsection;
     }
 
-    getSubSections(reportid,chapterid,sectionid) {
+    getSubSections(reportid, chapterid, sectionid) {
         const ues = new UES();
         let getsubsections = false;
-        const section = ues.getSectionbyID.call(this,reportid,chapterid,sectionid)
-        if(section) {
-            if(section.hasOwnProperty("subsections")) {
+        const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+        if (section) {
+            if (section.hasOwnProperty("subsections")) {
                 getsubsections = section.subsections;
 
             }
@@ -715,13 +716,14 @@ class UES {
         return getsubsections;
     }
 
-    getSectionKeybyID(reportid,chapterid,sectionid) {
+    getSectionKeybyID(reportid, chapterid, sectionid) {
         const ues = new UES();
         let key = false;
-        const sections = ues.getSectionsbyChapterID.call(this,reportid,chapterid)
-        if(sections) {
-            sections.map((section,i)=> {
-                if(section.sectionid === sectionid) {
+        const sections = ues.getSectionsbyChapterID.call(this, reportid, chapterid)
+        if (sections) {
+            // eslint-disable-next-line
+            sections.map((section, i) => {
+                if (section.sectionid === sectionid) {
                     key = i
                 }
             })
@@ -730,14 +732,15 @@ class UES {
 
     }
 
-    
-    getSectionbyID(reportid,chapterid,sectionid) {
+
+    getSectionbyID(reportid, chapterid, sectionid) {
         const ues = new UES();
         let getsection = false;
-        const sections = ues.getSectionsbyChapterID.call(this,reportid,chapterid)
-        if(sections) {
-            sections.map(section=> {
-                if(section.sectionid === sectionid) {
+        const sections = ues.getSectionsbyChapterID.call(this, reportid, chapterid)
+        if (sections) {
+            // eslint-disable-next-line
+            sections.map(section => {
+                if (section.sectionid === sectionid) {
                     getsection = section;
                 }
             })
@@ -747,12 +750,12 @@ class UES {
     }
 
 
-    getSectionsbyChapterID(reportid,chapterid) {
+    getSectionsbyChapterID(reportid, chapterid) {
         const ues = new UES();
         let getsections = false;
-        const chapter = ues.getChapterByID.call(this,reportid,chapterid)
-        if(chapter) {
-            if(chapter.hasOwnProperty("sections")) {
+        const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+        if (chapter) {
+            if (chapter.hasOwnProperty("sections")) {
                 getsections = chapter.sections;
             }
         }
@@ -762,9 +765,9 @@ class UES {
     getChaptersByReportID(reportid) {
         const ues = new UES();
         let chapters = false;
-        const report = ues.getReportByID.call(this,reportid)
- 
-        if(report.hasOwnProperty("chapters")) {
+        const report = ues.getReportByID.call(this, reportid)
+
+        if (report.hasOwnProperty("chapters")) {
             chapters = report.chapters;
         }
         return chapters;

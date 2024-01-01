@@ -7,11 +7,15 @@ import { removeIcon, arrowUp, arrowDown } from './svg';
 
 class Chapters {
 
-    handleChapterID(sectionid) {
+    handleChapterID(chapterid) {
         if (this.state.activechapterid) {
-            this.setState({ activechapterid: false })
+            if(this.state.activechapterid === chapterid) {
+            this.setState({ activechapterid: false, activesectionid:false, activesubsectionid:false })
+            } else {
+            this.setState({ activechapterid: chapterid, activesectionid:false, activesubsectionid:false })
+            }
         } else {
-            this.setState({ activechapterid: sectionid })
+            this.setState({ activechapterid: chapterid })
         }
     }
 
@@ -34,7 +38,7 @@ class Chapters {
 
 
 
-        return (<div style={{ ...styles.generalContainer, ...styles.generalFont }}>
+        return (<div style={{ ...styles.generalContainer, ...styles.generalFont }} key={chapter.chapterid}>
             <div style={{ ...styles.generalFlex }}>
                 <div style={{ ...styles.flex5, ...highlight(chapter.chapterid) }}>
                     <span style={{ ...regularFont }}
@@ -61,6 +65,8 @@ class Chapters {
         const ues = new UES();
         const regularFont = ues.regularFont.call(this)
         const headerFont = ues.headerFont.call(this)
+
+        if(this.state.activereportid) {
 
         return (
 
@@ -90,6 +96,9 @@ class Chapters {
 
 
             </div>)
+
+
+        }
 
 
     }

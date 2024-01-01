@@ -19,7 +19,7 @@ class Pavement extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activesectionid: false, activepavementid: false, sectionname: '', ti: '', rvalue: '', ab: '', ac: '', as: '', pcc: '', use: '', spinner:false
+            render: '', width: 0, height: 0, message: '', activesectionid: false, activepavementid: false, sectionname: '', ti: '', rvalue: '', ab: '', ac: '', as: '', pcc: '', use: '', spinner: false
 
         }
 
@@ -156,15 +156,20 @@ class Pavement extends Component {
             const newsectionid = makeid.pavementid.call(this);
             const projectid = this.props.projectid;
             const rvalue = this.state.rvalue;
-            const newpavement = newPavement(newsectionid, projectid, value, rvalue)
-            if (pavements) {
-                pavements.push(newpavement)
+            const project = ues.getProjectbyID.call(this, projectid)
+            if (project) {
+                const project_id = project._id;
+                const newpavement = newPavement(newsectionid, project_id, projectid, value, rvalue)
+                if (pavements) {
+                    pavements.push(newpavement)
 
-            } else {
-                pavements = [newpavement]
+                } else {
+                    pavements = [newpavement]
+
+                }
+                this.setState({ activesectionid: newsectionid })
 
             }
-            this.setState({ activesectionid: newsectionid })
         }
 
     }
@@ -347,16 +352,22 @@ class Pavement extends Component {
             const newsectionid = makeid.pavementid.call(this);
             const projectid = this.props.projectid;
             const sectionname = this.state.sectionname;
+            const project = ues.getProjectbyID.call(this, projectid)
+            if (project) {
 
-            const newpavement = newPavement(newsectionid, projectid, sectionname, value)
-            if (pavements) {
-                pavements.push(newpavement)
+                const project_id = project._id;
 
-            } else {
-                pavements = [newpavement]
+                const newpavement = newPavement(newsectionid, project_id, projectid, sectionname, value)
+                if (pavements) {
+                    pavements.push(newpavement)
+
+                } else {
+                    pavements = [newpavement]
+
+                }
+                this.setState({ activesectionid: newsectionid })
 
             }
-            this.setState({ activesectionid: newsectionid })
         }
 
     }
@@ -704,9 +715,10 @@ class Pavement extends Component {
     async savePavement() {
         const ues = new UES();
         const pavement = ues.getPavement.call(this)
+        console.log(pavement)
         if (pavement) {
             try {
-                this.setState({spinner:true})
+                this.setState({ spinner: true })
 
                 let response = await SavePavement({ pavement })
                 if (response.hasOwnProperty("pavement")) {
@@ -723,10 +735,14 @@ class Pavement extends Component {
                 if (response.hasOwnProperty("lastupdated")) {
                     message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
                 }
-                this.setState({ message, spinner:false })
+                this.setState({ message, spinner: false })
 
 
             } catch (err) {
+
+                alert(err)
+
+                this.setState({ spinner: true })
 
             }
 
@@ -832,13 +848,13 @@ class Pavement extends Component {
         const headerFont = ues.headerFont.call(this)
         const generateIconWidth = ues.generateIcon.call(this)
 
-        const showSaveIcon =() => {
-            if(this.state.spinner) {
+        const showSaveIcon = () => {
+            if (this.state.spinner) {
 
-                return(<Spinner/>)
+                return (<Spinner />)
 
             } else {
-                return(<div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
+                return (<div style={{ ...styles.generalContainer, ...styles.alignCenter }}>
                     <button style={{ ...styles.generalButton, ...generateIconWidth }} onClick={() => { this.savePavement() }}>{saveIcon()}</button>
                 </div>)
             }

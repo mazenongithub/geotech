@@ -20,6 +20,12 @@ export function arrowDown() {
     </style></defs><g id="Layout"><polygon className="arrowUp-1" points=".87 27.5 8.37 27.5 8.37 .5 22.37 .5 22.37 27.5 29.87 27.5 15.37 52.59 .87 27.5"/></g></svg>)
 }
 
+export function dropdownIcon() {
+    return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 25"><defs><style>
+
+    </style></defs><g id="Layout"><polygon className="dropdownIcon-1" points="39.5 18.5 39.5 24.5 .5 24.5 .5 .5 6.5 .5 6.5 18.5 39.5 18.5"/></g></svg>)
+}
+
 export function sendInvite() {
     return(<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 196 62.5"><defs><style>
     </style></defs><g id="Layout"><rect className="sendInvite-1" x=".5" y=".5" width="195" height="58" rx="8.15" ry="8.15"/><text className="sendInvite-3" transform="translate(24.61 38.29)"><tspan x="0" y="0">Send I</tspan><tspan className="sendInvite-2" x="81.49" y="0">n</tspan><tspan x="98.01" y="0">vite</tspan></text></g></svg>)

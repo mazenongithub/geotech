@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
-import { arrowUp, generateIcon, removeIcon, saveIcon, arrowDown, linkArrow } from './svg';
-import { formatDateReport, currentDate, newReport, newChapter, newSublist, newReportSection, newSubSection } from './functions'
+import { removeIcon, saveIcon, dropdownIcon } from './svg';
+import { formatDateReport, currentDate, newReport, newChapter, newReportSection, newSubSection } from './functions'
 import MakeID from './makeids';
-import GenerateReport from './generatereport';
+//import GenerateReport from './generatereport';
 import Spinner from './spinner';
 import Chapters from './chapters';
 import Sections from './sections';
@@ -34,20 +34,20 @@ class Report extends Component {
         window.addEventListener('resize', this.updateWindowDimensions);
         this.updateWindowDimensions();
         const ues = new UES();
+
         const projects = ues.getProjects.call(this)
-        const clients = ues.getClients.call(this);
-        const projectid = this.props.projectid;
-        const report = ues.getReportsByProjectID.call(this, projectid)
         if (!projects) {
             ues.loadProjects.call(this);
         }
 
+        const clients = ues.getClients.call(this);
         if (!clients) {
             ues.loadClients.call(this)
         }
 
-        if (!report) {
-            ues.loadReports.call(this, projectid)
+        const reports = ues.getReports.call(this)
+        if (!reports) {
+            ues.loadReports.call(this)
         }
 
 
@@ -132,7 +132,12 @@ class Report extends Component {
 
     handleReportID(reportid) {
         if (this.state.activereportid) {
-            this.setState({ activereportid: false })
+            if (this.state.activereportid === reportid) {
+                this.setState({ activereportid: false, activechapterid: false, activesectionid: false, activesubsectionid: false })
+
+            } else {
+                this.setState({ activereportid: reportid, activechapterid: false, activesectionid: false, activesubsectionid: false })
+            }
         } else {
             this.setState({ activereportid: reportid })
         }
@@ -161,6 +166,7 @@ class Report extends Component {
             const getchapters = ues.getChaptersByReportID.call(this, reportid)
 
             if (getchapters) {
+                // eslint-disable-next-line
                 getchapters.map(getchapter => {
                     ids.push(chapter.showChapterID.call(this, getchapter))
 
@@ -178,18 +184,30 @@ class Report extends Component {
         const styles = MyStylesheet();
         const iconWidth = ues.removeIcon.call(this)
         const projectid = this.props.projectid;
-        const headerFont = ues.headerFont.call(this)
         const myuser = ues.checkUser.call(this)
-        const arrowWidth = ues.arrowWidth.call(this)
+
         const highlight = (reportid) => {
             if (this.state.activereportid === reportid) {
                 return (styles.activeid)
             }
         }
 
+        const activemenu = () => {
+            if (this.state.activereportid === report.reportid) {
+                return (<div style={{ ...styles.generalContainer }}>
+                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${projectid}/report/${report.reportid}`}><button style={{ ...styles.generalButton, ...iconWidth }}>{dropdownIcon()}</button> View Report </Link>
+                    </div>
+                    <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${projectid}/report/${report.reportid}/figures`}><button style={{ ...styles.generalButton, ...iconWidth }}>{dropdownIcon()}</button> Figures/Appendix </Link>
+                    </div>
+                </div>)
+            }
+        }
+
         return (
-            <div style={{ ...styles.generalContainer }}>
-                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }} key={report.reportid}>
+            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }} key={report.reportid}>
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
                     <div style={{ ...styles.flex5, ...styles.generalFont, ...highlight(report.reportid) }}>
                         <span style={{ ...regularFont }} onClick={() => { this.handleReportID(report.reportid) }}>{formatDateReport(report.datereport)}</span>
                     </div>
@@ -199,14 +217,7 @@ class Report extends Component {
 
                 </div>
 
-                <div style={{ ...styles.generalFlex }}>
-                    <div style={{ ...styles.flex1 }}>
-                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${projectid}/report/${report.reportid}`}><button style={{ ...styles.generalButton, ...arrowWidth }}>{linkArrow()}</button> View Report </Link>
-                    </div>
-                    <div style={{ ...styles.flex1 }}>
-                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${projectid}/report/${report.reportid}/figures`}><button style={{ ...styles.generalButton, ...arrowWidth }}>{linkArrow()}</button> Figures/Appendix </Link>
-                    </div>
-                </div>
+                {activemenu()}
 
             </div>)
     }
@@ -230,34 +241,40 @@ class Report extends Component {
 
     handleDateReport(value) {
         const ues = new UES();
-        let reports = ues.getReports.call(this)
-        if (this.state.activereportid) {
-            const reportid = this.state.activereportid;
+        const projectid = this.props.projectid;
+        const project = ues.getProjectbyID.call(this, projectid)
+        if (project) {
+            const project_id = project._id;
+            let reports = ues.getReports.call(this)
+            if (this.state.activereportid) {
+                const reportid = this.state.activereportid;
 
 
-            const report = ues.getReportByID.call(this, reportid)
-            if (report) {
-                const i = ues.getReportKeyByID.call(this, reportid)
-                reports[i].datereport = value;
-                this.props.reduxReports(reports)
-                this.setState({ render: 'render' })
-            }
-
-        } else {
-            const makeid = new MakeID();
-            const reportid = makeid.reportid.call(this)
-            const projectid = this.props.projectid;
-            const intro = this.state.intro;
-            const newreport = newReport(reportid, projectid, value, intro)
-
-            if (reports) {
-                reports.push(newreport)
+                const report = ues.getReportByID.call(this, reportid)
+                if (report) {
+                    const i = ues.getReportKeyByID.call(this, reportid)
+                    reports[i].datereport = value;
+                    this.props.reduxReports(reports)
+                    this.setState({ render: 'render' })
+                }
 
             } else {
-                reports = [newreport]
+                const makeid = new MakeID();
+                const reportid = makeid.reportid.call(this)
+                const projectid = this.props.projectid;
+                const intro = this.state.intro;
+                const newreport = newReport(reportid, project_id, projectid, value, intro)
+
+                if (reports) {
+                    reports.push(newreport)
+
+                } else {
+                    reports = [newreport]
+
+                }
+                this.setState({ activereportid: reportid })
 
             }
-            this.setState({ activereportid: reportid })
 
         }
 
@@ -431,6 +448,7 @@ class Report extends Component {
                 const chapterid = this.state.activechapterid;
                 let getsections = ues.getSectionsbyChapterID.call(this, reportid, chapterid)
                 if (getsections) {
+                    // eslint-disable-next-line
                     getsections.map(section => {
 
                         ids.push(sections.showSectionID.call(this, section))
@@ -652,6 +670,7 @@ class Report extends Component {
                     const sectionid = this.state.activesectionid;
                     const getsubsections = ues.getSubSections.call(this, reportid, chapterid, sectionid)
                     if (getsubsections) {
+                        // eslint-disable-next-line
                         getsubsections.map(section => {
 
                             ids.push(subsections.showSubSectionID.call(this, section))
@@ -1190,30 +1209,30 @@ class Report extends Component {
                     if (chapter) {
                         const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
                         if (this.state.activesectionid) {
-                        const sectionid = this.state.activesectionid;
-                        const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
-                        if (section) {
-                          
+                            const sectionid = this.state.activesectionid;
+                            const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+                            if (section) {
+
                                 const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
 
-                                const subsection = ues.getSubSectionbyID.call(this,reportid,chapterid,sectionid,subsectionid);
+                                const subsection = ues.getSubSectionbyID.call(this, reportid, chapterid, sectionid, subsectionid);
 
-                                if(subsection) {
+                                if (subsection) {
 
 
-                                const l = ues.getSubSectionKeybyID.call(this,reportid,chapterid,sectionid,subsectionid)
-                                const subsectioncount = reports[i].chapters[j].sections[k].subsections.length;
+                                    const l = ues.getSubSectionKeybyID.call(this, reportid, chapterid, sectionid, subsectionid)
+                                    const subsectioncount = reports[i].chapters[j].sections[k].subsections.length;
 
-                                if (subsectioncount > 1 && l > 0) {
-                                    const section_1 = reports[i].chapters[j].sections[k].subsections[l - 1];
-                                    reports[i].chapters[j].sections[k].subsections[l] = section_1;
-                                    reports[i].chapters[j].sections[k].subsections[l - 1] = section;
-                                    this.props.reduxReports(reports);
-                                    this.setState({ render: 'render' })
-    
+                                    if (subsectioncount > 1 && l > 0) {
+                                        const section_1 = reports[i].chapters[j].sections[k].subsections[l - 1];
+                                        reports[i].chapters[j].sections[k].subsections[l] = section_1;
+                                        reports[i].chapters[j].sections[k].subsections[l - 1] = subsection;
+                                        this.props.reduxReports(reports);
+                                        this.setState({ render: 'render' })
+
+                                    }
+
                                 }
-
-                            }
 
                             }
 
@@ -1249,31 +1268,31 @@ class Report extends Component {
                     if (chapter) {
                         const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
                         if (this.state.activesectionid) {
-                        const sectionid = this.state.activesectionid;
-                        const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
-                        if (section) {
-                          
+                            const sectionid = this.state.activesectionid;
+                            const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+                            if (section) {
+
                                 const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
 
-                                const subsection = ues.getSubSectionbyID.call(this,reportid,chapterid,sectionid,subsectionid);
+                                const subsection = ues.getSubSectionbyID.call(this, reportid, chapterid, sectionid, subsectionid);
 
-                                if(subsection) {
+                                if (subsection) {
 
 
-                                const l = ues.getSubSectionKeybyID.call(this,reportid,chapterid,sectionid,subsectionid)
-                                const subsectioncount = reports[i].chapters[j].sections[k].subsections.length;
+                                    const l = ues.getSubSectionKeybyID.call(this, reportid, chapterid, sectionid, subsectionid)
+                                    const subsectioncount = reports[i].chapters[j].sections[k].subsections.length;
 
-                                if (subsectioncount > 1 && l < subsectioncount - 1) {
-                                    const section_1 = reports[i].chapters[j].sections[k].subsections[l + 1];
-                                    reports[i].chapters[j].sections[k].subsections[l] = section_1;
-                                    reports[i].chapters[j].sections[k].subsections[l + 1] = subsection;
-                                    this.props.reduxReports(reports);
-                                    this.setState({ render: 'render' })
+                                    if (subsectioncount > 1 && l < subsectioncount - 1) {
+                                        const section_1 = reports[i].chapters[j].sections[k].subsections[l + 1];
+                                        reports[i].chapters[j].sections[k].subsections[l] = section_1;
+                                        reports[i].chapters[j].sections[k].subsections[l + 1] = subsection;
+                                        this.props.reduxReports(reports);
+                                        this.setState({ render: 'render' })
+
+                                    }
+
 
                                 }
-
-
-                            }
 
                             }
 

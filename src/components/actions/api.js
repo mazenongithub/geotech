@@ -26,7 +26,7 @@ export async function UploadGraphicLog(formData) {
 }
 export function SaveReport(values) {
 
-    const APIURL = `https://civilengineer.io/UES/api/handlegeneralreport.php`
+    const APIURL = `https://civilengineer.io/UES/api/handlereport.php`
   
     return fetch(APIURL, {
         method: 'post',
@@ -197,9 +197,9 @@ export async function LoadPavement(projectid) {
     })
 }
 
-export async function LoadBorings(projectid) {
+export async function LoadBorings() {
 
-    let APIURL = `https://civilengineer.io/UES/api/loadborings.php?projectid=${projectid}`
+    let APIURL = `https://civilengineer.io/UES/api/loadborings.php`
     
     return fetch(APIURL, { credentials: 'include' }).then(resp => {
 
@@ -220,9 +220,9 @@ export async function LoadBorings(projectid) {
 }
 
 
-export async function LoadReport(projectid) {
+export async function LoadReport() {
 
-    let APIURL = `https://civilengineer.io/UES/api/loadgeneralreport.php?projectid=${projectid}`
+    let APIURL = `https://civilengineer.io/UES/api/loadreport.php`
     
     return fetch(APIURL, { credentials: 'include' }).then(resp => {
 
