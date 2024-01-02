@@ -146,15 +146,55 @@ class ViewReport extends Component {
 
     }
 
-    showSection(label, section) {
+    showChapter(label, chapter) {
 
         const styles = MyStylesheet();
         const ues = new UES();
         const regularFont = ues.regularFont.call(this)
         return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
-                <span style={{ ...regularFont, ...styles.marginLeft15 }}>{label}</span>
-                <span style={{ ...regularFont, ...styles.leftMargin40 }}><u>{section.sectionname}</u></span>
+                <span style={{ ...regularFont }}>{label}</span>
+                <span style={{ ...regularFont, ...styles.marginLeft15 }}><u>{chapter.chaptername}</u></span>
+            </div>
+
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15, ...styles.lineSpace }}>
+                <span style={{ ...regularFont }}>{chapter.content}</span>
+            </div>
+
+        </div>)
+
+    }
+
+    showSubSection(label, section) {
+
+        const styles = MyStylesheet();
+        const ues = new UES();
+        const regularFont = ues.regularFont.call(this)
+        return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.leftMargin40 }}>
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                <span style={{ ...regularFont }}>{label}</span>
+                <span style={{ ...regularFont, ...styles.marginLeft15 }}><u>{section.sectionname}</u></span>
+            </div>
+
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15, ...styles.lineSpace }}>
+                <span style={{ ...regularFont }}>{section.content}</span>
+            </div>
+
+        </div>)
+
+    }
+
+
+
+    showSection(label, section) {
+
+        const styles = MyStylesheet();
+        const ues = new UES();
+        const regularFont = ues.regularFont.call(this)
+        return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.marginLeft15 }}>
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                <span style={{ ...regularFont }}>{label}</span>
+                <span style={{ ...regularFont, ...styles.marginLeft15 }}><u>{section.sectionname}</u></span>
             </div>
 
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15, ...styles.lineSpace }}>
@@ -279,269 +319,73 @@ class ViewReport extends Component {
 
             {this.showPavementSections()}
 
-            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.marginTop15 }}>
-                <span style={{ ...regularFont }}>We emphasize that the performance of pavement is critically dependent upon uniform and adequate compaction of the soil subgrade,
-                    as well as all engineered fill and utililty trench backfill within the limits of the pavements.
-                    We recommend that final pavement subgrade preparation (i.e., scarification, moisture conditioning and compaction)
-                    be performed after underground utility construction is completed and just prior to aggregate base. </span>
-
-            </div>
 
 
         </div>)
     }
 
-    showConclusionSections() {
+
+    showReport() {
 
         const report = this.getReport();
-        let getSections = [];
-        let label = "";
-        if (report.hasOwnProperty("conclusion")) {
-            // eslint-disable-next-line
-            report.conclusion.map((section, i) => {
+        let getreport = [];
+        if (report) {
+            if (report.hasOwnProperty("chapters")) {
+                // eslint-disable-next-line
+                report.chapters.map((chapter, i) => {
 
-                if (i < 10) {
-                    label = `3.${i + 1}`
+                    let label = Number(i + 1).toFixed(1)
+                    getreport.push(this.showChapter(label, chapter))
 
-                } else {
-                    label = `3.${i + 1}`
-                }
-                getSections.push(this.showSection(label, section))
+                    if (chapter.hasOwnProperty("sections")) {
+                        // eslint-disable-next-line
+                        chapter.sections.map((section, j) => {
 
-            })
-        }
-        return getSections;
-    }
+                            let label_1 = `${Number(i + 1)}.${Number(j + 1)}`
+                            getreport.push(this.showSection(label_1, section))
 
-    showRecommedationSections() {
+                            if (section.hasOwnProperty("subsections")) {
+                                // eslint-disable-next-line
+                                section.subsections.map((subsection, k) => {
 
-        const report = this.getReport();
-        let getSections = [];
-        let label = "";
-        if (report.hasOwnProperty("recommendation")) {
-            // eslint-disable-next-line
-            report.recommendation.map((section, i) => {
-                if (i < 10) {
-                    label = `4.${i + 1}`
+                                    let label_2 = `${Number(i + 1)}.${Number(j + 1)}.${Number(k + 1)}`
 
-                } else {
-                    label = `4.${i + 1}`
-                }
+                                    getreport.push(this.showSubSection(label_2, subsection))
 
-                getSections.push(this.showSection(label, section))
-                if (section.sectionname === 'Pavement Design') {
-                    getSections.push(this.showPavementDesign())
-                }
+                                })
 
-            })
-        }
-        return getSections;
-    }
 
-    showGeneralSections() {
 
-        const report = this.getReport();
-        let getSections = [];
-        let label = "";
-        if (report.hasOwnProperty("general")) {
-            // eslint-disable-next-line
-            report.general.map((section, i) => {
+                            }
 
-                if (i < 10) {
-                    label = `1.${i + 1}`
 
-                } else {
-                    label = `1.${i + 1}`
-                }
-                getSections.push(this.showSection(label, section))
 
-                if (section.sectionname === "Scope of Work") {
-                    getSections.push(this.showScope())
-                } else if (section.sectionname === "Figures and Appendix") {
-                    getSections.push(this.showFigures())
-                }
+                        })
 
-            })
 
+
+                    }
+
+
+
+                })
+
+
+
+            }
 
 
 
         }
-
-        return getSections;
-    }
-
-    showFigure(figure) {
-        const styles = MyStylesheet();
-        const ues = new UES();
-        const regularFont = ues.regularFont.call(this)
-        return (<div style={{ ...styles.generalContainer }}>
-            <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
-                <div style={{ ...styles.flex1 }}>
-                    <span style={{ ...regularFont }}>F{figure.figurenumber} </span>
-
-                </div>
-                <div style={{ ...styles.flex5 }}>
-                    <span style={{ ...regularFont }}> {figure.figurename} </span>
-                </div>
-            </div>
+        return getreport;
 
 
-        </div>)
-    }
-
-    showAppendix(appendix) {
-        const styles = MyStylesheet();
-        const ues = new UES();
-        const regularFont = ues.regularFont.call(this)
-        return (<div style={{ ...styles.generalContainer }}>
-            <div style={{ ...styles.generalFlex, ...styles.generalFont }}>
-                <div style={{ ...styles.flex1 }}>
-                    <span style={{ ...regularFont }}>A{appendix.appendixnumber} </span>
-
-                </div>
-                <div style={{ ...styles.flex5 }}>
-                    <span style={{ ...regularFont }}> {appendix.appendixname} </span>
-                </div>
-            </div>
-
-
-        </div>)
-    }
-
-    showFigures() {
-        const ues = new UES();
-        const reportid = this.props.reportid;
-        const styles = MyStylesheet();
-        const figures = ues.getFiguresbyReportID.call(this, reportid);
-        const regularFont = ues.regularFont.call(this);
-        const appendix = ues.getAppendixsbyReportID.call(this,reportid)
-       
-        let getfigures = [];
-       
-        if (figures) {
-
-            getfigures.push(<div style={{ ...styles.generalContainer, ...styles.generalFont }}>
-                <span style={{ ...regularFont }}><u>FIGURES</u></span>
-            </div>
-            )
-            // eslint-disable-next-line
-            figures.map(figure => {
-                getfigures.push(this.showFigure(figure))
-
-
-            })
-        }
-
-        if(appendix) {
-
-            getfigures.push(<div style={{ ...styles.generalContainer, ...styles.generalFont }}>
-                <span style={{ ...regularFont }}><u>Appendix</u></span>
-            </div>
-            )
-// eslint-disable-next-line
-            appendix.map(appendix => {
-                getfigures.push(this.showAppendix(appendix))
-
-
-            })
-            
-        }
-
-
-        return getfigures;
-    }
-
-    showFindingSections() {
-
-        const report = this.getReport();
-        let getSections = [];
-        let label = "";
-        if (report.hasOwnProperty("finding")) {
-            // eslint-disable-next-line
-            report.finding.map((section, i) => {
-
-                if (i < 10) {
-                    label = `2.${i + 1}`
-
-                } else {
-                    label = `2.${i + 1}`
-                }
-
-                getSections.push(this.showSection(label, section))
-
-            })
-        }
-        return getSections;
-    }
-
-    showConclusionHeader() {
-        const report = this.getReport();
-        const styles = MyStylesheet();
-        const ues = new UES();
-        const headerFont = ues.headerFont.call(this)
-        if (report.hasOwnProperty("conclusion")) {
-            return (
-                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                    <span style={{ ...styles.generalFont, ...headerFont }}>
-                        3.0
-                    </span>
-
-
-                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.leftMargin40 }}>
-                        CONCLUSION
-                    </span>
-
-                </div>)
-
-        }
 
     }
 
-    showRecommendationHeader() {
-        const report = this.getReport();
-        const styles = MyStylesheet();
-        const ues = new UES();
-        const headerFont = ues.headerFont.call(this)
-        if (report.hasOwnProperty("recommendation")) {
-            return (
-                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-
-                    <span style={{ ...styles.generalFont, ...headerFont }}>
-                        4.0
-                    </span>
 
 
-                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.leftMargin40 }}>
-                        RECOMMENDATIONS
-                    </span>
 
-                </div>)
-
-        }
-
-    }
-
-    showFindingHeader() {
-        const report = this.getReport();
-        const styles = MyStylesheet();
-        const ues = new UES();
-        const headerFont = ues.headerFont.call(this)
-        if (report.hasOwnProperty("finding")) {
-            return (
-                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                    <span style={{ ...styles.generalFont, ...headerFont }}>
-                        2.0
-                    </span>
-                    <span style={{ ...styles.generalFont, ...headerFont, ...styles.leftMargin40 }}>
-                        FINDINGS
-                    </span>
-
-                </div>)
-
-        }
-
-    }
 
 
     render() {
@@ -589,34 +433,13 @@ class ViewReport extends Component {
                             </div>
 
                             <div style={{ ...styles.generalContainer }}>
-
-                                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
-                                    <span style={{ ...headerFont }}>1.0</span>
-                                    <span style={{ ...headerFont, ...styles.leftMargin40 }}>INTRODUCTION</span>
-                                </div>
-
-                                <div style={{ ...styles.bottomMargin15, ...styles.generalFont }}>
-                                    <span style={{ ...regularFont }}>{report.intro}</span>
-                                </div>
-
+                                {this.showReport()}
                             </div>
 
 
-                            <div style={{ ...styles.generalContainer }}>
-                                {this.showGeneralSections()}
-                            </div>
 
-                            {this.showFindingHeader()}
 
-                            {this.showFindingSections()}
 
-                            {this.showConclusionHeader()}
-
-                            {this.showConclusionSections()}
-
-                            {this.showRecommendationHeader()}
-
-                            {this.showRecommedationSections()}
 
 
                         </div>

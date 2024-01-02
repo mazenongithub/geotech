@@ -10,12 +10,12 @@ class Chapters {
     handleChapterID(chapterid) {
         if (this.state.activechapterid) {
             if(this.state.activechapterid === chapterid) {
-            this.setState({ activechapterid: false, activesectionid:false, activesubsectionid:false })
+            this.setState({ activechapterid: false, activesectionid:false, activesubsectionid:false, activesectionlistid:false })
             } else {
-            this.setState({ activechapterid: chapterid, activesectionid:false, activesubsectionid:false })
+            this.setState({ activechapterid: chapterid, activesectionid:false, activesubsectionid:false, activesectionlistid:false })
             }
         } else {
-            this.setState({ activechapterid: chapterid })
+            this.setState({ activechapterid: chapterid,  activesectionid:false, activesubsectionid:false, activesectionlistid:false })
         }
     }
 

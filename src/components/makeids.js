@@ -24,6 +24,15 @@ class MakeID {
                                     sectionid = false;
                                 }
 
+                                if(section.hasOwnProperty("list")) {
+                                     // eslint-disable-next-line
+                                    section.list.map(list=> {
+                                        if(list.listid === sectionid) {
+                                            sectionid = false;
+                                        }
+                                    })
+                                }
+
                                 if (section.hasOwnProperty("subsections")) {
                                     // eslint-disable-next-line
                                     section.subsections.map(subsection => {

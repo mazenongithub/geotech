@@ -733,6 +733,70 @@ class UES {
     }
 
 
+    getSectionListKeybyID(reportid, chapterid, sectionid,listid) {
+        const ues = new UES();
+        let key = false;
+        const sectionlist = ues.getSectionList.call(this,reportid,chapterid,sectionid)
+        if(sectionlist) {
+             // eslint-disable-next-line
+            sectionlist.map((list,i)=> {
+                if(list.listid === listid) {
+                    key = i;
+                }
+            })
+
+        }
+
+        return key;
+
+    }
+
+
+    getSectionListbyID(reportid, chapterid, sectionid,listid) {
+        const ues = new UES();
+        let getlist = false;
+        const sectionlist = ues.getSectionList.call(this,reportid,chapterid,sectionid)
+        if(sectionlist) { 
+            // eslint-disable-next-line
+            sectionlist.map(list=> {
+                if(list.listid === listid) {
+                    getlist = list;
+                }
+            })
+
+        }
+
+        return getlist;
+
+    }
+
+
+    getSectionList(reportid, chapterid, sectionid) {
+        const ues = new UES();
+        let getlist= false;
+        const sections = ues.getSectionsbyChapterID.call(this, reportid, chapterid)
+        if (sections) {
+            // eslint-disable-next-line
+            sections.map(section => {
+                if (section.sectionid === sectionid) {
+                    
+                    if(section.hasOwnProperty("list")) {
+                        getlist = section.list;
+                    }
+                
+                
+                }
+            })
+        }
+        
+        return getlist;
+
+    }
+       
+
+    
+
+
     getSectionbyID(reportid, chapterid, sectionid) {
         const ues = new UES();
         let getsection = false;

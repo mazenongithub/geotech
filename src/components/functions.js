@@ -57,6 +57,10 @@ export function newPavement(sectionid, project_id, projectid,sectionname,rvalue)
 export function newSection(sectionid,sectionname,content) {
     return({sectionid,sectionname,content})
 }
+
+export function newSectionList(listid,sectionid,list) {
+    return({listid,sectionid,list})
+}
 export function newSublist(sublistid,content) {
     return ({sublistid,content})
 }

@@ -5,13 +5,14 @@ import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
 import { removeIcon, saveIcon, dropdownIcon } from './svg';
-import { formatDateReport, currentDate, newReport, newChapter, newReportSection, newSubSection } from './functions'
+import { formatDateReport, currentDate, newReport, newChapter, newReportSection, newSubSection, newSectionList } from './functions'
 import MakeID from './makeids';
 //import GenerateReport from './generatereport';
 import Spinner from './spinner';
 import Chapters from './chapters';
 import Sections from './sections';
 import SubSections from './subsection';
+import SectionList from './sectionlist';
 
 
 
@@ -22,7 +23,7 @@ class Report extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activechapterid: false, activesectionid: false, activesubsectionid: false, activereportid: false, intro: '', activelistid: false, activesublistid: false, activegeneralid: false, activeconclusionid: false, activerecommendationid: false, activefindingid: false, content: '', spinner: false
+            render: '', width: 0, height: 0, message: '', activechapterid: false, activesectionid: false, activesubsectionid: false, activereportid: false, intro: '', activesectionlistid: false, activesublistid: false, activegeneralid: false, activeconclusionid: false, activerecommendationid: false, activefindingid: false, content: '', spinner: false
 
         }
 
@@ -656,6 +657,8 @@ class Report extends Component {
     }
 
 
+
+
     showSubSectionIDs() {
         const ues = new UES();
         const subsections = new SubSections();
@@ -684,6 +687,41 @@ class Report extends Component {
         return ids;
 
     }
+
+    showSectionListIDs() {
+        const ues = new UES();
+        const sectionlist = new SectionList();
+        let ids = [];
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+
+            if (this.state.activechapterid) {
+                const chapterid = this.state.activechapterid;
+
+                if (this.state.activesectionid) {
+                    const sectionid = this.state.activesectionid;
+                    const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+                    if (section.hasOwnProperty("list")) {
+                        // eslint-disable-next-line
+                        section.list.map(list => {
+
+                            ids.push(sectionlist.showListID.call(this, list))
+
+                        })
+
+                    }
+
+                }
+            }
+        }
+        return ids;
+
+    }
+
+
+
+
+
 
     getSubSectionName() {
         let subsectionname = "";
@@ -715,6 +753,217 @@ class Report extends Component {
 
 
     }
+
+    getSectionList() {
+        let sectionlist = "";
+
+        const ues = new UES();
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            if (this.state.activechapterid) {
+                const chapterid = this.state.activechapterid;
+
+                if (this.state.activesectionid) {
+                    const sectionid = this.state.activesectionid;
+
+                    if (this.state.activesectionlistid) {
+                        const listid = this.state.activesectionlistid;
+
+                        const getlist = ues.getSectionListbyID.call(this, reportid, chapterid, sectionid, listid)
+
+                        sectionlist = getlist.list
+
+
+                    }
+
+                }
+            }
+        }
+
+        return sectionlist;
+
+
+    }
+
+    handleSectionList(value) {
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        const makeid = new MakeID();
+        if (reports) {
+
+            if (this.state.activereportid) {
+
+                const reportid = this.state.activereportid;
+
+                const report = ues.getReportByID.call(this, reportid)
+                if (report) {
+
+                    const i = ues.getReportKeyByID.call(this, reportid)
+
+                    if (this.state.activechapterid) {
+                        const chapterid = this.state.activechapterid;
+
+                        const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+
+                        if (chapter) {
+
+                            const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+
+                            if (this.state.activesectionid) {
+
+                                const sectionid = this.state.activesectionid;
+
+                                const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+
+                                if (section) {
+
+                                    const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
+
+                                    if (this.state.activesectionlistid) {
+                                        const listid = this.state.activesectionlistid;
+
+                                        const sectionlist = ues.getSectionListbyID.call(this, reportid, chapterid, sectionid, listid)
+                                        if (sectionlist) {
+
+                                            const l = ues.getSectionListKeybyID.call(this, reportid, chapterid, sectionid, listid)
+
+                                            reports[i].chapters[j].sections[k].list[l].list = value
+                                            this.props.reduxReports(reports)
+                                            this.setState({ render: 'render' })
+
+
+
+                                        }
+
+                                    } else {
+                                        const listid = makeid.reportSectionID.call(this, reportid)
+                                        const newlist = newSectionList(listid, sectionid, value)
+
+                                        if (section.hasOwnProperty("list")) {
+                                            reports[i].chapters[j].sections[k].list.push(newlist)
+
+                                        } else {
+                                            reports[i].chapters[j].sections[k].list = [newlist]
+                                        }
+
+                                        this.props.reduxReports(reports)
+                                        this.setState({ activesectionlistid: listid })
+
+
+                                    }
+
+
+
+                                }
+
+
+
+
+                            }
+
+
+
+
+
+                        }
+                    }
+
+
+
+
+
+                }
+
+
+
+
+            }
+
+
+        }
+
+    }
+
+    removeSectionList(listid) {
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if (reports) {
+
+            if (this.state.activereportid) {
+
+                const reportid = this.state.activereportid;
+
+                const report = ues.getReportByID.call(this, reportid)
+                if (report) {
+
+                    const i = ues.getReportKeyByID.call(this, reportid)
+
+                    if (this.state.activechapterid) {
+                        const chapterid = this.state.activechapterid;
+
+                        const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+
+                        if (chapter) {
+
+                            const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+
+                            if (this.state.activesectionid) {
+
+                                const sectionid = this.state.activesectionid;
+
+                                const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+
+                                if (section) {
+
+                                    const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
+
+                                    const sectionlist = ues.getSectionListbyID.call(this, reportid, chapterid, sectionid, listid)
+                                    if (sectionlist) {
+
+
+                                        const l = ues.getSectionListKeybyID.call(this, reportid, chapterid, sectionid, listid)
+
+                                        reports[i].chapters[j].sections[k].list.splice(l, 1)
+                                        this.props.reduxReports(reports)
+                                        this.setState({ activesectionlistid: false })
+
+
+
+                                    }
+
+
+
+                                }
+
+
+
+
+                            }
+
+
+
+
+
+                        }
+                    }
+
+
+
+
+
+                }
+
+
+
+
+            }
+
+
+        }
+
+    }
+
+
 
     handleSubSectionName(value) {
 
@@ -1314,6 +1563,125 @@ class Report extends Component {
 
 
 
+    moveSectionListUp(listid) {
+
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid);
+                if (this.state.activechapterid) {
+                    const chapterid = this.state.activechapterid;
+                    const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                    if (chapter) {
+                        const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+                        if (this.state.activesectionid) {
+                            const sectionid = this.state.activesectionid;
+                            const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+                            if (section) {
+
+                                const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
+
+                                const sectionlist = ues.getSectionListbyID.call(this, reportid, chapterid, sectionid, listid);
+
+                                if (sectionlist) {
+
+
+                                    const l = ues.getSectionListKeybyID.call(this, reportid, chapterid, sectionid, listid)
+                                    const listcount = reports[i].chapters[j].sections[k].list.length;
+
+                                    if (listcount > 1 && l > 0) {
+                                        const list_1 = reports[i].chapters[j].sections[k].list[l - 1];
+                                        reports[i].chapters[j].sections[k].list[l] = list_1;
+                                        reports[i].chapters[j].sections[k].list[l - 1] = sectionlist;
+                                        this.props.reduxReports(reports);
+                                        this.setState({ render: 'render' })
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+
+
+
+                }
+
+            }
+        }
+
+
+    }
+
+
+
+    moveSectionListDown(listid) {
+
+        const ues = new UES();
+        const reports = ues.getReports.call(this)
+        if (this.state.activereportid) {
+            const reportid = this.state.activereportid;
+            const report = ues.getReportByID.call(this, reportid)
+            if (report) {
+                const i = ues.getReportKeyByID.call(this, reportid);
+                if (this.state.activechapterid) {
+                    const chapterid = this.state.activechapterid;
+                    const chapter = ues.getChapterByID.call(this, reportid, chapterid)
+                    if (chapter) {
+                        const j = ues.getChapterKeyByID.call(this, reportid, chapterid)
+                        if (this.state.activesectionid) {
+                            const sectionid = this.state.activesectionid;
+                            const section = ues.getSectionbyID.call(this, reportid, chapterid, sectionid)
+                            if (section) {
+
+                                const k = ues.getSectionKeybyID.call(this, reportid, chapterid, sectionid)
+
+                                const sectionlist = ues.getSectionListbyID.call(this, reportid, chapterid, sectionid, listid);
+
+                                if (sectionlist) {
+
+
+                                    const l = ues.getSectionListKeybyID.call(this, reportid, chapterid, sectionid, listid)
+                                    const listcount = reports[i].chapters[j].sections[k].list.length;
+
+                                    if (listcount > 1 && l < listcount - 1) {
+                                        const list_1 = reports[i].chapters[j].sections[k].list[l + 1];
+                                        reports[i].chapters[j].sections[k].list[l] = list_1;
+                                        reports[i].chapters[j].sections[k].list[l + 1] = sectionlist;
+                                        this.props.reduxReports(reports);
+                                        this.setState({ render: 'render' })
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+
+
+
+                }
+
+            }
+        }
+
+
+    }
+
+
+
+
 
 
 
@@ -1329,6 +1697,7 @@ class Report extends Component {
         const chapters = new Chapters();
         const sections = new Sections();
         const subsections = new SubSections();
+        const sectionlist = new SectionList();
 
         const showSaveIcon = () => {
             if (this.state.spinner) {
@@ -1381,6 +1750,8 @@ class Report extends Component {
                     {chapters.showChapters.call(this)}
 
                     {sections.showSections.call(this)}
+
+                    {sectionlist.showSectionList.call(this)}
 
                     {subsections.showSubSections.call(this)}
 

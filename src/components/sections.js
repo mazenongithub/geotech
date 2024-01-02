@@ -13,16 +13,16 @@ class Sections {
         if (this.state.activesectionid) {
 
             if (sectionid === this.state.activesectionid) {
-                this.setState({ activesectionid: false, activesubsectionid: false })
+                this.setState({ activesectionid: false, activesubsectionid: false, activesectionlistid:false })
 
             } else {
 
-                this.setState({ activesectionid: sectionid, activesubsectionid: false })
+                this.setState({ activesectionid: sectionid, activesubsectionid: false,activesectionlistid:false })
 
             }
 
         } else {
-            this.setState({ activesectionid: sectionid })
+            this.setState({ activesectionid: sectionid, activesubsectionid: false,activesectionlistid:false })
         }
     }
 
