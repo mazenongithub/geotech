@@ -78,9 +78,9 @@ class SectionList {
                     <span style={{ ...headerFont }}><u>Section List</u></span>
                 </div>
                 <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                    <input type="text" style={{ ...styles.generalFont, ...regularFont, ...styles.generalField }}
+                    <textarea style={{ ...styles.generalFont, ...regularFont, ...styles.generalField, ...styles.areatext }}
                         value={this.getSectionList()}
-                        onChange={event => { this.handleSectionList(event.target.value) }} />
+                        onChange={event => { this.handleSectionList(event.target.value) }}/>
                 </div>
 
 

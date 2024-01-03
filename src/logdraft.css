@@ -1,12 +1,19 @@
 
+
 @media print {
     .titleFont{font-size:'12px';}
     .noPrint{display: none;}
+    .print-adj{
+        position: relative;
+        top:-50px;
+      }
  
  }
  .titleFont{
     color:'red';
  }
+
+
 
 .logdraft-1 {
     letter-spacing: -.07em;

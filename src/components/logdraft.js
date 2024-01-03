@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { MyStylesheet } from './styles'
 import { Link } from 'react-router-dom';
 import UES from './ues';
-import { milestoneformatdatestring, calcdryden, moist,convertDegree } from './functions'
+import { milestoneformatdatestring, calcdryden, moist, convertDegree } from './functions'
 import '../logdraft.css';
 
 
@@ -471,7 +471,7 @@ class LogDraft extends Component {
                                 <text className="logdraftblock-4" transform="translate(592.25 290.57)"><tspan x="0" y="0">{Number(boring.diameter)}</tspan></text><text className="logdraftblock-4" transform="translate(428.25 282.57)"><tspan x="0" y="0">Diameter of </tspan><tspan x="0" y="24">Hole, inches</tspan></text>
                                 <text className="logdraftblock-4" transform="translate(548.25 226.57)"><tspan x="0" y="0">{boring.contractor}</tspan></text><text className="logdraftblock-4" transform="translate(428.25 220.57)"><tspan x="0" y="0">Drilling </tspan><tspan x="0" y="24">Contractor</tspan></text><text className="logdraftblock-4" transform="translate(548.25 164.57)"><tspan x="0" y="0">{boring.loggedby}</tspan></text><text className="logdraftblock-4" transform="translate(427.25 164.57)"><tspan x="0" y="0">Logged By</tspan></text><text className="logdraftblock-4" transform="translate(857.25 403.98)"><tspan x="0" y="0">Driving Method </tspan><tspan x="0" y="24">and Drop</tspan></text><text className="logdraftblock-4" transform="translate(857.25 340.98)"><tspan x="0" y="0">Drill Hole </tspan><tspan x="0" y="24">Backfill</tspan></text>
 
-                                <g  transform="translate(1015.25 390.98)">
+                                <g transform="translate(1015.25 390.98)">
                                     <foreignObject width="230" height="300">
                                         <text className="logdraftblock-4"><tspan x="0" y="0">{boring.drivingmethod}</tspan></text>
                                     </foreignObject>
@@ -501,27 +501,27 @@ class LogDraft extends Component {
             y1 = y1 + (50 * 16)
         }
         const boring = this.getBoring();
-        if(boring) {
-        return (
-            <g>
-                <rect className="logdraft-5" x="1" y="1" width="1266" height={y1} />
+        if (boring) {
+            return (
+                <g>
+                    <rect className="logdraft-5" x="1" y="1" width="1266" height={y1} />
 
-                <g id="Layout" transform={`translate(0 ${y1} )`}><text className="logdraft-footer-5" transform="translate(1093.67 70.98)"><tspan x="0" y="0">FIGURE {boring.figure}</tspan></text>
-                    <polyline className="logdraft-footer-3" points="0 24.63 8.13 26.04 20.04 27.85 33.92 29.05 27.77 43.72 19.64 58.79 2.18 81.29 0 73.65" />
-                    <polygon className="logdraft-footer-3" points="63.88 27.25 80.34 24.63 80.34 42.51 80.34 67.43 80.34 75.31 77.46 83.6 72.11 93.54 64.52 102.58 51.87 111.62 50.24 96.86 51.28 72.15 55.74 50.45 63.88 27.25" />
-                    <polygon className="logdraft-footer-4" points="16.96 103.19 12.6 99.57 7.09 92.64 14.53 82.69 22.86 68.13 30.6 52.96 36.85 36.89 39.67 28.75 45.63 28.75 35.21 57.68 28.37 74.86 16.96 103.19" />
-                    <polygon className="logdraft-footer-4" points="51.73 28.75 57.38 28 53.06 40.51 50.24 49.85 45.63 64.16 42.5 77.72 40.72 89.47 39.67 103.19 38.93 117.5 24.5 109.51 30.45 91.28 38.04 68.13 45.63 46.38 51.73 28.75" />
-                    <polygon className="logdraft-footer-3" points="225.15 42.92 185.08 42.92 179.68 43.67 174.17 46.53 171.19 50.75 170 56.03 170 87.21 170.9 91.43 174.62 96.86 182.35 100.02 225.15 100.02 225.15 87.52 186.52 87.21 183.99 85.71 183.39 76.97 225.15 76.52 225.15 64.91 183.69 65.52 183.69 57.98 185.03 55.87 189.05 55.42 225.15 54.97 225.15 42.92" />
-                    <polygon className="logdraft-footer-3" points="274.74 59.94 288.58 59.94 288.58 54.52 287.09 49.7 284.86 46.98 280.55 44.12 276.38 42.92 245.14 42.92 239.34 44.27 235.47 47.59 233.09 52.56 232.49 59.94 232.49 65.52 233.83 69.44 236.51 73.35 242.61 76.37 271.17 76.37 273.41 77.87 274.15 80.43 274.15 84.35 273.11 86.76 249.01 86.76 246.92 85.71 246.18 83.15 232.49 83.6 232.49 86.76 233.38 90.68 235.47 95.2 240.67 98.52 244.54 100.02 276.38 100.02 282.03 97.91 287.09 92.94 288.58 87.82 288.58 77.87 286.5 72.75 283.52 69.13 278.46 66.42 272.96 65.82 249.6 65.97 246.92 64.46 246.03 59.64 247.22 56.93 248.41 55.27 270.58 55.27 272.51 55.72 274.3 57.53 274.74 59.94" />
-                    <polygon className="logdraft-footer-3" points="106.03 42.92 119.57 42.92 119.57 83.9 121.06 86.46 124.03 87.82 143.82 87.82 146.65 86.16 148.13 84.95 148.13 42.92 161.97 42.92 161.97 64.46 161.97 84.35 161.08 90.83 158.85 94.6 155.57 97.31 150.07 100.02 146.94 100.02 118.82 100.02 111.83 97.61 106.77 91.43 106.03 86.16 106.03 42.92" />
-                    <line className="logdraft-footer-1" x1="295.92" y1="86.47" x2="302.1" y2="86.47" /><line className="logdraft-footer-1" x1="299.01" y1="94.01" x2="299.01" y2="86.47" />
-                    <line className="logdraft-footer-1" x1="303.51" y1="94.27" x2="303.51" y2="86.47" /><line className="logdraft-footer-1" x1="307.19" y1="93.67" x2="304.55" y2="86.47" />
-                    <line className="logdraft-footer-1" x1="310.24" y1="86.47" x2="307.19" y2="93.67" /><line className="logdraft-footer-1" x1="311.02" y1="94.01" x2="310.84" y2="86.47" />
-                    <line className="logdraft-footer-1" x1="303.51" y1="86.47" x2="304.55" y2="86.47" /><line className="logdraft-footer-1" x1="310.24" y1="86.47" x2="310.84" y2="86.47" />
-                    <line className="logdraft-footer-2" x1="315.52" y1="99" x2="1263.52" y2="99" />
-                    <line className="logdraft-footer-2" x1="1263.52" y1="99" x2="1263.52" />
-                </g>
-            </g>)
+                    <g id="Layout" transform={`translate(0 ${y1} )`}><text className="logdraft-footer-5" transform="translate(1093.67 70.98)"><tspan x="0" y="0">FIGURE {boring.figure}</tspan></text>
+                        <polyline className="logdraft-footer-3" points="0 24.63 8.13 26.04 20.04 27.85 33.92 29.05 27.77 43.72 19.64 58.79 2.18 81.29 0 73.65" />
+                        <polygon className="logdraft-footer-3" points="63.88 27.25 80.34 24.63 80.34 42.51 80.34 67.43 80.34 75.31 77.46 83.6 72.11 93.54 64.52 102.58 51.87 111.62 50.24 96.86 51.28 72.15 55.74 50.45 63.88 27.25" />
+                        <polygon className="logdraft-footer-4" points="16.96 103.19 12.6 99.57 7.09 92.64 14.53 82.69 22.86 68.13 30.6 52.96 36.85 36.89 39.67 28.75 45.63 28.75 35.21 57.68 28.37 74.86 16.96 103.19" />
+                        <polygon className="logdraft-footer-4" points="51.73 28.75 57.38 28 53.06 40.51 50.24 49.85 45.63 64.16 42.5 77.72 40.72 89.47 39.67 103.19 38.93 117.5 24.5 109.51 30.45 91.28 38.04 68.13 45.63 46.38 51.73 28.75" />
+                        <polygon className="logdraft-footer-3" points="225.15 42.92 185.08 42.92 179.68 43.67 174.17 46.53 171.19 50.75 170 56.03 170 87.21 170.9 91.43 174.62 96.86 182.35 100.02 225.15 100.02 225.15 87.52 186.52 87.21 183.99 85.71 183.39 76.97 225.15 76.52 225.15 64.91 183.69 65.52 183.69 57.98 185.03 55.87 189.05 55.42 225.15 54.97 225.15 42.92" />
+                        <polygon className="logdraft-footer-3" points="274.74 59.94 288.58 59.94 288.58 54.52 287.09 49.7 284.86 46.98 280.55 44.12 276.38 42.92 245.14 42.92 239.34 44.27 235.47 47.59 233.09 52.56 232.49 59.94 232.49 65.52 233.83 69.44 236.51 73.35 242.61 76.37 271.17 76.37 273.41 77.87 274.15 80.43 274.15 84.35 273.11 86.76 249.01 86.76 246.92 85.71 246.18 83.15 232.49 83.6 232.49 86.76 233.38 90.68 235.47 95.2 240.67 98.52 244.54 100.02 276.38 100.02 282.03 97.91 287.09 92.94 288.58 87.82 288.58 77.87 286.5 72.75 283.52 69.13 278.46 66.42 272.96 65.82 249.6 65.97 246.92 64.46 246.03 59.64 247.22 56.93 248.41 55.27 270.58 55.27 272.51 55.72 274.3 57.53 274.74 59.94" />
+                        <polygon className="logdraft-footer-3" points="106.03 42.92 119.57 42.92 119.57 83.9 121.06 86.46 124.03 87.82 143.82 87.82 146.65 86.16 148.13 84.95 148.13 42.92 161.97 42.92 161.97 64.46 161.97 84.35 161.08 90.83 158.85 94.6 155.57 97.31 150.07 100.02 146.94 100.02 118.82 100.02 111.83 97.61 106.77 91.43 106.03 86.16 106.03 42.92" />
+                        <line className="logdraft-footer-1" x1="295.92" y1="86.47" x2="302.1" y2="86.47" /><line className="logdraft-footer-1" x1="299.01" y1="94.01" x2="299.01" y2="86.47" />
+                        <line className="logdraft-footer-1" x1="303.51" y1="94.27" x2="303.51" y2="86.47" /><line className="logdraft-footer-1" x1="307.19" y1="93.67" x2="304.55" y2="86.47" />
+                        <line className="logdraft-footer-1" x1="310.24" y1="86.47" x2="307.19" y2="93.67" /><line className="logdraft-footer-1" x1="311.02" y1="94.01" x2="310.84" y2="86.47" />
+                        <line className="logdraft-footer-1" x1="303.51" y1="86.47" x2="304.55" y2="86.47" /><line className="logdraft-footer-1" x1="310.24" y1="86.47" x2="310.84" y2="86.47" />
+                        <line className="logdraft-footer-2" x1="315.52" y1="99" x2="1263.52" y2="99" />
+                        <line className="logdraft-footer-2" x1="1263.52" y1="99" x2="1263.52" />
+                    </g>
+                </g>)
 
         }
     }
@@ -571,8 +571,8 @@ class LogDraft extends Component {
                 </g>
             )
             y1 = y1 + (50)
-        
-           
+
+
         }
         return (<g>
             {getscale}
@@ -642,63 +642,64 @@ class LogDraft extends Component {
                         <div className={`noPrint`} style={{ ...styles.alignCenter, ...styles.bottomMargin15 }}>
                             <Link style={{ ...styles.generalLink, ...styles.boldFont, ...headerFont, ...styles.generalColor }} to={`/${userid}/projects/${projectid}/borings/${boringid}/logdraft`}>/LogDraft</Link>
                         </div>
+                        <div className={`print-adj`}>
+                        
+                            {this.showTitleBlock()}
+                            <div style={{ ...styles.generalContainer }}>
 
-                        {this.showTitleBlock()}
-                        <div style={{ ...styles.generalContainer }}>
+                                <svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox={viewbox}>
+                                    <g id="Layout">
 
-                            <svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" viewBox={viewbox}>
-                                <g id="Layout">
-
-                                    <path className="logdraft-13" d="m58.5,28.41v207H2.5V28.41h56m2-2H.5v211h60V26.41h0Z" />
-                                    <text className="logdraft-8" transform="translate(36.26 223.41) rotate(-90)"><tspan x="0" y="0">DEPTH, feet</tspan></text>
-                                    <text className="logdraft-9" transform="translate(911.68 232.1) rotate(-90)"><tspan x="0" y="0">SAMPLE</tspan></text>
-                                    <text className="logdraft-9" transform="translate(948.68 237.41) rotate(-90)"><tspan x="0" y="0" > SAMPLE </tspan><tspan x="0" y="28.8">NUMBER</tspan></text>
-                                    <text className="logdraft-9" transform="translate(1018.68 234.41) rotate(-90)"><tspan x="0" y="0">BLOW </tspan><tspan x="0" y="28.8">COUN</tspan><tspan className="logdraft-19" x="70.66" y="28.8">T</tspan></text>
-                                    <text className="logdraft-8" transform="translate(120.26 220.41) rotate(-90)"><tspan x="0" y="0">GRAPHIC </tspan><tspan x="0" y="34.8">LOG</tspan></text>
-                                    <path className="logdraft-13" d="m188.5,28.41v207H62.5V28.41h126m2-2H60.5v211h130V26.41h0Z" /><path className="logdraft-13" d="m888.5,28.41v207H192.5V28.41h696m2-2H190.5v211h700V26.41h0Z" />
-                                    <text className="logdraft-8" transform="translate(282.95 81.18)"><tspan x="0" y="0">ENGINEERING CLASSIFIC</tspan><tspan className="logdraft-1" x="360.96" y="0">A</tspan><tspan x="378.15" y="0">TION</tspan><tspan className="logdraft-21" x="447.42" y="0"> </tspan><tspan x="453.88" y="0">AND </tspan><tspan x="158.46" y="34.8">DESCRIPTION</tspan></text>
-                                    <text className="logdraft-6" transform="translate(1128.55 48.6)"><tspan x="0" y="0">TES</tspan><tspan className="logdraft-19" x="46.68" y="0">T</tspan><tspan x="60.9" y="0"> </tspan><tspan x=".89" y="28.8">D</tspan><tspan className="logdraft-1" x="18.22" y="28.8">AT</tspan><tspan className="logdraft-21" x="45.33" y="28.8">A</tspan></text>
-                                    <text className="logdraft-6" transform="translate(922.81 48.6)"><tspan x="0" y="0">SAMPLE </tspan><tspan x="19.12" y="28.8">D</tspan><tspan className="logdraft-1" x="36.46" y="28.8">AT</tspan><tspan className="logdraft-21" x="63.56" y="28.8">A</tspan></text>
-                                    <path className="logdraft-13" d="m1049.5,28.41v56h-157V28.41h157m2-2h-161v60h161V26.41h0Z" />
-                                    <path className="logdraft-13" d="m1264.5,28.41v56h-211V28.41h211m2-2h-215v60h215V26.41h0Z" />
-                                    <path className="logdraft-13" d="m919,86.91v150h-29V86.91h29m.5-.5h-30v151h30V86.41h0Z" />
-                                    <path className="logdraft-13" d="m996,86.91v150h-76V86.91h76m.5-.5h-77v151h77V86.41h0Z" />
-                                    <path className="logdraft-13" d="m1051,86.91v150h-54V86.91h54m.5-.5h-55v151h55V86.41h0Z" />
-                                    <text className="logdraft-9" transform="translate(1073.68 233.41) rotate(-90)"><tspan x="0" y="0">MOISTURE </tspan><tspan x="0" y="28.8">CONTEN</tspan><tspan className="logdraft-19" x="101.33" y="28.8">T</tspan><tspan x="115.56" y="28.8" > %</tspan></text>
-                                    <text className="logdraft-9" transform="translate(1126.68 236.41) rotate(-90)"><tspan x="0" y="0">D</tspan><tspan className="logdraft-19" x="17.33" y="0">RY</tspan><tspan x="49.8" y="0" > UNI</tspan><tspan className="logdraft-19" x="97.8" y="0">T</tspan><tspan x="112.03" y="0"> </tspan><tspan x="0" y="28.8">WIEIGH</tspan><tspan className="logdraft-18" x="88" y="28.8">T</tspan><tspan x="100" y="28.8">, pcf</tspan></text>
-                                    <path className="logdraft-13" d="m1106,86.91v150h-54V86.91h54m.5-.5h-55v151h55V86.41h0Z" />
-                                    <text className="logdraft-9" transform="translate(1204.68 236.41) rotate(-90)"><tspan x="0" y="0">ADDITIONA</tspan><tspan className="logdraft-20" x="130.68" y="0">L</tspan><tspan x="143.13" y="0"> </tspan><tspan x="0" y="28.8">TESTS</tspan></text>
-                                    <path className="logdraft-13" d="m1161,86.91v150h-54V86.91h54m.5-.5h-55v151h55V86.41h0Z" />
-
-
-
-                                    {this.loaddescription()}
+                                        <path className="logdraft-13" d="m58.5,28.41v207H2.5V28.41h56m2-2H.5v211h60V26.41h0Z" />
+                                        <text className="logdraft-8" transform="translate(36.26 223.41) rotate(-90)"><tspan x="0" y="0">DEPTH, feet</tspan></text>
+                                        <text className="logdraft-9" transform="translate(911.68 232.1) rotate(-90)"><tspan x="0" y="0">SAMPLE</tspan></text>
+                                        <text className="logdraft-9" transform="translate(948.68 237.41) rotate(-90)"><tspan x="0" y="0" > SAMPLE </tspan><tspan x="0" y="28.8">NUMBER</tspan></text>
+                                        <text className="logdraft-9" transform="translate(1018.68 234.41) rotate(-90)"><tspan x="0" y="0">BLOW </tspan><tspan x="0" y="28.8">COUN</tspan><tspan className="logdraft-19" x="70.66" y="28.8">T</tspan></text>
+                                        <text className="logdraft-8" transform="translate(120.26 220.41) rotate(-90)"><tspan x="0" y="0">GRAPHIC </tspan><tspan x="0" y="34.8">LOG</tspan></text>
+                                        <path className="logdraft-13" d="m188.5,28.41v207H62.5V28.41h126m2-2H60.5v211h130V26.41h0Z" /><path className="logdraft-13" d="m888.5,28.41v207H192.5V28.41h696m2-2H190.5v211h700V26.41h0Z" />
+                                        <text className="logdraft-8" transform="translate(282.95 81.18)"><tspan x="0" y="0">ENGINEERING CLASSIFIC</tspan><tspan className="logdraft-1" x="360.96" y="0">A</tspan><tspan x="378.15" y="0">TION</tspan><tspan className="logdraft-21" x="447.42" y="0"> </tspan><tspan x="453.88" y="0">AND </tspan><tspan x="158.46" y="34.8">DESCRIPTION</tspan></text>
+                                        <text className="logdraft-6" transform="translate(1128.55 48.6)"><tspan x="0" y="0">TES</tspan><tspan className="logdraft-19" x="46.68" y="0">T</tspan><tspan x="60.9" y="0"> </tspan><tspan x=".89" y="28.8">D</tspan><tspan className="logdraft-1" x="18.22" y="28.8">AT</tspan><tspan className="logdraft-21" x="45.33" y="28.8">A</tspan></text>
+                                        <text className="logdraft-6" transform="translate(922.81 48.6)"><tspan x="0" y="0">SAMPLE </tspan><tspan x="19.12" y="28.8">D</tspan><tspan className="logdraft-1" x="36.46" y="28.8">AT</tspan><tspan className="logdraft-21" x="63.56" y="28.8">A</tspan></text>
+                                        <path className="logdraft-13" d="m1049.5,28.41v56h-157V28.41h157m2-2h-161v60h161V26.41h0Z" />
+                                        <path className="logdraft-13" d="m1264.5,28.41v56h-211V28.41h211m2-2h-215v60h215V26.41h0Z" />
+                                        <path className="logdraft-13" d="m919,86.91v150h-29V86.91h29m.5-.5h-30v151h30V86.41h0Z" />
+                                        <path className="logdraft-13" d="m996,86.91v150h-76V86.91h76m.5-.5h-77v151h77V86.41h0Z" />
+                                        <path className="logdraft-13" d="m1051,86.91v150h-54V86.91h54m.5-.5h-55v151h55V86.41h0Z" />
+                                        <text className="logdraft-9" transform="translate(1073.68 233.41) rotate(-90)"><tspan x="0" y="0">MOISTURE </tspan><tspan x="0" y="28.8">CONTEN</tspan><tspan className="logdraft-19" x="101.33" y="28.8">T</tspan><tspan x="115.56" y="28.8" > %</tspan></text>
+                                        <text className="logdraft-9" transform="translate(1126.68 236.41) rotate(-90)"><tspan x="0" y="0">D</tspan><tspan className="logdraft-19" x="17.33" y="0">RY</tspan><tspan x="49.8" y="0" > UNI</tspan><tspan className="logdraft-19" x="97.8" y="0">T</tspan><tspan x="112.03" y="0"> </tspan><tspan x="0" y="28.8">WIEIGH</tspan><tspan className="logdraft-18" x="88" y="28.8">T</tspan><tspan x="100" y="28.8">, pcf</tspan></text>
+                                        <path className="logdraft-13" d="m1106,86.91v150h-54V86.91h54m.5-.5h-55v151h55V86.41h0Z" />
+                                        <text className="logdraft-9" transform="translate(1204.68 236.41) rotate(-90)"><tspan x="0" y="0">ADDITIONA</tspan><tspan className="logdraft-20" x="130.68" y="0">L</tspan><tspan x="143.13" y="0"> </tspan><tspan x="0" y="28.8">TESTS</tspan></text>
+                                        <path className="logdraft-13" d="m1161,86.91v150h-54V86.91h54m.5-.5h-55v151h55V86.41h0Z" />
 
 
 
-
-                                    {this.loadsamplenumbers()}
-                                    {this.loadspt()}
-                                    {this.loadSampleTypes()}
-                                    {this.loadmoisturecontent()}
-                                    {this.loaddryden()}
-                                    {this.loadremarks()}
-                                    {this.showBoringBottom()}
-                                    {this.showSampleLines()}
-                                    {this.loadgraphics()}
-
-                                    {this.drawFooter()}
-                                    {this.drawLabels()}
-                                    {this.drawScale()}
+                                        {this.loaddescription()}
 
 
-                                    {this.showGroundWaterSym()}
 
-                                    <line className="logdraft-5" x1="889.5" y1="237.41" x2="1266.5" y2="237.41" />
-                                  
-                                    <line className="logdraft-5" x1="1267" y1="237.91" x2="1266.5" y2="86.41" />
-                                </g></svg>
 
+                                        {this.loadsamplenumbers()}
+                                        {this.loadspt()}
+                                        {this.loadSampleTypes()}
+                                        {this.loadmoisturecontent()}
+                                        {this.loaddryden()}
+                                        {this.loadremarks()}
+                                        {this.showBoringBottom()}
+                                        {this.showSampleLines()}
+                                        {this.loadgraphics()}
+
+                                        {this.drawFooter()}
+                                        {this.drawLabels()}
+                                        {this.drawScale()}
+
+
+                                        {this.showGroundWaterSym()}
+
+                                        <line className="logdraft-5" x1="889.5" y1="237.41" x2="1266.5" y2="237.41" />
+
+                                        <line className="logdraft-5" x1="1267" y1="237.91" x2="1266.5" y2="86.41" />
+                                    </g></svg>
+                            </div>
 
                         </div>
 

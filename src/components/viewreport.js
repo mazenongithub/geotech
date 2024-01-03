@@ -112,35 +112,35 @@ class ViewReport extends Component {
         return report;
     }
 
-    showScope() {
-        const report = this.getReport();
+    showList(list) {
+
         const ues = new UES();
         const regularFont = ues.regularFont.call(this)
         const styles = MyStylesheet();
         let getlist = [];
         let getsublist = [];
-        if (report.hasOwnProperty("list")) {
-            // eslint-disable-next-line
-            report.list.map(list => {
+
+        // eslint-disable-next-line
+        list.map(list => {
 
 
-                getlist.push(<li key={list.listid}>{list.content}</li>)
+            getlist.push(<li key={list.listid}>{list.list}</li>)
 
-                if (list.hasOwnProperty("sublist")) {
-                    // eslint-disable-next-line
-                    list.sublist.map(sublist => {
+            if (list.hasOwnProperty("sublist")) {
+                // eslint-disable-next-line
+                list.sublist.map(sublist => {
 
-                        getsublist.push(<li key={sublist.sublistid}>{sublist.content}</li>)
-                    })
-                    getlist.push(<ol key={`reportsublist`} type="a">{getsublist}</ol>)
-
-
-                }
+                    getsublist.push(<li key={sublist.sublistid}>{sublist.list}</li>)
+                })
+                getlist.push(<ol key={`reportsublist`} type="a">{getsublist}</ol>)
 
 
+            }
 
-            })
-        }
+
+
+        })
+
 
         return (<ol style={{ ...styles.generalFont, ...regularFont }} key={`reportlist`} type="1">{getlist}</ol>)
 
@@ -205,24 +205,7 @@ class ViewReport extends Component {
 
     }
 
-    showPavementSection(pavement) {
-        const ues = new UES();
-        const regularFont = ues.regularFont.call(this)
-        const styles = MyStylesheet();
-
-
-        return (
-            <div style={{ ...styles.generalFlex }} key={pavement.sectionid}>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.showBorder }}>
-                    <span style={{ ...regularFont }}>{pavement.sectionname}</span>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                    <span style={{ ...regularFont }}> {pavement.rvalue}</span>
-                </div>
-
-            </div>)
-
-    }
+  
 
     showSectionDesign(section) {
         const ues = new UES();
@@ -246,84 +229,78 @@ class ViewReport extends Component {
 
     }
 
-    showPavementSections() {
+    
+
+    showPavementTables() {
 
         const ues = new UES();
-        const projectid = this.props.projectid;
         let getsections = [];
+        const projectid = this.props.projectid; 
         const pavements = ues.getPavementByProjectID.call(this, projectid);
-        const styles = MyStylesheet();
-        const regularFont = ues.regularFont.call(this)
-        const titleBlock = () => {
-            return (<div style={{ ...styles.generalFlex }} key={`pavemettitleblock`}>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                    <span style={{ ...regularFont }}>Traffic Index (T.I)</span>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                    <span style={{ ...regularFont }}> Asphalt Concrete Thickness </span>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                    <span style={{ ...regularFont }}> Aggregate  Base Thickness </span>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                    <span style={{ ...regularFont }}> Aggregate  SubBase Thickness </span>
-                </div>
-
-            </div>)
-        }
         if (pavements) {
             // eslint-disable-next-line
             pavements.map(pavement => {
-                getsections.push(this.showPavementSection(pavement))
+                getsections.push(this.showPavementTable(pavement))
 
-                if (pavement.hasOwnProperty("design")) {
-
-                    getsections.push(titleBlock())
-                    // eslint-disable-next-line
-                    pavement.design.map(section => {
-                        getsections.push(this.showSectionDesign(section))
-                    })
-                }
-
+               
 
             })
 
 
         }
 
-
-
         return getsections;
-    }
 
-    showPavementDesign() {
+    }
+    showPavementTable(pavement) {
         const styles = MyStylesheet();
         const ues = new UES();
-        const headerFont = ues.headerFont.call(this)
         const regularFont = ues.regularFont.call(this)
-        return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }} key={`pavementdesign`}>
-            <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
-                <span style={{ ...styles.generalFont, ...headerFont, ...styles.boldFont }}>Pavement Design Alternatives</span>
 
-            </div>
+        const pavementSections = (section) => {
+            return (<tr>
+                <td style={{...styles.showBorder}}><div style={{...styles.generalContainer, ...styles.alignCenter}}><span style={{...regularFont}}>{section.ti} </span> </div></td>
+                <td style={{...styles.showBorder}}><div style={{...styles.generalContainer, ...styles.alignCenter}}><span style={{...regularFont}}>{section.use} </span> </div></td>
+                <td style={{...styles.showBorder}}><div style={{...styles.generalContainer, ...styles.alignCenter}}><span style={{...regularFont}}>{section.ac} </span> </div></td>
+                <td style={{...styles.showBorder}}><div style={{...styles.generalContainer, ...styles.alignCenter}}><span style={{...regularFont}}>{section.ab} </span> </div></td>
+                <td style={{...styles.showBorder}}><div style={{...styles.generalContainer, ...styles.alignCenter}}><span style={{...regularFont}}>{section.pcc} </span> </div></td>
+            </tr>)
+        }
 
-            <div style={{ ...styles.generalFlex }}>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.showBorder }}>
-                    <span style={{ ...regularFont }}>Section Name</span>
-                </div>
-                <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.showBorder, ...styles.alignCenter }}>
-                    <span style={{ ...regularFont }}> RValue</span>
-                </div>
-
-            </div>
-
-            {this.showPavementSections()}
+        let tablerows = [];
+        if(pavement.hasOwnProperty("design")) {
+            // eslint-disable-next-line
+            pavement.design.map(section=> {
+                tablerows.push(pavementSections(section))
+            })
+        }
 
 
-
-        </div>)
+        return (
+            <div style={{...styles.generalContainer, ...styles.bottomMargin15}}>
+            <table width="99%" border="0" cellpadding="3">
+                <tbody>
+                    <tr>
+                        <td width="21%" rowspan="2" style={{...styles.showBorder}}><div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>Traffic Index</span></div></td>
+                        <td width="26%" rowspan="2" style={{...styles.showBorder}}><div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>Pavement Use</span></div></td>
+                        <td colspan="3" style={{...styles.showBorder}}>
+                        <div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>{pavement.sectionname} </span></div>
+                        <div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>Rvalue = {pavement.rvalue} </span></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="17%" style={{...styles.showBorder}}><div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>Type A Asphalt Conrete (in) </span> </div></td>
+                        <td width="18%" style={{...styles.showBorder}}><div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>Class 2 Aggregate Base (in) </span></div></td>
+                        <td width="18%" style={{...styles.showBorder}}><div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>Portland Cement Concrete (P.C.C) </span> </div></td>
+                    </tr>
+                    {tablerows}
+                </tbody>
+            </table>
+            </div>)
     }
 
+
+  
 
     showReport() {
 
@@ -343,6 +320,17 @@ class ViewReport extends Component {
 
                             let label_1 = `${Number(i + 1)}.${Number(j + 1)}`
                             getreport.push(this.showSection(label_1, section))
+
+                            if(section.sectionname === 'Pavement Design') {
+                                getreport.push(this.showPavementTables())
+                            }
+
+                            if (section.hasOwnProperty("list")) {
+
+                                getreport.push(this.showList(section.list))
+
+                            }
+
 
                             if (section.hasOwnProperty("subsections")) {
                                 // eslint-disable-next-line
