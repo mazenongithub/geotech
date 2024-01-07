@@ -1,138 +1,121 @@
-
-
 @media print {
-    .titleFont{font-size:'12px';}
-    .noPrint{display: none;}
-    .print-adj{
-        position: relative;
-        top:-50px;
-      }
- 
- }
- .titleFont{
-    color:'red';
- }
-
-
-
+   .print-adj {
+     position:relative;
+     top:-50px;
+   } 
+}
 .logdraft-1 {
-    letter-spacing: -.07em;
-}
-
-.logdraft-2,
-.logdraft-3,
-.logdraft-4,
-.logdraft-5,
-.logdraft-6,
-.logdraft-7 {
-    stroke-miterlimit: 10;
-}
-
-.logdraft-2,
-.logdraft-3,
-.logdraft-4,
-.logdraft-5,
-.logdraft-7 {
-    fill: none;
-}
-
-.logdraft-2,
-.logdraft-5,
-.logdraft-6,
-.logdraft-7 {
-    stroke: #000;
-}
-
-.logdraft-8 {
-    font-size: 29px;
-}
-
-.logdraft-8,
-.logdraft-9,
-.logdraft-10,
-.logdraft-11,
-.logdraft-6,
-.logdraft-12 {
-    font-family: ArialMT, Arial;
-}
-
-.logdraft-9,
-.logdraft-10,
-.logdraft-6 {
-    font-size: 24px;
-}
-
-.logdraft-3 {
-    stroke: #030607;
-}
-
-.logdraft-13,
-.logdraft-14,
-.logdraft-15,
-.logdraft-16,
-.logdraft-17 {
-    stroke-width: 0px;
-}
-
-.logdraft-14 {
-    fill: #035384;
-}
-
-.logdraft-15 {
-    fill: #4185c5;
-}
-
-.logdraft-4 {
-    stroke: blue;
-}
-
-.logdraft-5 {
-    stroke-width: 2px;
-}
-
-.logdraft-10 {
     text-decoration: underline;
 }
 
-.logdraft-11 {
-    font-size: 30px;
+.logdraft-1,
+.logdraft-2 {
+    font-size: 29px;
 }
 
-.logdraft-18 {
-    letter-spacing: -.11em;
-}
-
-.logdraft-19 {
-    letter-spacing: -.02em;
-}
-
-.logdraft-20 {
-    letter-spacing: -.04em;
-}
-
-.logdraft-16 {
-    fill: blue;
-}
-
-.logdraft-12 {
-    font-size: 18px;
-}
-
-.logdraft-21 {
-    letter-spacing: -.06em;
+.logdraft-1,
+.logdraft-2,
+.logdraft-3,
+.logdraft-4,
+.logdraft-5,
+.logdraft-6 {
+    font-family: ArialMT, Arial;
 }
 
 .logdraft-7 {
+    fill: #c1272d;
+}
+
+.logdraft-7,
+.logdraft-8,
+.logdraft-9,
+.logdraft-10 {
+    stroke-width: 0px;
+}
+
+.logdraft-11 {
+    letter-spacing: -.07em;
+}
+
+.logdraft-12,
+.logdraft-13,
+.logdraft-14,
+.logdraft-4,
+.logdraft-15 {
+    stroke-miterlimit: 10;
+}
+
+.logdraft-12,
+.logdraft-13,
+.logdraft-14,
+.logdraft-15 {
+    fill: none;
+}
+
+.logdraft-12,
+.logdraft-14,
+.logdraft-4,
+.logdraft-15 {
+    stroke: #000;
+}
+
+.logdraft-3,
+.logdraft-4,
+.logdraft-16 {
+    font-size: 24px;
+}
+
+.logdraft-13 {
+    stroke: #030607;
+}
+
+.logdraft-14 {
+    opacity: .98;
+}
+
+.logdraft-9 {
+    fill: #035384;
+}
+
+.logdraft-4 {
     stroke-width: .5px;
 }
 
+.logdraft-10 {
+    fill: #4185c5;
+}
+
+.logdraft-15 {
+    stroke-width: 2px;
+}
+
+.logdraft-5 {
+    font-size: 30px;
+}
+
 .logdraft-17 {
-    fill: #6b266d;
+    letter-spacing: -.11em;
+}
+
+.logdraft-16 {
+    font-family: Arial-BoldMT, Arial;
+    font-weight: 700;
+}
+
+.logdraft-18 {
+    letter-spacing: -.02em;
+}
+
+.logdraft-6 {
+    font-size: 20px;
+}
+
+.logdraft-19 {
+    letter-spacing: -.04em;
+}
+
+.logdraft-20 {
+    letter-spacing: -.06em;
 }
 
 .liner-1{fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:2px;}
-
-
-.logdraftblock-1{letter-spacing:-.11em;}.logdraftblock-2{font-family:Arial-BoldMT, Arial;font-size:24px;font-weight:700;}.logdraftblock-3{letter-spacing:-.02em;}.logdraftblock-4{font-family:ArialMT, Arial;font-size:20px;}.logdraftblock-5{letter-spacing:-.04em;}.logdraftblock-6{letter-spacing:-.06em;}.logdraftblock-7{fill:none;stroke:#000;stroke-miterlimit:10;stroke-width:.5px;}
-
-.logdraft-footer-1{stroke:#030607;}.logdraft-footer-1,.logdraft-footer-2{fill:none;stroke-miterlimit:10;}.logdraft-footer-3{fill:#035384;}.logdraft-footer-3,.logdraft-footer-4{stroke-width:0px;}.logdraft-footer-4{fill:#4185c5;}.logdraft-footer-2{stroke:#000;stroke-width:2px;}.logdraft-footer-5{font-family:ArialMT, Arial;font-size:30px;}

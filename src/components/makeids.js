@@ -24,10 +24,10 @@ class MakeID {
                                     sectionid = false;
                                 }
 
-                                if(section.hasOwnProperty("list")) {
-                                     // eslint-disable-next-line
-                                    section.list.map(list=> {
-                                        if(list.listid === sectionid) {
+                                if (section.hasOwnProperty("list")) {
+                                    // eslint-disable-next-line
+                                    section.list.map(list => {
+                                        if (list.listid === sectionid) {
                                             sectionid = false;
                                         }
                                     })
@@ -146,13 +146,31 @@ class MakeID {
                 pavementid = makeID(16)
                 // eslint-disable-next-line
                 pavements.map(pavement => {
-                    if (pavement.hasOwnProperty("design")) {
+
+                    if (pavement.pavementid === pavementid) {
+                        pavementid= false;
+                    }
+                    if (pavement.hasOwnProperty("services")) {
 
                         // eslint-disable-next-line
-                        pavement.design.map(section => {
-                            if (section.pavementid === pavementid) {
+                        pavement.services.map(service => {
+                            if (service.serviceid === pavementid) {
                                 pavementid = false;
                             }
+
+                            if (service.hasOwnProperty("design")) {
+
+                                service.design.map(section => {
+                                    if (section.sectionid === pavementid) {
+                                        pavementid = false;
+                                    }
+                                })
+                            }
+
+
+
+
+
                         })
                     }
                 })

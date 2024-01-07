@@ -32,6 +32,9 @@ export function MyStylesheet() {
         marginLeft15: {
             marginLeft: '15px'
         },
+        marginLeft30: {
+            marginLeft: '30px'
+        },
         areatext: {
             height: '175px'
         },

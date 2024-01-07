@@ -543,10 +543,10 @@ class UES {
 
     }
 
-    getPavementSectionKeyByID(sectionid, pavementid) {
+    getPavementSectionKeyByID(sectionid, serviceid, pavementid) {
         const ues = new UES();
         let key = false;
-        const pavementsections = ues.getPavementSections.call(this, sectionid);
+        const pavementsections = ues.getPavementSections.call(this, sectionid, serviceid);
         if (pavementsections) {
             // eslint-disable-next-line
             pavementsections.map((section, i) => {
@@ -556,13 +556,70 @@ class UES {
             })
         }
 
+        
+        
         return key;
     }
 
-    getPavementSectionByID(sectionid, pavementid) {
+
+    getPavementServiceKeyByID(sectionid,serviceid) {
+        const ues = new UES();
+        const getservice = ues.getPavementService.call(this,sectionid);
+        let key = false;
+        if(getservice) {
+            getservice.map((service,i)=> {
+                if(service.serviceid === serviceid) {
+                   key = i;
+
+                }
+            })
+
+
+        }
+        return key;
+    }
+
+    getPavementServiceByID(sectionid,serviceid) {
+        const ues = new UES();
+        const getservice = ues.getPavementService.call(this,sectionid);
+        let findservice = false;
+        if(getservice) {
+            getservice.map(service=> {
+                if(service.serviceid === serviceid) {
+                    findservice = service;
+
+                }
+            })
+
+
+        }
+        return findservice;
+    }
+
+    getPavementService(sectionid) {
         const ues = new UES();
         let getsection = false;
-        const pavementsections = ues.getPavementSections.call(this, sectionid);
+        const section = ues.getPavementByID.call(this, sectionid);
+
+        if (section) {
+   
+            
+            if(section.hasOwnProperty("services")) {
+                getsection = section.services;
+            }
+            
+
+
+        }
+
+        return getsection;
+
+    }
+
+    getPavementSectionByID(sectionid, serviceid, pavementid) {
+        const ues = new UES();
+        let getsection = false;
+        const pavementsections = ues.getPavementSections.call(this, sectionid, serviceid);
         if (pavementsections) {
             // eslint-disable-next-line
             pavementsections.map(section => {
@@ -575,12 +632,12 @@ class UES {
         return getsection;
     }
 
-    getPavementSections(sectionid) {
+    getPavementSections(sectionid, serviceid) {
         let getsections = false;
         const ues = new UES();
-        const pavement = ues.getPavementByID.call(this, sectionid)
-        if (pavement.hasOwnProperty("design")) {
-            getsections = pavement.design;
+        const service = ues.getPavementServiceByID.call(this,sectionid,serviceid)
+        if (service.hasOwnProperty("design")) {
+            getsections = service.design;
         }
 
 

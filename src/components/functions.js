@@ -1,13 +1,13 @@
-export function newChapter(reportid,chapterid,chaptername,content) {
-    return({reportid,chapterid,chaptername,content})
+export function newChapter(reportid, chapterid, chaptername, content) {
+    return ({ reportid, chapterid, chaptername, content })
 }
 
-export function newReportSection(sectionid,sectionname,content) {
-    return({sectionid,sectionname,content})
+export function newReportSection(sectionid, sectionname, content) {
+    return ({ sectionid, sectionname, content })
 }
 
-export function newSubSection(subsectionid,sectionname,content) {
-    return({subsectionid,sectionname,content})
+export function newSubSection(subsectionid, sectionname, content) {
+    return ({ subsectionid, sectionname, content })
 }
 
 export function validateUserID(value) {
@@ -33,42 +33,46 @@ export function newSieve(sampleid, wgt34, wgt38, wgt4, wgt10, wgt30, wgt40, wgt1
     return ({ sampleid, wgt34, wgt38, wgt4, wgt10, wgt30, wgt40, wgt100, wgt200 })
 }
 export function newSample(sampleid, boringid, sampledepth, depth, samplenumber, sampleset, diameter, samplelength, description, uscs, spt, sptlength, wetwgt, wetwgt_2, drywgt, tarewgt, tareno, graphiclog, ll, pi, remarks) {
-    return ({ sampleid, boringid, sampledepth, depth, samplenumber, sampleset, diameter, samplelength, description, uscs, spt,sptlength, wetwgt, wetwgt_2, drywgt, tarewgt, tareno, graphiclog, ll, pi, remarks })
+    return ({ sampleid, boringid, sampledepth, depth, samplenumber, sampleset, diameter, samplelength, description, uscs, spt, sptlength, wetwgt, wetwgt_2, drywgt, tarewgt, tareno, graphiclog, ll, pi, remarks })
 }
-export function newBoring(boringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, longitude, diameter, remarks, drillmethod, contractor,samplingmethod,drivingmethod, checkedby,figure,backfill) {
-    return { boringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, longitude, diameter, remarks, drillmethod,contractor,samplingmethod,drivingmethod, checkedby,figure,backfill }
+export function newBoring(boringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, longitude, diameter, remarks, drillmethod, contractor, samplingmethod, drivingmethod, checkedby, figure, backfill) {
+    return { boringid, projectid, boringnumber, datedrilled, gwdepth, elevation, drillrig, loggedby, latitude, longitude, diameter, remarks, drillmethod, contractor, samplingmethod, drivingmethod, checkedby, figure, backfill }
 }
 
 export function newAppendix(appendixid, appendixnumber, appendixname) {
-    return({appendixid, appendixnumber, appendixname})
+    return ({ appendixid, appendixnumber, appendixname })
 }
 
-export function newFigure(figureid,figurenumber,figurename) {
-    return ({figureid,figurenumber,figurename})
+export function newFigure(figureid, figurenumber, figurename) {
+    return ({ figureid, figurenumber, figurename })
 }
 
-export function newPavementSection(pavementid, sectionid, ti,ac,ab,as, pcc,use) {
-    return({pavementid, sectionid,ti,ac,ab,as,pcc,use})
+export function newPavementService(serviceid,sectionid,servicetype,ti) {
+    return({serviceid,sectionid,servicetype,ti})
 }
 
-export function newPavement(sectionid, project_id, projectid,sectionname,rvalue) {
-    return({sectionid, project_id, projectid, sectionname, rvalue})
-}
-export function newSection(sectionid,sectionname,content) {
-    return({sectionid,sectionname,content})
+export function newPavementSection(pavementid, serviceid,  ac, ab, as, pcc) {
+    return ({ pavementid, serviceid, ac, ab, as, pcc })
 }
 
-export function newSectionList(listid,sectionid,list) {
-    return({listid,sectionid,list})
+export function newPavement(sectionid, project_id, projectid, sectionname, rvalue) {
+    return ({ sectionid, project_id, projectid, sectionname, rvalue })
 }
-export function newSublist(sublistid,content) {
-    return ({sublistid,content})
+export function newSection(sectionid, sectionname, content) {
+    return ({ sectionid, sectionname, content })
 }
-export function newList(listid,content) {
-    return ({listid,content})
+
+export function newSectionList(listid, sectionid, list) {
+    return ({ listid, sectionid, list })
 }
-export function newReport(reportid,project_id,projectid,datereport,intro) {
-    return({reportid,project_id, projectid,datereport,intro})
+export function newSublist(sublistid, content) {
+    return ({ sublistid, content })
+}
+export function newList(listid, content) {
+    return ({ listid, content })
+}
+export function newReport(reportid, project_id, projectid, datereport, intro) {
+    return ({ reportid, project_id, projectid, datereport, intro })
 }
 export function currentDate() {
     let currentdate = "";
@@ -85,30 +89,31 @@ export function currentDate() {
 
 }
 
-export function  convertDegree(degree) {
-    degree = degree.toString();
-    let degreeArray = degree.split('.')
-    let decimal = `0.${degreeArray[1]}`;
-    decimal = Number(decimal)
-    let whole = degreeArray[0]
-    
-    let totalcentiseconds = decimal * (60*60*100)
-    
-    let minutes = Math.floor(decimal * (60))
-    let subtractseconds = minutes*(60*100)
-    
-    let remainingseconds = totalcentiseconds - subtractseconds
-    let seconds = Math.floor(remainingseconds/100);
-    remainingseconds = remainingseconds - (seconds*100)
-    let decimalseconds = Math.round(remainingseconds)
-    if(decimalseconds < 10) {
-        decimalseconds = `0${decimalseconds}`
+export function convertDegree(degree) {
+    if (Number(degree) > 0) {
+        degree = degree.toString();
+        let degreeArray = degree.split('.')
+        let decimal = `0.${degreeArray[1]}`;
+        decimal = Number(decimal)
+        let whole = degreeArray[0]
+
+        let totalcentiseconds = decimal * (60 * 60 * 100)
+
+        let minutes = Math.floor(decimal * (60))
+        let subtractseconds = minutes * (60 * 100)
+
+        let remainingseconds = totalcentiseconds - subtractseconds
+        let seconds = Math.floor(remainingseconds / 100);
+        remainingseconds = remainingseconds - (seconds * 100)
+        let decimalseconds = Math.round(remainingseconds)
+        if (decimalseconds < 10) {
+            decimalseconds = `0${decimalseconds}`
+        }
+        return `${whole}.${minutes}'${seconds}.${decimalseconds}"`
+
     }
-    return `${whole}.${minutes}'${seconds}.${decimalseconds}"`
-    
-    
-    
-  }
+
+}
 
 export function formatDateReport(datestring) {
     datestring = datestring.replace(/-/g, '/');
@@ -233,7 +238,7 @@ export function milestoneformatdatestring(datein) {
 
 }
 
-export function moist (drywgt,tarewgt, wetwgt,wetwgt_2) {
+export function moist(drywgt, tarewgt, wetwgt, wetwgt_2) {
     let wgtwater = 0;
     let netweight = Number(drywgt) - Number(tarewgt)
 
@@ -252,15 +257,15 @@ export function moist (drywgt,tarewgt, wetwgt,wetwgt_2) {
 
 }
 
-export function  netwgt_1 (wetwgt_2, wetwgt,tarewgt, drywgt) {
+export function netwgt_1(wetwgt_2, wetwgt, tarewgt, drywgt) {
     let netwgt_1 = 0
     if (Number(wetwgt_2) > 0) {
-         netwgt_1 = (Number(wetwgt) - Number(tarewgt)) / (1 + moist(drywgt,tarewgt, wetwgt,wetwgt_2))
-        
+        netwgt_1 = (Number(wetwgt) - Number(tarewgt)) / (1 + moist(drywgt, tarewgt, wetwgt, wetwgt_2))
+
     }
     return netwgt_1;
 }
-export function netwgt (drywgt,tarewgt) {
+export function netwgt(drywgt, tarewgt) {
     if (Number(drywgt) && Number(tarewgt) > 0) {
         return (Number(drywgt) - Number(tarewgt));
     } else {
@@ -268,12 +273,12 @@ export function netwgt (drywgt,tarewgt) {
     }
 }
 
-export function calcdryden (wetwgt_2, wetwgt, tarewgt, drywgt, diameter,samplelength) {
+export function calcdryden(wetwgt_2, wetwgt, tarewgt, drywgt, diameter, samplelength) {
     let netweight = 0;
     if (Number(wetwgt_2) > 0) {
-        netweight = netwgt_1(wetwgt_2, wetwgt,tarewgt, drywgt)
+        netweight = netwgt_1(wetwgt_2, wetwgt, tarewgt, drywgt)
     } else {
-        netweight = netwgt(drywgt,tarewgt);
+        netweight = netwgt(drywgt, tarewgt);
     }
     if (netweight > 0 && diameter > 0 && samplelength > 0) {
         return Math.round(Number((netweight / (.25 * Math.pow(Number(diameter), 2) * Math.PI * Number(samplelength))) * (1 / 453.592) * (144 * 12)))
