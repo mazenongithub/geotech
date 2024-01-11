@@ -405,7 +405,7 @@ class Proposals extends Component {
             if (this.state.activesectionid) {
                 const sectionid = this.state.activesectionid;
                 const section = ues.getProposalSectionByID.call(this, proposalid, sectionid)
-                sectioncontent = section.sectioncontent;
+                sectioncontent = section.content;
             }
         }
 
@@ -429,7 +429,7 @@ class Proposals extends Component {
                         const section = ues.getProposalSectionByID.call(this, proposalid, sectionid)
                         if (section) {
                             const j = ues.getProposalSectionKeyByID.call(this, proposalid, sectionid)
-                            proposals[i].sections[j].sectioncontent = value;
+                            proposals[i].sections[j].content = value;
                             this.props.reduxProposals(proposals)
                             this.setState({ render: 'render' })
                         }
@@ -831,8 +831,9 @@ class Proposals extends Component {
             if (proposals) {
 
                 try {
-
+                    this.setState({spinner:true})
                     let response = await SaveProposals({ project_id, proposals })
+             
                     if (response.hasOwnProperty("proposals")) {
                         this.props.reduxProposals(response.proposals)
                     }
