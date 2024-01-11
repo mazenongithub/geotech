@@ -1557,6 +1557,51 @@ class UES {
 
     }
 
+    getProposalSubSectionKeyByID(proposalid,sectionid,subsectionid) {
+        const ues = new UES();
+        let key = false;
+        const subsections = ues.getProposalSubSections.call(this,proposalid,sectionid)
+        if(subsections) {
+            // eslint-disable-next-line
+            subsections.map((subsection,i)=> {
+                if(subsection.subsectionid === subsectionid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+    }
+
+    getProposalSubSectionByID(proposalid,sectionid,subsectionid) {
+        const ues = new UES();
+        let getsection = false;
+        const subsections = ues.getProposalSubSections.call(this,proposalid,sectionid)
+        if(subsections) {
+            // eslint-disable-next-line
+            subsections.map(subsection=> {
+                if(subsection.subsectionid === subsectionid) {
+                    getsection = subsection;
+                }
+            })
+        }
+        return getsection;
+    }
+
+    getProposalSubSections(proposalid,sectionid) {
+        let subsections = false;
+        const ues = new UES();
+        const section = ues.getProposalSectionByID.call(this,proposalid,sectionid);
+  
+        if(section) {
+            if(section.hasOwnProperty("subsections")) {
+                subsections = section.subsections;
+            }
+        }
+
+        return subsections;
+
+    }
+
     getProposalSectionByID(proposalid, sectionid) {
         const ues = new UES();
         let getsection = false;
@@ -1631,8 +1676,9 @@ class UES {
         const ues = new UES();
         let getproposal = [];
         const proposals = ues.getProposals.call(this);
-        console.log(proposals, projectid)
+      
         if(proposals) {
+            // eslint-disable-next-line
             proposals.map(proposal=> {
                 if(proposal.projectid === projectid) {
                     getproposal.push(proposal)

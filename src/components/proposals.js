@@ -9,9 +9,10 @@ import { LoadProposals, SaveProposals } from './actions/api';
 // import Investigation from './investigation'
 import Sections from './sections';
 import SectionList from './sectionlist';
-import { newProposal, currentDate, newSection, newList, inputUTCStringForLaborID } from './functions';
+import { newProposal, currentDate, newSection, newList, inputUTCStringForLaborID, newSubSection } from './functions';
 import MakeID from './makeids';
-import Spinner from './spinner'
+import Spinner from './spinner';
+import SubSections from './subsection';
 
 
 
@@ -22,7 +23,7 @@ class Proposals extends Component {
 
         this.state = {
 
-            render: '', width: 0, height: 0, message: '', activesectionid: false, dateproposal: currentDate(), intro: '', sectionname: '', sectioncontent: '', activesectionlistid: false, spinner: false
+            render: '', width: 0, height: 0, message: '', activesectionid: false, activesubsectionid: '', dateproposal: currentDate(), intro: '', sectionname: '', sectioncontent: '', activesectionlistid: false, spinner: false
 
         }
 
@@ -237,7 +238,7 @@ class Proposals extends Component {
     showProposalIDs() {
         const ues = new UES();
         const projectid = this.props.projectid;
-        const proposals = ues.getProposalsbyProjectID.call(this,projectid)
+        const proposals = ues.getProposalsbyProjectID.call(this, projectid)
         let ids = [];
         if (proposals) {
             // eslint-disable-next-line
@@ -825,32 +826,32 @@ class Proposals extends Component {
         if (project) {
             const project_id = project._id;
             const proposals = ues.getProposalsbyProjectID.call(this, projectid)
-         
+
 
             if (proposals) {
 
                 try {
 
-                let response = await SaveProposals({project_id, proposals})
-                if (response.hasOwnProperty("proposals")) {
-                   this.props.reduxProposals(response.proposals)
+                    let response = await SaveProposals({ project_id, proposals })
+                    if (response.hasOwnProperty("proposals")) {
+                        this.props.reduxProposals(response.proposals)
+                    }
+                    let message = "";
+                    if (response.hasOwnProperty("message")) {
+                        message = response.message;
+                    }
+
+                    if (response.hasOwnProperty("lastupdated")) {
+                        message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
+                    }
+
+                    this.setState({ message, spinner: false })
+
+
+                } catch (err) {
+                    this.setState({ spinner: false })
+                    alert(err)
                 }
-                let message = "";
-                if (response.hasOwnProperty("message")) {
-                    message = response.message;
-                }
-
-                if (response.hasOwnProperty("lastupdated")) {
-                    message += `Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
-                }
-
-                this.setState({ message, spinner: false })
-
-
-            } catch(err) {
-                this.setState({ spinner: false })
-                alert(err)
-            }
 
 
 
@@ -858,6 +859,327 @@ class Proposals extends Component {
 
             }
         }
+    }
+
+    moveSubSectionUp(subsectionid) {
+        const ues = new UES();
+
+        const proposals = ues.getProposals.call(this)
+        if (proposals) {
+            if (this.state.activeproposalid) {
+                const proposalid = this.state.activeproposalid;
+                const proposal = ues.getProposalByID.call(this, proposalid);
+                if (proposal) {
+                    const i = ues.getProposalKeyByID.call(this, proposalid);
+                    if (this.state.activesectionid) {
+                        const sectionid = this.state.activesectionid;
+                        const section = ues.getProposalSectionByID.call(this, proposalid, sectionid)
+                        if (section) {
+                            const j = ues.getProposalSectionKeyByID.call(this, proposalid, sectionid)
+
+                            const subsection = ues.getProposalSubSectionByID.call(this, proposalid, sectionid, subsectionid);
+
+                            if (subsection) {
+
+                                const k = ues.getProposalSubSectionKeyByID.call(this, proposalid, sectionid, subsectionid)
+
+                                const sectioncount = proposals[i].sections[j].subsections.length;
+
+                                if (sectioncount > 1 && k > 0) {
+                                    const section_1 = proposals[i].sections[j].subsections[k - 1];
+                                    proposals[i].sections[j].subsections[k] = section_1;
+                                    proposals[i].sections[j].subsections[k - 1] = subsection;
+                                    this.props.reduxProposals(proposals)
+                                    this.setState({ render: 'render' })
+
+                                }
+
+
+
+                            }
+
+                        }
+
+                    }
+
+
+                }
+            }
+        }
+
+    }
+
+    moveSubSectionDown(subsectionid) {
+
+        const ues = new UES();
+
+        const proposals = ues.getProposals.call(this)
+        if (proposals) {
+            if (this.state.activeproposalid) {
+                const proposalid = this.state.activeproposalid;
+                const proposal = ues.getProposalByID.call(this, proposalid);
+                if (proposal) {
+                    const i = ues.getProposalKeyByID.call(this, proposalid);
+                    if (this.state.activesectionid) {
+                        const sectionid = this.state.activesectionid;
+
+                        const section = ues.getProposalSectionByID.call(this, proposalid, sectionid)
+                        if (section) {
+                            const j = ues.getProposalSectionKeyByID.call(this, proposalid, sectionid)
+
+                            const subsection = ues.getProposalSubSectionByID.call(this, proposalid, sectionid, subsectionid);
+
+                            if (subsection) {
+
+                                const k = ues.getProposalSubSectionKeyByID.call(this, proposalid, sectionid, subsectionid)
+
+                                const sectioncount = proposals[i].sections[j].subsections.length;
+
+                                if (sectioncount > 1 && k < sectioncount - 1) {
+                                    const section_1 = proposals[i].sections[j].subsections[k + 1];
+                                    proposals[i].sections[j].subsections[k] = section_1;
+                                    proposals[i].sections[j].subsections[k + 1] = subsection;
+                                    this.props.reduxReports(proposals);
+                                    this.setState({ render: 'render' })
+
+                                }
+
+
+                            }
+
+
+
+                        }
+
+                    }
+
+
+                }
+            }
+        }
+
+    }
+
+    getSubSectionName() {
+        const ues = new UES();
+        let sectionname = "";
+        if (this.state.activeproposalid) {
+            const proposalid = this.state.activeproposalid;
+            if (this.state.activesectionid) {
+                const sectionid = this.state.activesectionid;
+
+                if (this.state.activesubsectionid) {
+                    const subsectionid = this.state.activesubsectionid;
+                    const subsection = ues.getProposalSubSectionByID.call(this, proposalid, sectionid, subsectionid)
+                    if (subsection) {
+                        sectionname = subsection.sectionname;
+                    }
+
+
+
+
+                }
+
+
+            }
+
+        }
+        return sectionname;
+
+    }
+
+    handleSubSectionName(value) {
+        const ues = new UES();
+        const proposals = ues.getProposals.call(this);
+        const makeid = new MakeID();
+        if (proposals) {
+            if (this.state.activeproposalid) {
+                const proposalid = this.state.activeproposalid;
+                const proposal = ues.getProposalByID.call(this, proposalid);
+                if (proposal) {
+                    const i = ues.getProposalKeyByID.call(this, proposalid);
+                    if (this.state.activesectionid) {
+                        const sectionid = this.state.activesectionid;
+                        const section = ues.getProposalSectionByID.call(this, proposalid, sectionid);
+                        if (section) {
+                            const j = ues.getProposalSectionKeyByID.call(this, proposalid, sectionid);
+
+                            if (this.state.activesubsectionid) {
+                                const subsectionid = this.state.activesubsectionid;
+                                const subsection = ues.getProposalSubSectionByID.call(this, proposalid, sectionid, subsectionid)
+                                if (subsection) {
+                                    const k = ues.getProposalSubSectionKeyByID.call(this, proposalid, sectionid, subsectionid)
+                                    proposals[i].sections[j].subsections[k].sectionname = value;
+                                    this.props.reduxProposals(proposals)
+                                    this.setState({ render: 'render' })
+
+                                }
+
+                            } else {
+                                const subsectionid = makeid.proposalid.call(this);
+                                const content = this.state.content;
+                                const newsubsection = newSubSection(subsectionid, value, content)
+                                if (section.hasOwnProperty("subsections")) {
+                                    proposals[i].sections[j].subsections.push(newsubsection)
+
+                                } else {
+                                    proposals[i].sections[j].subsections = [newsubsection]
+                                }
+                                this.props.reduxProposals(proposals)
+                                this.setState({ activesubsectionid: subsectionid })
+                            }
+
+
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+    }
+
+    getSubSectionContent() {
+        const ues = new UES();
+        let content = "";
+        if (this.state.activeproposalid) {
+            const proposalid = this.state.activeproposalid;
+            if (this.state.activesectionid) {
+                const sectionid = this.state.activesectionid;
+
+                if (this.state.activesubsectionid) {
+                    const subsectionid = this.state.activesubsectionid;
+                    const subsection = ues.getProposalSubSectionByID.call(this, proposalid, sectionid, subsectionid)
+                    if (subsection) {
+                        content = subsection.content;
+                    }
+
+
+
+
+                }
+
+
+            }
+
+        }
+        return content;
+
+    }
+
+    handleSubSectionContent(value) {
+        const ues = new UES();
+        const proposals = ues.getProposals.call(this);
+        const makeid = new MakeID();
+        if (proposals) {
+            if (this.state.activeproposalid) {
+                const proposalid = this.state.activeproposalid;
+                const proposal = ues.getProposalByID.call(this, proposalid);
+                if (proposal) {
+                    const i = ues.getProposalKeyByID.call(this, proposalid);
+                    if (this.state.activesectionid) {
+                        const sectionid = this.state.activesectionid;
+                        const section = ues.getProposalSectionByID.call(this, proposalid, sectionid);
+                        if (section) {
+                            const j = ues.getProposalSectionKeyByID.call(this, proposalid, sectionid);
+
+                            if (this.state.activesubsectionid) {
+                                const subsectionid = this.state.activesubsectionid;
+                                const subsection = ues.getProposalSubSectionByID.call(this, proposalid, sectionid, subsectionid)
+                                if (subsection) {
+                                    const k = ues.getProposalSubSectionKeyByID.call(this, proposalid, sectionid, subsectionid)
+                                    proposals[i].sections[j].subsections[k].content = value;
+                                    this.props.reduxProposals(proposals)
+                                    this.setState({ render: 'render' })
+
+                                }
+
+                            } else {
+                                const subsectionid = makeid.proposalid.call(this);
+                                const sectionname = this.state.sectionname;
+                                const newsubsection = newSubSection(subsectionid, sectionname, value)
+                                if (section.hasOwnProperty("subsections")) {
+                                    proposals[i].sections[j].subsections.push(newsubsection)
+
+                                } else {
+                                    proposals[i].sections[j].subsections = [newsubsection]
+                                }
+                                this.props.reduxProposals(proposals)
+                                this.setState({ activesubsectionid: subsectionid })
+                            }
+
+
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+    }
+
+    removeSubSection(subsectionid) {
+
+        const ues = new UES();
+        const proposals = ues.getProposals.call(this);
+
+        if (proposals) {
+            if (this.state.activeproposalid) {
+                const proposalid = this.state.activeproposalid;
+                const proposal = ues.getProposalByID.call(this, proposalid);
+                if (proposal) {
+                    const i = ues.getProposalKeyByID.call(this, proposalid);
+                    if (this.state.activesectionid) {
+                        const sectionid = this.state.activesectionid;
+                        const section = ues.getProposalSectionByID.call(this, proposalid, sectionid);
+                        if (section) {
+                            const j = ues.getProposalSectionKeyByID.call(this, proposalid, sectionid);
+
+
+                            const subsection = ues.getProposalSubSectionByID.call(this, proposalid, sectionid, subsectionid)
+                            if (subsection) {
+                                const k = ues.getProposalSubSectionKeyByID.call(this, proposalid, sectionid, subsectionid)
+                                proposals[i].sections[j].subsections.splice(k, 1)
+                                this.props.reduxProposals(proposals)
+                                this.setState({ render: 'render' })
+
+                            }
+
+
+
+
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+    }
+
+    showSubSectionIDs() {
+        const ues = new UES();
+        let ids = [];
+        const subsection = new SubSections();
+        if (this.state.activeproposalid) {
+            const proposalid = this.state.activeproposalid;
+            if (this.state.activesectionid) {
+                const sectionid = this.state.activesectionid;
+                const subsections = ues.getProposalSubSections.call(this, proposalid, sectionid)
+
+                if (subsections) {
+                    // eslint-disable-next-line
+                    subsections.map(section => {
+                        ids.push(subsection.showSubSectionID.call(this, section))
+                    })
+                }
+            }
+            return ids;
+        }
+
     }
 
 
@@ -892,6 +1214,7 @@ class Proposals extends Component {
 
         const sections = new Sections();
         const sectionlist = new SectionList();
+        const subsections = new SubSections();
 
         if (myuser) {
             const projectid = this.props.projectid;
@@ -954,6 +1277,8 @@ class Proposals extends Component {
                         {sections.showSections.call(this)}
 
                         {sectionlist.showSectionList.call(this)}
+
+                        {subsections.showSubSections.call(this)}
 
                         <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.bottomMargin15 }}>
                             <span style={{ ...regularFont }}>{this.state.message}</span>

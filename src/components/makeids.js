@@ -167,6 +167,15 @@ class MakeID {
                             })
                         }
 
+                        if(section.hasOwnProperty("subsections")) {
+                            // eslint-disable-next-line
+                            section.subsections.map(subsection=> {
+                                if(subsection.subsectionid === proposalid) {
+                                    proposalid = false;
+                                }
+                            })
+                        }
+
                     })
 
                    
