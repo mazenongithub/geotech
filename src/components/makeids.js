@@ -136,6 +136,58 @@ class MakeID {
         return figureid;
     }
 
+    proposalid() {
+        const ues = new UES();
+        let proposalid = false;
+        const proposals = ues.getProposals.call(this)
+        if(proposals) {
+            while(!proposalid) {
+
+            proposalid = makeID(8)
+            // eslint-disable-next-line
+            proposals.map(proposal => {
+                if(proposal.proposalid === proposalid) {
+                    proposalid = false;
+                }
+
+                if(proposal.hasOwnProperty("sections")) {
+                    // eslint-disable-next-line
+                    proposal.sections.map(section=> {
+                        if(section.sectionid === proposalid) {
+                            proposalid = false;
+                        }
+
+
+                        if(section.hasOwnProperty("list")) {
+                            // eslint-disable-next-line
+                            section.list.map(list=> {
+                                if(list.listid === proposalid) {
+                                    proposalid = false;
+                                }
+                            })
+                        }
+
+                    })
+
+                   
+                
+                }
+
+                
+            
+            
+            })
+
+
+            }
+
+        } else {
+            proposalid = makeID(8)
+        }
+
+        return proposalid;
+    }
+
     pavementSectionID() {
         let pavementid = false;
         const ues = new UES();
@@ -159,7 +211,7 @@ class MakeID {
                             }
 
                             if (service.hasOwnProperty("design")) {
-
+// eslint-disable-next-line
                                 service.design.map(section => {
                                     if (section.sectionid === pavementid) {
                                         pavementid = false;

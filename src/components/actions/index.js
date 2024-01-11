@@ -1,4 +1,4 @@
-import {MYUSER, CLIENTS, PROJECTS, REPORTS, PAVEMENT, BORINGS, MYADMIN} from './types';
+import {MYUSER, CLIENTS, PROJECTS, REPORTS, PAVEMENT, BORINGS, MYADMIN, PROPOSALS} from './types';
 
 export const reduxUser = (myuser) => async dispatch => {
 
@@ -33,6 +33,11 @@ export const reduxBorings = (borings ) => async dispatch => {
 export const reduxMyAdmin = (myadmin) => async dispatch => {
 
     dispatch({ type: MYADMIN, payload: myadmin  })
+}
+
+export const reduxProposals = (proposals) => async dispatch => {
+
+    dispatch({ type: PROPOSALS, payload: proposals  })
 }
 
 

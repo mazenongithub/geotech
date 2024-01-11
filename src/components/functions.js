@@ -47,6 +47,10 @@ export function newFigure(figureid, figurenumber, figurename) {
     return ({ figureid, figurenumber, figurename })
 }
 
+export function newProposal(proposalid,projectid,dateproposal,proposalnumber,intro) {
+    return({proposalid,projectid,dateproposal,proposalnumber,intro})
+}
+
 export function newPavementService(serviceid,sectionid,servicetype,ti) {
     return({serviceid,sectionid,servicetype,ti})
 }
@@ -77,7 +81,10 @@ export function newReport(reportid, project_id, projectid, datereport, intro) {
 export function currentDate() {
     let currentdate = "";
     const dateobj = new Date();
-    const month = dateobj.getMonth() + 1;
+    let month = dateobj.getMonth() + 1;
+    if(month < 10) {
+        month = `0${month}`
+    }
     let day = dateobj.getDate();
     if (day < 10) {
         day = `0${day}`

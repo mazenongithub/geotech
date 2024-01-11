@@ -205,7 +205,7 @@ class ViewReport extends Component {
 
     }
 
-  
+
 
     showSectionDesign(section) {
         const ues = new UES();
@@ -229,20 +229,20 @@ class ViewReport extends Component {
 
     }
 
-    
+
 
     showPavementTables() {
 
         const ues = new UES();
         let getsections = [];
-        const projectid = this.props.projectid; 
+        const projectid = this.props.projectid;
         const pavements = ues.getPavementByProjectID.call(this, projectid);
         if (pavements) {
             // eslint-disable-next-line
             pavements.map(pavement => {
                 getsections.push(this.showPavementTable(pavement))
 
-               
+
 
             })
 
@@ -257,50 +257,97 @@ class ViewReport extends Component {
         const ues = new UES();
         const regularFont = ues.regularFont.call(this)
 
-        const pavementSections = (section) => {
+        const escapeZero = (val) => {
+            if(Number(val) === 0) {
+                val = '-'
+            } else {
+                val = Number(val)
+            }
+            return val;
+        }
+
+        const showDesignRow = (design) => {
             return (<tr>
-                <td style={{...styles.showBorder}}><div style={{...styles.generalContainer, ...styles.alignCenter}}><span style={{...regularFont}}>{section.ti} </span> </div></td>
-                <td style={{...styles.showBorder}}><div style={{...styles.generalContainer, ...styles.alignCenter}}><span style={{...regularFont}}>{section.use} </span> </div></td>
-                <td style={{...styles.showBorder}}><div style={{...styles.generalContainer, ...styles.alignCenter}}><span style={{...regularFont}}>{section.ac} </span> </div></td>
-                <td style={{...styles.showBorder}}><div style={{...styles.generalContainer, ...styles.alignCenter}}><span style={{...regularFont}}>{section.ab} </span> </div></td>
-                <td style={{...styles.showBorder}}><div style={{...styles.generalContainer, ...styles.alignCenter}}><span style={{...regularFont}}>{section.pcc} </span> </div></td>
+                <td width="29%" style={{ ...styles.alignCenter }}>{escapeZero(design.ac)}</td>
+                <td width="32%" style={{ ...styles.alignCenter }}>{escapeZero(design.ab)}</td>
+                <td width="39%" style={{ ...styles.alignCenter }}>{escapeZero(design.pcc)}</td>
             </tr>)
         }
 
+        const showDesign = (service) => {
+            let getdesgin = [];
+            if (service.hasOwnProperty("design")) {
+                // eslint-disable-next-line
+                service.design.map(pavement => {
+                    getdesgin.push(showDesignRow(pavement))
+                })
+            }
+            return getdesgin;
+
+        }
+
+        const showservicerows = (pavement) => {
+            let getrows = [];
+            if (pavement.hasOwnProperty("services")) {
+                // eslint-disable-next-line
+                pavement.services.map(service => {
+
+                    getrows.push
+                        (<tr>
+                            <td style={{ ...styles.alignCenter }}><div style={{...styles.generalFont}}><span style={{...regularFont}}>{service.ti}</span></div></td>
+                            <td style={{ ...styles.alignCenter }}><div>{service.servicetype}</div></td>
+                            <td colspan="3">
+                                <table width="99%" border="0" cellpadding="3">
+                                    <tbody>
+                                    {showDesign(service)}
+                                    </tbody>
+                                </table></td>
+                        </tr>)
+
+
+                })
+
+            }
+
+            return getrows;
+        }
+
         let tablerows = [];
-        if(pavement.hasOwnProperty("design")) {
+        if (pavement.hasOwnProperty("services")) {
             // eslint-disable-next-line
-            pavement.design.map(section=> {
-                tablerows.push(pavementSections(section))
+            pavement.services.map(service => {
+                console.log(service)
+                tablerows.push(showservicerows(service))
             })
         }
 
 
         return (
-            <div style={{...styles.generalContainer, ...styles.bottomMargin15}}>
-            <table width="99%" border="0" cellpadding="3">
-                <tbody>
-                    <tr>
-                        <td width="21%" rowspan="2" style={{...styles.showBorder}}><div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>Traffic Index</span></div></td>
-                        <td width="26%" rowspan="2" style={{...styles.showBorder}}><div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>Pavement Use</span></div></td>
-                        <td colspan="3" style={{...styles.showBorder}}>
-                        <div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>{pavement.sectionname} </span></div>
-                        <div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>Rvalue = {pavement.rvalue} </span></div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width="17%" style={{...styles.showBorder}}><div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>Type A Asphalt Conrete (in) </span> </div></td>
-                        <td width="18%" style={{...styles.showBorder}}><div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>Class 2 Aggregate Base (in) </span></div></td>
-                        <td width="18%" style={{...styles.showBorder}}><div style={{...styles.alignCenter, ...styles.generalFont}}><span style={{...regularFont}}>Portland Cement Concrete (P.C.C) </span> </div></td>
-                    </tr>
-                    {tablerows}
-                </tbody>
-            </table>
+            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                <table width="99%" border="1" cellpadding="3" style={{...styles.generalFont, ...regularFont}}>
+                    <tbody>
+                        <tr>
+                            <td width="11%" rowspan="2" style={{ ...styles.alignCenter }}><div>Traffic Index</div></td>
+                            <td width="40%" rowspan="2" style={{ ...styles.alignCenter }}><div>Pavement Use</div></td>
+                            <td colspan="3" style={{ ...styles.alignCenter }}>
+                                <div>{pavement.sectionname}</div>
+                                <div>RValue={pavement.rvalue}</div>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="16%" style={{ ...styles.alignCenter }}><div>Type A Asphalt Concrete (inches)</div></td>
+                            <td width="17%" style={{ ...styles.alignCenter }}><div>Class 2 Aggregate Base (inches)</div></td>
+                            <td width="16%" style={{ ...styles.alignCenter }}><div>Portland Cement Concrete (inches)</div></td>
+                        </tr>
+                        {showservicerows(pavement)}
+                    </tbody>
+                </table>
             </div>)
     }
 
 
-  
+
 
     showReport() {
 
@@ -321,7 +368,7 @@ class ViewReport extends Component {
                             let label_1 = `${Number(i + 1)}.${Number(j + 1)}`
                             getreport.push(this.showSection(label_1, section))
 
-                            if(section.sectionname === 'Pavement Design') {
+                            if (section.sectionname === 'Pavement Design') {
                                 getreport.push(this.showPavementTables())
                             }
 

@@ -6,6 +6,7 @@ import reports from './reportsreducer';
 import pavement from './pavementreducer'
 import borings from './boringsreducer';
 import myadmin from './myadminreducer';
+import proposals from './proposalsreducer';
 
 export default combineReducers({
     myuser,
@@ -14,5 +15,6 @@ export default combineReducers({
     reports,
     pavement,
     borings,
-    myadmin
+    myadmin,
+    proposals
 })

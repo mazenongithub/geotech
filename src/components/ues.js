@@ -227,44 +227,44 @@ class UES {
     async saveReport() {
         const ues = new UES();
         const projectid = this.props.projectid;
-        const project = ues.getProjectbyID.call(this,projectid)
-        if(project) {
-        const project_id = project._id;
-        const reports = ues.getReportsByProjectID.call(this, projectid)
-       
-        try {
-       
-            this.setState({ spinner: true })
-            const response = await SaveReport({ project_id, reports });
-            console.log(response)
-            if (response.hasOwnProperty("reportsdb")) {
-                // eslint-disable-next-line
-                
-                this.props.reduxReports(response.reportsdb)
+        const project = ues.getProjectbyID.call(this, projectid)
+        if (project) {
+            const project_id = project._id;
+            const reports = ues.getReportsByProjectID.call(this, projectid)
 
+            try {
+
+                this.setState({ spinner: true })
+                const response = await SaveReport({ project_id, reports });
+                console.log(response)
+                if (response.hasOwnProperty("reportsdb")) {
+                    // eslint-disable-next-line
+
+                    this.props.reduxReports(response.reportsdb)
+
+                }
+
+                let message = "";
+                if (response.hasOwnProperty("message")) {
+                    message += response.message;
+
+                }
+
+                if (response.hasOwnProperty("lastupdated")) {
+                    message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
+                }
+
+                this.setState({ message, spinner: false })
+
+            } catch (err) {
+                this.setState({ spinner: false })
+                alert(err)
             }
 
-            let message = "";
-            if (response.hasOwnProperty("message")) {
-                message += response.message;
 
-            }
-
-            if (response.hasOwnProperty("lastupdated")) {
-                message += ` Last Saved ${inputUTCStringForLaborID(response.lastupdated)} `
-            }
-
-            this.setState({ message, spinner: false })
-
-        } catch (err) {
-            this.setState({ spinner: false })
-            alert(err)
         }
 
 
-    }
-
-    
     }
 
     async saveBorings() {
@@ -353,7 +353,7 @@ class UES {
 
 
     async loadReports() {
-     
+
 
         try {
 
@@ -556,20 +556,21 @@ class UES {
             })
         }
 
-        
-        
+
+
         return key;
     }
 
 
-    getPavementServiceKeyByID(sectionid,serviceid) {
+    getPavementServiceKeyByID(sectionid, serviceid) {
         const ues = new UES();
-        const getservice = ues.getPavementService.call(this,sectionid);
+        const getservice = ues.getPavementService.call(this, sectionid);
         let key = false;
-        if(getservice) {
-            getservice.map((service,i)=> {
-                if(service.serviceid === serviceid) {
-                   key = i;
+        if (getservice) {
+            // eslint-disable-next-line
+            getservice.map((service, i) => {
+                if (service.serviceid === serviceid) {
+                    key = i;
 
                 }
             })
@@ -579,13 +580,14 @@ class UES {
         return key;
     }
 
-    getPavementServiceByID(sectionid,serviceid) {
+    getPavementServiceByID(sectionid, serviceid) {
         const ues = new UES();
-        const getservice = ues.getPavementService.call(this,sectionid);
+        const getservice = ues.getPavementService.call(this, sectionid);
         let findservice = false;
-        if(getservice) {
-            getservice.map(service=> {
-                if(service.serviceid === serviceid) {
+        if (getservice) {
+            // eslint-disable-next-line
+            getservice.map(service => {
+                if (service.serviceid === serviceid) {
                     findservice = service;
 
                 }
@@ -602,12 +604,12 @@ class UES {
         const section = ues.getPavementByID.call(this, sectionid);
 
         if (section) {
-   
-            
-            if(section.hasOwnProperty("services")) {
+
+
+            if (section.hasOwnProperty("services")) {
                 getsection = section.services;
             }
-            
+
 
 
         }
@@ -635,7 +637,7 @@ class UES {
     getPavementSections(sectionid, serviceid) {
         let getsections = false;
         const ues = new UES();
-        const service = ues.getPavementServiceByID.call(this,sectionid,serviceid)
+        const service = ues.getPavementServiceByID.call(this, sectionid, serviceid)
         if (service.hasOwnProperty("design")) {
             getsections = service.design;
         }
@@ -790,14 +792,14 @@ class UES {
     }
 
 
-    getSectionListKeybyID(reportid, chapterid, sectionid,listid) {
+    getSectionListKeybyID(reportid, chapterid, sectionid, listid) {
         const ues = new UES();
         let key = false;
-        const sectionlist = ues.getSectionList.call(this,reportid,chapterid,sectionid)
-        if(sectionlist) {
-             // eslint-disable-next-line
-            sectionlist.map((list,i)=> {
-                if(list.listid === listid) {
+        const sectionlist = ues.getSectionList.call(this, reportid, chapterid, sectionid)
+        if (sectionlist) {
+            // eslint-disable-next-line
+            sectionlist.map((list, i) => {
+                if (list.listid === listid) {
                     key = i;
                 }
             })
@@ -809,14 +811,14 @@ class UES {
     }
 
 
-    getSectionListbyID(reportid, chapterid, sectionid,listid) {
+    getSectionListbyID(reportid, chapterid, sectionid, listid) {
         const ues = new UES();
         let getlist = false;
-        const sectionlist = ues.getSectionList.call(this,reportid,chapterid,sectionid)
-        if(sectionlist) { 
+        const sectionlist = ues.getSectionList.call(this, reportid, chapterid, sectionid)
+        if (sectionlist) {
             // eslint-disable-next-line
-            sectionlist.map(list=> {
-                if(list.listid === listid) {
+            sectionlist.map(list => {
+                if (list.listid === listid) {
                     getlist = list;
                 }
             })
@@ -830,28 +832,28 @@ class UES {
 
     getSectionList(reportid, chapterid, sectionid) {
         const ues = new UES();
-        let getlist= false;
+        let getlist = false;
         const sections = ues.getSectionsbyChapterID.call(this, reportid, chapterid)
         if (sections) {
             // eslint-disable-next-line
             sections.map(section => {
                 if (section.sectionid === sectionid) {
-                    
-                    if(section.hasOwnProperty("list")) {
+
+                    if (section.hasOwnProperty("list")) {
                         getlist = section.list;
                     }
-                
-                
+
+
                 }
             })
         }
-        
+
         return getlist;
 
     }
-       
 
-    
+
+
 
 
     getSectionbyID(reportid, chapterid, sectionid) {
@@ -1494,6 +1496,166 @@ class UES {
             })
         }
         return getproject;
+    }
+
+    getProposalSectionListKeybyID(proposalid,sectionid, listid) {
+        const ues = new UES();
+        let key = false;
+        const lists = ues.getProposalSectionList.call(this,proposalid,sectionid)
+        if(lists) {
+            // eslint-disable-next-line
+            lists.map((list,i)=> {
+                if(list.listid === listid) {
+                    key = i;
+                }
+            })
+        }
+        return key;
+    }
+
+    getProposalSectionListbyID(proposalid,sectionid, listid) {
+        const ues = new UES();
+        let getlist = false;
+        const lists = ues.getProposalSectionList.call(this,proposalid,sectionid)
+        if(lists) {
+            // eslint-disable-next-line
+            lists.map(list=> {
+                if(list.listid === listid) {
+                    getlist = list;
+                }
+            })
+        }
+        return getlist;
+    }
+
+    getProposalSectionList(proposalid,sectionid) {
+        const ues = new UES();
+        let list = false;
+        const section = ues.getProposalSectionByID.call(this,proposalid,sectionid)
+        if(section) {
+            if(section.hasOwnProperty("list")) {
+                list = section.list;
+            }
+        }
+        return list;
+    }
+
+    getProposalSectionKeyByID(proposalid, sectionid) {
+        const ues = new UES();
+        let key = false;
+        const sections = ues.getProposalSections.call(this,proposalid)
+        if(sections) {
+            // eslint-disable-next-line
+            sections.map((section,i)=> {
+                if(section.sectionid === sectionid) {
+                    key = i;
+                }
+            })
+        }
+
+        return key;
+
+    }
+
+    getProposalSectionByID(proposalid, sectionid) {
+        const ues = new UES();
+        let getsection = false;
+        const sections = ues.getProposalSections.call(this,proposalid)
+        if(sections) {
+            // eslint-disable-next-line
+            sections.map(section=> {
+                if(section.sectionid === sectionid) {
+                    getsection = section;
+                }
+            })
+        }
+
+        return getsection;
+
+    }
+
+    getProposalSections(proposalid) {
+        const ues = new UES();
+        const proposal = ues.getProposalByID.call(this, proposalid)
+        let getsections = false;
+        if (proposal) {
+            if (proposal.hasOwnProperty("sections")) {
+
+                getsections = proposal.sections;
+
+            }
+        }
+
+        return getsections;
+
+    }
+
+    getProposalKeyByID(proposalid) {
+
+        let key = false;
+        const ues = new UES();
+        const proposals = ues.getProposals.call(this)
+        if (proposals) {
+            // eslint-disable-next-line
+            proposals.map((proposal, i) => {
+                if (proposal.proposalid === proposalid) {
+                    key = i;
+
+                }
+            })
+        }
+
+        return key;
+
+    }
+
+    getProposalByID(proposalid) {
+        let getproposal = false;
+        const ues = new UES();
+        const proposals = ues.getProposals.call(this)
+        if (proposals) {
+            // eslint-disable-next-line
+            proposals.map(proposal => {
+                if (proposal.proposalid === proposalid) {
+                    getproposal = proposal;
+
+                }
+            })
+        }
+
+        return getproposal;
+
+    }
+
+    getProposalsbyProjectID(projectid) {
+        const ues = new UES();
+        let getproposal = [];
+        const proposals = ues.getProposals.call(this);
+        console.log(proposals, projectid)
+        if(proposals) {
+            proposals.map(proposal=> {
+                if(proposal.projectid === projectid) {
+                    getproposal.push(proposal)
+                }
+            })
+        }
+        if(getproposal.length === 0) {
+            getproposal = false;
+        }
+
+        return getproposal;
+
+    }
+
+    getProposals() {
+        let proposals = false;
+
+        if (this.props.proposals) {
+            if (this.props.proposals.hasOwnProperty("length")) {
+                proposals = this.props.proposals;
+            }
+        }
+        return proposals;
     }
 
     getProjects() {

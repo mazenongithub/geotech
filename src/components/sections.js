@@ -74,7 +74,7 @@ class Sections {
         const headerFont = ues.headerFont.call(this)
 
 
-        if (this.state.activechapterid) {
+        if (this.state.activechapterid || this.state.activeproposalid) {
 
             return (
 
