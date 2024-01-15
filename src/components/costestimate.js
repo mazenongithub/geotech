@@ -977,7 +977,7 @@ class CostEstimate extends Component {
                 
             })
         }
-        return Number(amount).toFixed(2)
+        return Number(Math.ceil(amount))
     }
 
     showGroup(group) {
@@ -1033,7 +1033,7 @@ class CostEstimate extends Component {
             })
 
         }
-        return amount;
+        return Number(amount);
     }
 
     getAmount() {
@@ -1051,6 +1051,96 @@ class CostEstimate extends Component {
         const fieldcost = calcFieldAmount(quantity,unitprice,overhead);
         return Number(fieldcost).toFixed(2)
 
+    }
+
+    handleLineItems() {
+        const styles = MyStylesheet();
+        const ues = new UES();
+        const regularFont = ues.regularFont.call(this)
+        if(this.state.activegroupid) {
+            return( <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.showBorder, ...styles.generalPadding }}>
+
+                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
+                    <span style={{ ...regularFont }}> Line Item</span>
+                </div>
+                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                    <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                        value={this.getLineItem()}
+                        onChange={event => { this.handleLineItem(event.target.value) }}
+                    />
+                </div>
+
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+
+                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
+
+                        <div style={{ ...styles.generalContainer }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                                value={this.getQuantity()}
+                                onChange={event => { this.handleQuantity(event.target.value) }} />
+                        </div>
+                        <span style={{ ...regularFont, ...styles.bottomMargin15 }}>Quantity</span>
+                    </div>
+                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
+                        <div style={{ ...styles.generalContainer }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                                value={this.getUnit()}
+                                onChange={event => { this.handleUnit(event.target.value) }}
+                            />
+                        </div>
+                        <span style={{ ...regularFont, ...styles.bottomMargin15 }}>Unit</span>
+                    </div>
+                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
+                        <div style={{ ...styles.generalContainer }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                                value={this.getUnitPrice()}
+                                onChange={event => { this.handleUnitPrice(event.target.value) }} />
+                        </div>
+                        <span style={{ ...regularFont, ...styles.bottomMargin15 }}>Unit Price</span>
+                    </div>
+
+
+                </div>
+
+
+                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
+
+                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
+
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
+                            <div style={{ ...styles.generalContainer }}>
+                                <span style={{ ...styles.generalFont, ...regularFont }}>{this.getAmount()}</span>
+                            </div>
+                            <span style={{ ...regularFont, ...styles.bottomMargin15 }}>Amount</span>
+                        </div>
+                    </div>
+                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
+                        <div style={{ ...styles.generalContainer }}>
+                            <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
+                                value={this.getOverhead()}
+                                onChange={event => { this.handleOverhead(event.target.value) }}
+                            />
+                        </div>
+                        <span style={{ ...regularFont, ...styles.bottomMargin15 }}>Overhead and Profit</span>
+                    </div>
+                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
+                        <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
+                            <div style={{ ...styles.generalContainer }}>
+                                <span style={{ ...styles.generalFont, ...regularFont }}>{this.getFieldCost()}</span>
+                            </div>
+                            <span style={{ ...regularFont, ...styles.bottomMargin15 }}>Field Cost</span>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                {this.showLineIDs()}
+
+            </div>
+)
+        }
     }
 
     render() {
@@ -1129,88 +1219,7 @@ class CostEstimate extends Component {
 
 
 
-                            <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.showBorder, ...styles.generalPadding }}>
-
-                                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont }}>
-                                    <span style={{ ...regularFont }}> Line Item</span>
-                                </div>
-                                <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
-                                    <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
-                                        value={this.getLineItem()}
-                                        onChange={event => { this.handleLineItem(event.target.value) }}
-                                    />
-                                </div>
-
-                                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
-
-                                        <div style={{ ...styles.generalContainer }}>
-                                            <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
-                                                value={this.getQuantity()}
-                                                onChange={event => { this.handleQuantity(event.target.value) }} />
-                                        </div>
-                                        <span style={{ ...regularFont, ...styles.bottomMargin15 }}>Quantity</span>
-                                    </div>
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
-                                        <div style={{ ...styles.generalContainer }}>
-                                            <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
-                                                value={this.getUnit()}
-                                                onChange={event => { this.handleUnit(event.target.value) }}
-                                            />
-                                        </div>
-                                        <span style={{ ...regularFont, ...styles.bottomMargin15 }}>Unit</span>
-                                    </div>
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
-                                        <div style={{ ...styles.generalContainer }}>
-                                            <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
-                                                value={this.getUnitPrice()}
-                                                onChange={event => { this.handleUnitPrice(event.target.value) }} />
-                                        </div>
-                                        <span style={{ ...regularFont, ...styles.bottomMargin15 }}>Unit Price</span>
-                                    </div>
-
-
-                                </div>
-
-
-                                <div style={{ ...styles.generalFlex, ...styles.bottomMargin15 }}>
-
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
-
-                                        <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
-                                            <div style={{ ...styles.generalContainer }}>
-                                                <span style={{ ...styles.generalFont, ...regularFont }}>{this.getAmount()}</span>
-                                            </div>
-                                            <span style={{ ...regularFont, ...styles.bottomMargin15 }}>Amount</span>
-                                        </div>
-                                    </div>
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
-                                        <div style={{ ...styles.generalContainer }}>
-                                            <input type="text" style={{ ...styles.generalField, ...styles.generalFont, ...regularFont }}
-                                                value={this.getOverhead()}
-                                                onChange={event => { this.handleOverhead(event.target.value) }}
-                                            />
-                                        </div>
-                                        <span style={{ ...regularFont, ...styles.bottomMargin15 }}>Overhead and Profit</span>
-                                    </div>
-                                    <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
-                                        <div style={{ ...styles.flex1, ...styles.generalFont, ...styles.addMargin }}>
-                                            <div style={{ ...styles.generalContainer }}>
-                                                <span style={{ ...styles.generalFont, ...regularFont }}>{this.getFieldCost()}</span>
-                                            </div>
-                                            <span style={{ ...regularFont, ...styles.bottomMargin15 }}>Field Cost</span>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-
-
-                                {this.showLineIDs()}
-
-                            </div>
-
+                           {this.handleLineItems()}
 
                             <div style={{ ...styles.generalContainer, ...styles.alignCenter, ...styles.generalFont }}>
                                 <span style={{ ...regularFont }}>{this.state.message}</span>
@@ -1223,7 +1232,7 @@ class CostEstimate extends Component {
                             {this.showCostEstimate()}
 
                             <div style={{...styles.generalContainer, ...styles.bottomMargin15, ...styles.generalFont, ...styles.alignRight}}>
-                                <span style={{...regularFont}}>Total Estimate Amount{this.getEstimatTotal()}</span>
+                                <span style={{...regularFont}}>Total Estimate Amount ${this.getEstimatTotal()}</span>
                             </div>
 
 
