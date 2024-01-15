@@ -66,6 +66,9 @@ export function MyStylesheet() {
         alignCenter: {
             textAlign: 'center'
         },
+        alignRight: {
+            textAlign: 'right'
+        },
         marginTop100:{
             marginTop:'100px'
         },

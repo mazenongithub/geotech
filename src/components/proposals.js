@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
-import { removeIcon, linkArrow, saveIcon } from './svg'
+import { removeIcon, linkArrow, saveIcon, dropdownIcon } from './svg'
 import { LoadProposals, SaveProposals } from './actions/api';
 // import Investigation from './investigation'
 import Sections from './sections';
@@ -289,6 +289,7 @@ class Proposals extends Component {
         const headerFont = ues.headerFont.call(this)
         const arrowWidth = ues.arrowWidth.call(this);
         const myuser = ues.checkUser.call(this)
+        const projectid = this.props.projectid;
 
         const highlight = (proposalid) => {
             if (this.state.activeproposalid === proposalid) {
@@ -296,10 +297,27 @@ class Proposals extends Component {
             }
         }
 
-        const projectid = this.props.projectid;
+    
         const project = ues.getProjectbyID.call(this, projectid)
 
+
+
         if (project) {
+
+            
+
+            const activemenu = () => {
+                if (this.state.activeproposalid === proposal.proposalid) {
+                    return (<div style={{ ...styles.generalContainer }}>
+                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${projectid}/proposals/${proposal.proposalid}`}><button style={{ ...styles.generalButton, ...iconWidth }}>{dropdownIcon()}</button> View Proposal </Link>
+                        </div>
+                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+                            <Link style={{ ...styles.generalLink, ...styles.generalFont, ...regularFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${projectid}/proposals/${proposal.proposalid}/costestimate`}><button style={{ ...styles.generalButton, ...iconWidth }}>{dropdownIcon()}</button> Cost Estimate </Link>
+                        </div>
+                    </div>)
+                }
+            }
 
 
             return (
@@ -323,9 +341,7 @@ class Proposals extends Component {
                         </div>
                     </div>
 
-                    <div style={{ ...styles.generalContainer }}>
-                        <Link style={{ ...styles.generalLink, ...styles.generalFont, ...headerFont, ...styles.boldFont, ...styles.generalColor }} to={`/${myuser.userid}/projects/${project.projectid}/proposal/${proposal.proposalid}`}><button style={{ ...styles.generalButton, ...arrowWidth }}>{linkArrow()}</button> Go To Proposal </Link>
-                    </div>
+                    {activemenu()}
 
                 </div>
             )

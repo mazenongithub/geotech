@@ -150,6 +150,24 @@ class MakeID {
                     proposalid = false;
                 }
 
+                if(proposal.hasOwnProperty("costestimate")) {
+                    // eslint-disable-next-line
+                    proposal.costestimate.map(group=> {
+                        if(group.groupid === proposalid) {
+                            proposalid = false;
+                        }
+
+                        if(group.hasOwnProperty("lineitems")) {
+                            // eslint-disable-next-line
+                            group.lineitems.map(item=> {
+                                if(item.lineid === proposalid) {
+                                    proposalid = false;
+                                }
+                            })
+                        }
+                    })
+                }
+
                 if(proposal.hasOwnProperty("sections")) {
                     // eslint-disable-next-line
                     proposal.sections.map(section=> {

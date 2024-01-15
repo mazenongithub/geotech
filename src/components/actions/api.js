@@ -358,7 +358,38 @@ export async function LoadUser() {
 export async function SaveProposals(values) {
  
 
-    const APIURL = `https://civilengineer.io/UES/api/saveproposals.php`
+    const APIURL = `https://civilengineer.io/UES/api/handleproposals.php`
+  
+    return fetch(APIURL, {
+        method: 'post',
+        credentials: 'include',
+        headers: new Headers({
+            'Content-Type': 'application/json',
+        }),
+
+        body: JSON.stringify(values)
+    })
+        .then(resp => {
+
+            if (!resp.ok) {
+                if (resp.status >= 400 && resp.status < 500) {
+                    return resp.json().then(data => {
+
+                        throw data.message;
+                    })
+                }
+
+            }
+
+            return resp.json();
+        })
+}
+
+
+export async function SaveEstimate(values) {
+ 
+
+    const APIURL = `https://civilengineer.io/UES/api/saveestimate.php`
   
     return fetch(APIURL, {
         method: 'post',

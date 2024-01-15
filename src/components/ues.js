@@ -1,6 +1,145 @@
-import { LoadBorings, LoadClients, LoadProjects, LoadReport, SaveBorings, LoadPavement, SaveReport } from "./actions/api";
+import { LoadProposals, LoadBorings, LoadClients, LoadProjects, LoadReport, SaveBorings, LoadPavement, SaveReport } from "./actions/api";
 import { inputUTCStringForLaborID } from "./functions";
+import { MyStylesheet } from "./styles";
 class UES {
+
+    showList(list) {
+
+        const ues = new UES();
+        const regularFont = ues.regularFont.call(this)
+        const styles = MyStylesheet();
+        let getlist = [];
+        let getsublist = [];
+
+        // eslint-disable-next-line
+        list.map(list => {
+
+
+            getlist.push(<li key={list.listid}>{list.list}</li>)
+
+            if (list.hasOwnProperty("sublist")) {
+                // eslint-disable-next-line
+                list.sublist.map(sublist => {
+
+                    getsublist.push(<li key={sublist.sublistid}>{sublist.list}</li>)
+                })
+                getlist.push(<ol key={`reportsublist`} type="a">{getsublist}</ol>)
+
+
+            }
+
+
+
+        })
+
+
+        return (<ol style={{ ...styles.generalFont, ...regularFont }} key={`reportlist`} type="1">{getlist}</ol>)
+
+    }
+
+    showSubSection(label, section) {
+
+        const styles = MyStylesheet();
+        const ues = new UES();
+        const regularFont = ues.regularFont.call(this)
+        return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.leftMargin40 }}>
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                <span style={{ ...regularFont }}>{label}</span>
+                <span style={{ ...regularFont, ...styles.marginLeft15 }}><u>{section.sectionname}</u></span>
+            </div>
+
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15, ...styles.lineSpace }}>
+                <span style={{ ...regularFont }}>{section.content}</span>
+            </div>
+
+        </div>)
+
+    }
+
+
+
+    showSection(label, section) {
+
+        const styles = MyStylesheet();
+        const ues = new UES();
+        const regularFont = ues.regularFont.call(this)
+        return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.marginLeft15 }}>
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
+                <span style={{ ...regularFont }}>{label}</span>
+                <span style={{ ...regularFont, ...styles.marginLeft15 }}><u>{section.sectionname}</u></span>
+            </div>
+
+            <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15, ...styles.lineSpace }}>
+                <span style={{ ...regularFont }}>{section.content}</span>
+            </div>
+
+        </div>)
+
+    }
+
+    getProjectBlock() {
+        const ues = new UES();
+        const projectid = this.props.projectid;
+        const project = ues.getProjectbyID.call(this, projectid)
+        const styles = MyStylesheet();
+        const regularFont = ues.regularFont.call(this)
+        if (project) {
+
+            const showaddress = (project) => {
+                if(project.address) {
+                    return( <div style={{ ...styles.generalContainer }}><span style={{ ...regularFont }}>{project.address}</span></div>)
+                }
+            }
+
+            const showcity = (project) => {
+                if(project.city) {
+                    return(<div style={{ ...styles.generalContainer }}><span style={{ ...regularFont }}>{project.city}, {project.projectstate}</span></div>)
+                }
+            }
+
+            return (
+                <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
+
+                    <div style={{ ...styles.generalContainer }}><span style={{ ...regularFont, ...styles.boldFont }}>{project.title}</span></div>
+                   {showaddress(project)}
+                   {showcity(project)}
+
+                </div>
+            )
+
+
+
+        }
+
+    }
+
+
+
+    getClientBlock() {
+        const ues = new UES();
+        const projectid = this.props.projectid;
+        const project = ues.getProjectbyID.call(this, projectid)
+        const styles = MyStylesheet();
+        const regularFont = ues.regularFont.call(this)
+        if (project) {
+            const clientid = project.clientid;
+            const client = ues.getClient.call(this, clientid)
+            if (client) {
+                return (
+                    <div style={{ ...styles.generalContainer, ...styles.generalFont }}>
+                        <div style={{ ...styles.generalContainer }}><span style={{ ...regularFont }}>{client.prefix} {client.firstname} {client.lastname}, {client.title}</span></div>
+                        <div style={{ ...styles.generalContainer }}><span style={{ ...regularFont }}>{client.company}</span> </div>
+                        <div style={{ ...styles.generalContainer }}><span style={{ ...regularFont }}>{client.address} </span></div>
+                        <div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}><span style={{ ...regularFont }}>{client.city},{client.contactstate} {client.zipcode}</span> </div>
+                    </div>
+
+
+
+                )
+            }
+        }
+    }
+
 
     proposalSections() {
         return ([
@@ -1483,6 +1622,104 @@ class UES {
         return key;
     }
 
+    getGroupLineItemKeyByID(proposalid,groupid,lineid) {
+        const ues = new UES();
+        const lineitems = ues.getGroupLineItems.call(this,proposalid,groupid)
+        let key = false;
+        if(lineitems) {
+            // eslint-disable-next-line
+            lineitems.map((item,i)=> {
+                if(item.lineid === lineid) {
+                   key = i;
+                }
+            })
+        }
+        return key
+       }
+
+   getGroupLineItemByID(proposalid,groupid,lineid) {
+    const ues = new UES();
+    const lineitems = ues.getGroupLineItems.call(this,proposalid,groupid)
+    let getitem = false;
+    if(lineitems) {
+        // eslint-disable-next-line
+        lineitems.map((item)=> {
+            if(item.lineid === lineid) {
+                getitem = item;
+            }
+        })
+    }
+    return getitem;
+   }
+
+    getGroupLineItems(proposalid,groupid) {
+        const ues = new UES();
+        const group = ues.getProposalGroupByID.call(this,proposalid,groupid)
+        let getitems = false;
+        if(group) {
+            if(group.hasOwnProperty("lineitems")) {
+                getitems = group.lineitems;
+            }
+        }
+        return getitems;
+    }
+    
+
+
+    getProposalGroupKeyByID(proposalid, groupid) {
+        const ues = new UES();
+        const costestimate = ues.getProposalEstimate.call(this,proposalid)
+        let key = false;
+        if(costestimate) {
+            // eslint-disable-next-line
+            costestimate.map((group,i)=> {
+                if(group.groupid === groupid) {
+                    key = i;
+
+                }
+            })
+        }
+
+        return key;
+        
+    }
+
+
+    getProposalGroupByID(proposalid, groupid) {
+        const ues = new UES();
+        const costestimate = ues.getProposalEstimate.call(this,proposalid)
+        let getgroup = false;
+        if(costestimate) {
+            // eslint-disable-next-line
+            costestimate.map(group=> {
+                if(group.groupid === groupid) {
+                    getgroup = group;
+
+                }
+            })
+        }
+
+        return getgroup;
+        
+    }
+
+    
+
+    getProposalEstimate(proposalid) {
+        const ues = new UES();
+        const proposal = ues.getProposalByID.call(this,proposalid)
+        let costestimate = false;
+        if(proposal) {
+            if(proposal.hasOwnProperty("costestimate")) {
+                costestimate = proposal.costestimate;
+
+            }
+        }
+
+        return costestimate;
+        
+    }
+
     getProjectbyID(projectid) {
         const ues = new UES();
         const projects = ues.getProjects.call(this);
@@ -1669,6 +1906,22 @@ class UES {
         }
 
         return getproposal;
+
+    }
+
+    async loadProposals() {
+
+        try {
+            let response = await LoadProposals();
+            if (response.hasOwnProperty("proposals")) {
+                this.props.reduxProposals(response.proposals)
+                this.setState({ render: 'render' })
+
+            }
+
+        } catch (err) {
+            alert(err)
+        }
 
     }
 

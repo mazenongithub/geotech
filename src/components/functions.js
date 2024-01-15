@@ -2,6 +2,21 @@ export function newChapter(reportid, chapterid, chaptername, content) {
     return ({ reportid, chapterid, chaptername, content })
 }
 
+export function newLineItem(lineid,groupid,lineitem,quantity,unit,unitprice,overhead) {
+return({lineid,groupid,lineitem,quantity,unit,unitprice,overhead}) 
+}
+export function newCostGroup(groupid,proposalid,groupname) {
+    return({groupid,proposalid,groupname})
+}
+
+export function calcFieldAmount(quantity,unitprice,overhead)  {
+    return Number((1+(Number(overhead)/100))*Number(quantity)*Number(unitprice)).toFixed(2)
+  }
+
+export function calcAmount(quantity,unitprice)  {
+    return Number(Number(quantity)*Number(unitprice)).toFixed(2)
+  }
+
 export function newReportSection(sectionid, sectionname, content) {
     return ({ sectionid, sectionname, content })
 }

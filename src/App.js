@@ -28,6 +28,8 @@ import Figures from './components/figures'
 import MyAdmin from './components/myadmin'
 import Spinner from './components/spinner'
 import Home from './components/home'
+import ViewProposal from './components/viewproposal'
+import CostEstimate from './components/costestimate'
 const ShowMyAdmin = () => {
   const { userid } = useParams();
   return (<MyAdmin userid={userid} />)
@@ -55,6 +57,16 @@ const ShowProject = () => {
 const ShowProposals = () => {
   const { projectid, userid } = useParams();
   return (<Proposals userid={userid} projectid={projectid} />)
+}
+
+const ShowViewProposal = () => {
+  const { projectid, userid, proposalid } = useParams();
+  return(<ViewProposal  userid={userid} projectid={projectid} proposalid={proposalid}/>)
+}
+
+const ShowCostEstimate = () => {
+  const { projectid, userid, proposalid } = useParams();
+  return(<CostEstimate  userid={userid} projectid={projectid} proposalid={proposalid}/>)
 }
 
 const ShowPavement = () => {
@@ -189,6 +201,8 @@ class App extends Component {
               <Route exact path="/:userid/projects" element={<Projects />} />
               <Route exact path="/:userid/projects/:projectid" element={<ShowProject />} />
               <Route exact path="/:userid/projects/:projectid/proposals" element={<ShowProposals />} />
+              <Route exact path="/:userid/projects/:projectid/proposals/:proposalid" element={<ShowViewProposal />} />
+              <Route exact path="/:userid/projects/:projectid/proposals/:proposalid/costestimate" element={<ShowCostEstimate />} />
               <Route exact path="/:userid/projects/:projectid/report" element={<ShowReport />} />
               <Route exact path="/:userid/projects/:projectid/report/:reportid" element={<ShowViewReport />} />
               <Route exact path="/:userid/projects/:projectid/report/:reportid/figures" element={<ShowFigures />} />
