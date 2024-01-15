@@ -984,7 +984,7 @@ class CostEstimate extends Component {
         const styles = MyStylesheet();
         const ues = new UES();
         const regularFont = ues.regularFont.call(this)
-        return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }}>
+        return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15 }} key={group.groupid}>
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.showBorder, ...styles.generalPadding }}>
                 <span style={{ ...regularFont }}>{group.groupname}</span>
             </div>

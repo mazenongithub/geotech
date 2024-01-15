@@ -6,6 +6,7 @@ import * as actions from './actions';
 import UES from './ues';
 import { Link } from "react-router-dom";
 import { formatDateReport } from './functions'
+import CostTable from './costtable';
 
 class ViewProposal extends Component {
 
@@ -64,6 +65,8 @@ class ViewProposal extends Component {
 
     showProposal() {
         const ues = new UES();
+        const costtable = new CostTable();
+        const proposalid = this.props.proposalid;
 
         const proposal = this.getProposal();
         let getproposal = [];
@@ -79,6 +82,11 @@ class ViewProposal extends Component {
                     if (section.hasOwnProperty("list")) {
 
                         getproposal.push(ues.showList.call(this,section.list))
+
+                    }
+
+                    if(section.sectionname==="Cost of Services") {
+                        getproposal.push(costtable.showCostEstimate.call(this,proposalid))
 
                     }
 
@@ -118,7 +126,7 @@ class ViewProposal extends Component {
     render() {
         const styles = MyStylesheet();
         const ues = new UES();
-
+     
         const regularFont = ues.regularFont.call(this)
         const headerFont = ues.headerFont.call(this)
         const myuser = ues.checkUser.call(this)

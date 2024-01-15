@@ -42,7 +42,7 @@ class UES {
         const styles = MyStylesheet();
         const ues = new UES();
         const regularFont = ues.regularFont.call(this)
-        return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.leftMargin40 }}>
+        return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.leftMargin40 }} key={section.subsectionid}>
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
                 <span style={{ ...regularFont }}>{label}</span>
                 <span style={{ ...regularFont, ...styles.marginLeft15 }}><u>{section.sectionname}</u></span>
@@ -63,7 +63,7 @@ class UES {
         const styles = MyStylesheet();
         const ues = new UES();
         const regularFont = ues.regularFont.call(this)
-        return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.marginLeft15 }}>
+        return (<div style={{ ...styles.generalContainer, ...styles.bottomMargin15, ...styles.marginLeft15 }} key={section.sectionid}>
             <div style={{ ...styles.generalContainer, ...styles.generalFont, ...styles.bottomMargin15 }}>
                 <span style={{ ...regularFont }}>{label}</span>
                 <span style={{ ...regularFont, ...styles.marginLeft15 }}><u>{section.sectionname}</u></span>
